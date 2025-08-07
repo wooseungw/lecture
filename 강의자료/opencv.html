@@ -4,8 +4,9 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>OpenCV 이미지/영상 처리 강의 자료 (통합본)</title>
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
-<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+<link href="css/tailwind.min.css" rel="stylesheet"/>
+<link href="css/fontawesome.min.css" rel="stylesheet"/>
+<link href="slide-controller.css" rel="stylesheet"/>
 <style>
         html { scroll-behavior: smooth; }
         body { font-family: 'Segoe UI', 'Noto Sans KR', sans-serif; background-color: #1e1e1e; color: #ffffff; }
@@ -62,7 +63,7 @@ pip install opencv-python
 </pre>
         </div>
     </div>
-    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-video mr-2 text-python-blue text-lg"></i><span>OpenCV 처리 | 1 / 5</span></div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-video mr-2 text-python-blue text-lg"></i><span>OpenCV 처리 | 1 / 11</span></div>
 </section>
 
 <!-- Slide 2: 이미지 읽기/표시 -->
@@ -104,7 +105,7 @@ cv2.destroyAllWindows()
 </pre>
         </div>
     </div>
-    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-video mr-2 text-python-blue text-lg"></i><span>OpenCV 처리 | 2 / 5</span></div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-video mr-2 text-python-blue text-lg"></i><span>OpenCV 처리 | 2 / 11</span></div>
 </section>
 
 <!-- Slide 3: 이미지 저장/색상 변환 -->
@@ -144,7 +145,7 @@ cv2.destroyAllWindows()
 </pre>
         </div>
     </div>
-    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-video mr-2 text-python-blue text-lg"></i><span>OpenCV 처리 | 3 / 5</span></div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-video mr-2 text-python-blue text-lg"></i><span>OpenCV 처리 | 3 / 11</span></div>
 </section>
 
 <!-- Slide 4: 동영상 파일 재생 -->
@@ -187,7 +188,7 @@ cv2.destroyAllWindows()
 </pre>
         </div>
     </div>
-    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-video mr-2 text-python-blue text-lg"></i><span>OpenCV 처리 | 4 / 5</span></div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-video mr-2 text-python-blue text-lg"></i><span>OpenCV 처리 | 4 / 11</span></div>
 </section>
 
 <!-- Slide 5: 웹캠 실시간 처리 -->
@@ -230,7 +231,335 @@ cv2.destroyAllWindows()
 </pre>
         </div>
     </div>
-    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-video mr-2 text-python-blue text-lg"></i><span>OpenCV 처리 | 5 / 5</span></div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-video mr-2 text-python-blue text-lg"></i><span>OpenCV 처리 | 5 / 11</span></div>
+</section>
+
+<!-- Slide 6: 도형 그리기 -->
+<section id="slide6" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">이미지/영상 처리</span> - <span class="python-yellow">도형 그리기</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">6.</span> 도형 그리기</h2>
+            <p class="text-base text-gray-300 leading-relaxed">OpenCV는 이미지 위에 사각형, 원, 선 등 다양한 도형을 그리는 기능을 제공합니다. 이를 통해 이미지에 정보를 시각적으로 추가하거나 마스킹 등의 작업을 수행할 수 있습니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-pencil-alt mr-2"></i>도형 그리기 함수</h4>
+                <ul class="text-sm text-gray-400 list-disc pl-5">
+                    <li><b>cv2.rectangle(img, pt1, pt2, color, thickness)</b>: 사각형 그리기</li>
+                    <li><b>cv2.circle(img, center, radius, color, thickness)</b>: 원 그리기</li>
+                    <li><b>cv2.line(img, pt1, pt2, color, thickness)</b>: 선 그리기</li>
+                    <li><b>thickness</b>: 선의 두께. -1을 지정하면 도형 내부를 채웁니다.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-keyword">import</span> cv2
+<span class="code-keyword">import</span> numpy as np
+
+<span class="code-comment"># 검은색 배경 이미지 생성 (500x500, 3채널)</span>
+img = np.zeros((500, 500, 3), dtype=np.uint8)
+
+<span class="code-comment"># 1. 사각형 그리기</span>
+cv2.rectangle(img, (50, 50), (200, 150), (0, 255, 0), 2)  <span class="code-comment"># 초록색 테두리</span>
+cv2.rectangle(img, (250, 50), (400, 150), (255, 0, 0), -1)  <span class="code-comment"># 파란색 채우기</span>
+
+<span class="code-comment"># 2. 원 그리기</span>
+cv2.circle(img, (125, 250), 50, (0, 255, 255), 3)  <span class="code-comment"># 노란색 테두리</span>
+cv2.circle(img, (325, 250), 50, (255, 255, 0), -1)  <span class="code-comment"># 청록색 채우기</span>
+
+<span class="code-comment"># 3. 선 그리기</span>
+cv2.line(img, (50, 350), (200, 350), (255, 255, 255), 2)  <span class="code-comment"># 가로선 (흰색)</span>
+cv2.line(img, (250, 330), (400, 370), (255, 0, 255), 3)  <span class="code-comment"># 대각선 (자홍색)</span>
+
+<span class="code-comment"># 이미지 출력</span>
+cv2.imshow(<span class="code-string">'Shape Drawing Examples'</span>, img)
+cv2.waitKey(<span class="code-number">0</span>)
+cv2.destroyAllWindows()
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-video mr-2 text-python-blue text-lg"></i><span>OpenCV 처리 | 6 / 11</span></div>
+</section>
+
+<!-- Slide 7: 텍스트 그리기 -->
+<section id="slide7" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">이미지/영상 처리</span> - <span class="python-yellow">텍스트 그리기</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">7.</span> 텍스트 그리기</h2>
+            <p class="text-base text-gray-300 leading-relaxed">OpenCV의 `cv2.putText()` 함수를 사용하여 이미지에 텍스트를 추가할 수 있습니다. 다양한 폰트, 크기, 색상, 두께를 설정하여 텍스트를 커스터마이징할 수 있습니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-font mr-2"></i>`cv2.putText()` 파라미터</h4>
+                <ul class="text-sm text-gray-400 list-disc pl-5">
+                    <li><b>image</b>: 텍스트를 그릴 이미지</li>
+                    <li><b>text</b>: 그릴 텍스트 (문자열)</li>
+                    <li><b>position</b>: 텍스트 시작 위치 (x, y)</li>
+                    <li><b>font</b>: 폰트 타입 (예: `cv2.FONT_HERSHEY_SIMPLEX`)</li>
+                    <li><b>scale</b>: 폰트 크기 배율</li>
+                    <li><b>color</b>: 텍스트 색상 (B, G, R)</li>
+                    <li><b>thickness</b>: 텍스트 두께</li>
+                    <li><b>lineType</b>: 선의 타입 (예: `cv2.LINE_AA`는 안티앨리어싱 적용)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-keyword">import</span> cv2
+<span class="code-keyword">import</span> numpy as np
+
+<span class="code-comment"># 흰색 배경 이미지 생성</span>
+img = np.ones((400, 600, 3), dtype=np.uint8) * 255
+
+<span class="code-comment"># 텍스트 그리기</span>
+cv2.putText(img, 'Hello, OpenCV!', (50, 100), 
+           cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 0, 0), 2, cv2.LINE_AA)
+
+cv2.putText(img, 'Python & Computer Vision', (50, 200), 
+           cv2.FONT_HERSHEY_COMPLEX, 1, (0, 128, 0), 3)
+
+cv2.putText(img, 'Gemini CLI', (50, 300), 
+           cv2.FONT_HERSHEY_SCRIPT_COMPLEX, 2, (0, 0, 255), 4)
+
+<span class="code-comment"># 이미지 출력</span>
+cv2.imshow(<span class="code-string">'Text Examples'</span>, img)
+cv2.waitKey(<span class="code-number">0</span>)
+cv2.destroyAllWindows()
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-video mr-2 text-python-blue text-lg"></i><span>OpenCV 처리 | 7 / 11</span></div>
+</section>
+
+<!-- Slide 8: 이미지 변환 -->
+<section id="slide8" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">이미지/영상 처리</span> - <span class="python-yellow">이미지 변환</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">8.</span> 이미지 크기 조절 및 블러</h2>
+            <p class="text-base text-gray-300 leading-relaxed">이미지의 크기를 조절하거나(리사이즈), 블러(흐림) 효과를 적용하여 노이즈를 줄이거나 특정 부분을 강조할 수 있습니다. 다양한 보간법과 블러 필터가 제공됩니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-arrows-alt-h mr-2"></i>주요 변환 함수</h4>
+                <ul class="text-sm text-gray-400 list-disc pl-5">
+                    <li><b>cv2.resize(src, dsize, fx, fy, interpolation)</b>: 이미지 크기 조절</li>
+                    <li><b>cv2.GaussianBlur(src, ksize, sigmaX)</b>: 가우시안 블러</li>
+                    <li><b>cv2.blur(src, ksize)</b>: 평균 블러</li>
+                    <li><b>cv2.medianBlur(src, ksize)</b>: 미디언 블러 (노이즈 제거에 효과적)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-keyword">import</span> cv2
+<span class="code-keyword">import</span> numpy as np
+
+<span class="code-comment"># 원본 이미지 로드 (또는 생성)</span>
+original_image = cv2.imread(<span class="code-string">'ex_img/thumbs_up.jpg'</span>)
+<span class="code-keyword">if</span> original_image <span class="code-keyword">is None</span>:
+    original_image = np.zeros((300, 400, 3), dtype=np.uint8)
+    cv2.putText(original_image, 'No Image', (50, 150), 
+               cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+
+<span class="code-comment"># 1. 이미지 크기 조절</span>
+resized_image = cv2.resize(original_image, (200, 200))
+
+<span class="code-comment"># 2. 가우시안 블러 적용</span>
+blurred_image = cv2.GaussianBlur(original_image, (15, 15), 0)
+
+<span class="code-comment"># 결과 이미지들을 하나의 창에 표시</span>
+combined_image = np.hstack((original_image, resized_image, blurred_image))
+
+cv2.imshow(<span class="code-string">'Image Transformations'</span>, combined_image)
+cv2.waitKey(<span class="code-number">0</span>)
+cv2.destroyAllWindows()
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-video mr-2 text-python-blue text-lg"></i><span>OpenCV 처리 | 8 / 11</span></div>
+</section>
+
+<!-- Slide 9: 이미지 필터와 효과 -->
+<section id="slide9" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">이미지/영상 처리</span> - <span class="python-yellow">필터 및 효과</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">9.</span> 다양한 이미지 필터 및 효과</h2>
+            <p class="text-base text-gray-300 leading-relaxed">OpenCV는 에지 검출, 형태학적 연산, 색상 공간 변환 등 다양한 이미지 필터와 효과를 제공하여 이미지의 특징을 추출하거나 개선할 수 있습니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-magic mr-2"></i>주요 필터 및 효과</h4>
+                <ul class="text-sm text-gray-400 list-disc pl-5">
+                    <li><b>cv2.Canny()</b>: Canny 에지 검출 (이미지의 윤곽선 찾기)</li>
+                    <li><b>cv2.erode() / cv2.dilate()</b>: 침식/팽창 (객체 크기 조절, 노이즈 제거)</li>
+                    <li><b>cv2.cvtColor(img, cv2.COLOR_BGR2HSV)</b>: 색상 공간 변환 (HSV는 색조, 채도, 명도 분리)</li>
+                    <li><b>히스토그램 평활화</b>: 이미지의 대비를 개선</li>
+                </ul>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-keyword">import</span> cv2
+<span class="code-keyword">import</span> numpy as np
+
+<span class="code-comment"># 테스트 이미지 생성 (또는 로드)</span>
+test_image = cv2.imread(<span class="code-string">'ex_img/thumbs_up.jpg'</span>)
+<span class="code-keyword">if</span> test_image <span class="code-keyword">is None</span>:
+    test_image = np.zeros((300, 400, 3), dtype=np.uint8)
+    cv2.putText(test_image, 'No Image', (50, 150), 
+               cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+
+<span class="code-comment"># 1. Canny 에지 검출</span>
+gray_image = cv2.cvtColor(test_image, cv2.COLOR_BGR2GRAY)
+canny_edges = cv2.Canny(gray_image, 100, 200)
+
+<span class="code-comment"># 2. 채도 증가 (HSV 변환)</span>
+hsv_image = cv2.cvtColor(test_image, cv2.COLOR_BGR2HSV)
+hsv_image[:, :, 1] = np.clip(hsv_image[:, :, 1] * 1.5, 0, 255)
+saturated_image = cv2.cvtColor(hsv_image, cv2.COLOR_HSV2BGR)
+
+<span class="code-comment"># 결과 이미지들을 하나의 창에 표시</span>
+combined_image = np.hstack((test_image, 
+                            cv2.cvtColor(canny_edges, cv2.COLOR_GRAY2BGR), 
+                            saturated_image))
+
+cv2.imshow(<span class="code-string">'Image Filters & Effects'</span>, combined_image)
+cv2.waitKey(<span class="code-number">0</span>)
+cv2.destroyAllWindows()
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-video mr-2 text-python-blue text-lg"></i><span>OpenCV 처리 | 9 / 11</span></div>
+</section>
+
+<!-- Slide 10: 마우스 상호작용 -->
+<section id="slide10" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">이미지/영상 처리</span> - <span class="python-yellow">마우스 상호작용</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">10.</span> 마우스 이벤트 처리</h2>
+            <p class="text-base text-gray-300 leading-relaxed">OpenCV는 마우스 이벤트를 감지하고 처리하는 기능을 제공하여 사용자와의 상호작용이 필요한 애플리케이션을 만들 수 있습니다. 이를 통해 그림판과 같은 기능을 구현할 수 있습니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-mouse-pointer mr-2"></i>`cv2.setMouseCallback()`</h4>
+                <ul class="text-sm text-gray-400 list-disc pl-5">
+                    <li><b>cv2.setMouseCallback(window_name, callback_function)</b>: 특정 창에 마우스 이벤트 콜백 함수를 등록합니다.</li>
+                    <li>콜백 함수는 이벤트 타입, 마우스 좌표(x, y), 플래그(키보드 상태), 사용자 정의 파라미터 등을 인자로 받습니다.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-keyword">import</span> cv2
+<span class="code-keyword">import</span> numpy as np
+
+<span class="code-comment"># 전역 변수들</span>
+drawing = <span class="code-keyword">False</span>  <span class="code-comment"># 마우스 드래그 중인지 확인</span>
+ix, iy = -<span class="code-number">1</span>, -<span class="code-number">1</span>  <span class="code-comment"># 시작 좌표</span>
+
+<span class="code-comment"># 이미지 생성</span>
+img = np.ones((400, 600, 3), dtype=np.uint8) * 255
+
+<span class="code-comment"># 마우스 콜백 함수</span>
+<span class="code-keyword">def</span> mouse_callback(event, x, y, flags, param):
+    <span class="code-keyword">global</span> ix, iy, drawing, img
+    
+    <span class="code-keyword">if</span> event == cv2.EVENT_LBUTTONDOWN:
+        drawing = <span class="code-keyword">True</span>
+        ix, iy = x, y
+    <span class="code-keyword">elif</span> event == cv2.EVENT_MOUSEMOVE:
+        <span class="code-keyword">if</span> drawing:
+            cv2.rectangle(img, (ix, iy), (x, y), (<span class="code-number">0</span>, <span class="code-number">255</span>, <span class="code-number">0</span>), -<span class="code-number">1</span>)
+    <span class="code-keyword">elif</span> event == cv2.EVENT_LBUTTONUP:
+        drawing = <span class="code-keyword">False</span>
+        cv2.rectangle(img, (ix, iy), (x, y), (<span class="code-number">0</span>, <span class="code-number">255</span>, <span class="code-number">0</span>), -<span class="code-number">1</span>)
+
+<span class="code-comment"># 창 생성 및 마우스 콜백 설정</span>
+cv2.namedWindow(<span class="code-string">'Drawing Canvas'</span>)
+cv2.setMouseCallback(<span class="code-string">'Drawing Canvas'</span>, mouse_callback)
+
+<span class="code-keyword">while</span> <span class="code-keyword">True</span>:
+    cv2.imshow(<span class="code-string">'Drawing Canvas'</span>, img)
+    <span class="code-keyword">if</span> cv2.waitKey(<span class="code-number">1</span>) & 0xFF == ord(<span class="code-string">'q'</span>):
+        <span class="code-keyword">break</span>
+
+cv2.destroyAllWindows()
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-video mr-2 text-python-blue text-lg"></i><span>OpenCV 처리 | 10 / 11</span></div>
+</section>
+
+<!-- Slide 11: 추가 필터링 (opencv_ex_10_filters.py) -->
+<section id="slide11" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">이미지/영상 처리</span> - <span class="python-yellow">고급 필터링</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">11.</span> 고급 필터링 및 효과</h2>
+            <p class="text-base text-gray-300 leading-relaxed">OpenCV는 이미지의 픽셀 값을 직접 조작하거나, 복잡한 수학적 연산을 통해 다양한 시각적 효과를 구현할 수 있는 고급 필터링 기법을 제공합니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-sliders-h mr-2"></i>주요 고급 필터</h4>
+                <ul class="text-sm text-gray-400 list-disc pl-5">
+                    <li><b>cv2.filter2D()</b>: 사용자 정의 커널을 이용한 2D 컨볼루션 필터</li>
+                    <li><b>cv2.warpAffine() / cv2.warpPerspective()</b>: 아핀/원근 변환 (이미지 왜곡, 회전 등)</li>
+                    <li><b>색상 팔레트 적용</b>: 그레이스케일 이미지에 다양한 색상 맵을 적용하여 시각화</li>
+                </ul>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-keyword">import</span> cv2
+<span class="code-keyword">import</span> numpy as np
+
+<span class="code-comment"># 원본 이미지 로드 (또는 생성)</span>
+original_image = cv2.imread(<span class="code-string">'ex_img/thumbs_up.jpg'</span>)
+<span class="code-keyword">if</span> original_image <span class="code-keyword">is None</span>:
+    original_image = np.zeros((300, 400, 3), dtype=np.uint8)
+    cv2.putText(original_image, 'No Image', (50, 150), 
+               cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+
+<span class="code-comment"># 1. 샤프닝 필터</span>
+kernel_sharpening = np.array([[-<span class="code-number">1</span>, -<span class="code-number">1</span>, -<span class="code-number">1</span>],
+                              [-<span class="code-number">1</span>, <span class="code-number">9</span>, -<span class="code-number">1</span>],
+                              [-<span class="code-number">1</span>, -<span class="code-number">1</span>, -<span class="code-number">1</span>]])
+sharpened_image = cv2.filter2D(original_image, -<span class="code-number">1</span>, kernel_sharpening)
+
+<span class="code-comment"># 2. 엠보싱 필터</span>
+kernel_emboss = np.array([[-<span class="code-number">2</span>, -<span class="code-number">1</span>, <span class="code-number">0</span>],
+                          [-<span class="code-number">1</span>, <span class="code-number">1</span>, <span class="code-number">1</span>],
+                          [<span class="code-number">0</span>, <span class="code-number">1</span>, <span class="code-number">2</span>]])
+embossed_image = cv2.filter2D(original_image, -<span class="code-number">1</span>, kernel_emboss)
+embossed_image = cv2.cvtColor(embossed_image, cv2.COLOR_BGR2GRAY)
+embossed_image = cv2.cvtColor(embossed_image, cv2.COLOR_GRAY2BGR) <span class="code-comment"># 3채널로 변환</span>
+
+<span class="code-comment"># 3. 색상 팔레트 적용 (그레이스케일 이미지에)</span>
+gray_original = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
+colored_map_image = cv2.applyColorMap(gray_original, cv2.COLORMAP_JET)
+
+<span class="code-comment"># 결과 이미지들을 하나의 창에 표시</span>
+combined_image = np.hstack((original_image, sharpened_image, embossed_image, colored_map_image))
+
+cv2.imshow(<span class="code-string">'Advanced Filters & Effects'</span>, combined_image)
+cv2.waitKey(<span class="code-number">0</span>)
+cv2.destroyAllWindows()
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-video mr-2 text-python-blue text-lg"></i><span>OpenCV 처리 | 11 / 11</span></div>
 </section>
 
 </body>
