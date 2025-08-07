@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Pillow 이미지 처리 강의 자료 (통합본)</title>
+<!-- 로컬 CSS 파일 -->
+<link href="css/tailwind.min.css" rel="stylesheet"/>
+<link href="css/fontawesome.min.css" rel="stylesheet"/>
+<link href="slide-controller.css" rel="stylesheet"/>
+<style>
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Segoe UI', 'Noto Sans KR', sans-serif; background-color: #1e1e1e; color: #ffffff; }
+        .python-blue { color: #306998; }
+        .python-yellow { color: #FFD43B; }
+        
+        /* SlideController와 호환되는 스타일 재정의 */
+        .slide-container { 
+            width: 100vw !important; 
+            height: 100vh !important; 
+            margin: 0 !important; 
+            position: absolute !important; 
+            top: 0 !important;
+            left: 0 !important;
+            display: flex !important; 
+            flex-direction: column !important; 
+            justify-content: center !important; 
+            padding: 4rem !important; 
+            border-bottom: none !important;
+            opacity: 0 !important;
+            transform: translateX(100%) !important;
+            transition: all 0.5s ease-in-out !important;
+            box-sizing: border-box !important;
+        }
+        
+        .slide-container.active {
+            opacity: 1 !important;
+            transform: translateX(0) !important;
+            z-index: 10 !important;
+        }
+        
+        .content-wrapper { display: flex; align-items: center; gap: 2rem; }
+        .text-content { flex: 1; }
+        .code-content { flex: 1.1; background-color: #252525; padding: 1.5rem; border-radius: 8px; font-family: 'Consolas', 'D2Coding', monospace; overflow-x: auto; max-height: 500px; }
+        .tip-box { background-color: #2d2d2d; border-left: 4px solid #FFD43B; padding: 1rem; margin-top: 1.25rem; border-radius: 0 8px 8px 0; }
+        
+        /* TOC를 슬라이드 모드에서 숨김 */
+        .toc { display: none; }
+        
+        .code-comment { color: #6A9955; }
+        .code-keyword { color: #569cd6; }
+        .code-string { color: #ce9178; }
+        .code-number { color: #b5cea8; }
+        .code-function { color: #DCDCAA; }
+</style>
+</head>
+<body class="bg-gray-900">
+
+<!-- Table of Contents -->
+<div class="toc">
+    <h4>Pillow 이미지 처리</h4>
+    <a href="#slide1">1. 소개 및 설치</a>
+    <a href="#slide2">2. 이미지 열기/정보 확인</a>
+    <a href="#slide3">3. 이미지 저장/형식 변환</a>
+    <a href="#slide4">4. 이미지 크기 조절</a>
+    <a href="#slide5">5. 자르기, 회전, 반전</a>
+    <a href="#slide6">6. 색상 모드 변환</a>
+</div>
+
+<!-- Slide 1: Pillow 소개 및 설치 -->
+<section id="slide1" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">이미지 처리</span> - <span class="python-yellow">Pillow 시작하기</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">1.</span> Pillow 라이브러리</h2>
+            <p class="text-base text-gray-300 leading-relaxed">Pillow는 파이썬에서 이미지를 다루는 가장 대표적인 라이브러리입니다. 이미지 열기, 수정, 저장 등 다양한 이미지 처리 작업을 손쉽게 수행할 수 있습니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-download mr-2"></i>라이브러리 설치</h4>
+                <p class="text-sm text-gray-400">Pillow는 파이썬 표준 라이브러리가 아니므로, 터미널이나 명령 프롬프트에서 `pip`를 사용하여 직접 설치해야 합니다.</p>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-comment"># Pillow 라이브러리 설치 명령어</span>
+<span class="code-comment"># 터미널(cmd, PowerShell)에 아래와 같이 입력하세요.</span>
+
+pip install Pillow
+
+<span class="code-comment"># ---------------------------------</span>
+<span class="code-comment"># 코드에서 Pillow 사용하기</span>
+<span class="code-comment"># Image 모듈을 import하여 사용합니다.</span>
+
+<span class="code-keyword">from</span> PIL <span class="code-keyword">import</span> Image
+
+<span class="code-function">print</span>(<span class="code-string">"Pillow 라이브러리 준비 완료!"</span>)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-image mr-2 text-python-blue text-lg"></i><span>이미지 처리 | 1 / 6</span></div>
+</section>
+
+<!-- Slide 2: 이미지 열기/정보 확인 -->
+<section id="slide2" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">이미지 처리</span> - <span class="python-yellow">Pillow 기초</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">2.</span> 이미지 열고 정보 확인하기</h2>
+            <p class="text-base text-gray-300 leading-relaxed">`Image.open()` 함수로 이미지 파일을 열어 객체로 만듭니다. 생성된 이미지 객체는 형식, 크기, 색상 모드 등 다양한 정보를 속성으로 가지고 있습니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-info-circle mr-2"></i>이미지 주요 정보</h4>
+                <ul class="text-sm text-gray-400 list-disc pl-5">
+                    <li><b>format</b>: 이미지 형식 (JPEG, PNG 등)</li>
+                    <li><b>size</b>: 이미지 크기 (가로, 세로 픽셀)</li>
+                    <li><b>mode</b>: 색상 모드 (RGB, L 등)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-keyword">from</span> PIL <span class="code-keyword">import</span> Image
+
+image_path = <span class="code-string">'ex_img/victory.jpg'</span>
+
+<span class="code-comment"># 이미지 열기</span>
+image = Image.open(image_path)
+
+<span class="code-comment"># 이미지 정보 출력</span>
+<span class="code-function">print</span>(f<span class="code-string">"형식: {image.format}"</span>)
+<span class="code-function">print</span>(f<span class="code-string">"크기: {image.size}"</span>)
+<span class="code-function">print</span>(f<span class="code-string">"모드: {image.mode}"</span>)
+<span class="code-function">print</span>(f<span class="code-string">"가로: {image.width}px, 세로: {image.height}px"</span>)
+
+<span class="code-comment"># 이미지 보기 (새 창으로 열림)</span>
+image.show()
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-image mr-2 text-python-blue text-lg"></i><span>이미지 처리 | 2 / 6</span></div>
+</section>
+
+<!-- Slide 3: 이미지 저장/형식 변환 -->
+<section id="slide3" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">이미지 처리</span> - <span class="python-yellow">Pillow 기초</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">3.</span> 이미지 저장 및 형식 변환</h2>
+            <p class="text-base text-gray-300 leading-relaxed">`.save()` 메서드를 사용하여 처리된 이미지 객체를 파일로 저장할 수 있습니다. 저장할 파일의 확장자를 다르게 지정하면 이미지 형식이 자동으로 변환됩니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-file-export mr-2"></i>형식 변환의 장점</h4>
+                <p class="text-sm text-gray-400">배경을 투명하게 처리하고 싶을 때는 JPG를 PNG로 변환하여 저장할 수 있고, 웹사이트 용량을 줄이기 위해 고화질 이미지를 WEBP 형식으로 변환할 수도 있습니다.</p>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-keyword">from</span> PIL <span class="code-keyword">import</span> Image
+
+image_path = <span class="code-string">'ex_img/victory.jpg'</span>
+image = Image.open(image_path)
+
+<span class="code-comment"># 새로운 이름으로 이미지 저장 (복사)</span>
+output_path = <span class="code-string">'ex_img/victory_copy.jpg'</span>
+image.save(output_path)
+<span class="code-function">print</span>(f<span class="code-string">"이미지 복사 완료: {output_path}"</span>)
+
+<span class="code-comment"># PNG 형식으로 변환하여 저장</span>
+png_path = <span class="code-string">'ex_img/victory.png'</span>
+image.save(png_path)
+<span class="code-function">print</span>(f<span class="code-string">"PNG 형식으로 저장 완료: {png_path}"</span>)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-image mr-2 text-python-blue text-lg"></i><span>이미지 처리 | 3 / 6</span></div>
+</section>
+
+<!-- Slide 4: 이미지 크기 조절 -->
+<section id="slide4" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">이미지 처리</span> - <span class="python-yellow">이미지 변형</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">4.</span> 이미지 크기 조절</h2>
+            <p class="text-base text-gray-300 leading-relaxed">`.resize((가로, 세로))` 메서드를 사용하여 이미지의 크기를 원하는 대로 변경할 수 있습니다. 썸네일 제작이나 이미지 규격 통일에 유용합니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-compress-arrows-alt mr-2"></i>`.thumbnail()` 메서드</h4>
+                <p class="text-sm text-gray-400">`.thumbnail()`은 원본 비율을 유지하면서 주어진 크기 안에 들어가는 최대 썸네일을 만듭니다. 원본 객체를 직접 수정하므로 복사본을 만들어 사용하는 것이 안전합니다.</p>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-keyword">from</span> PIL <span class="code-keyword">import</span> Image
+
+image = Image.open(<span class="code-string">'ex_img/victory.jpg'</span>)
+width, height = image.size
+
+<span class="code-comment"># 1. 이미지 크기 반으로 줄이기</span>
+small_image = image.resize((width // <span class="code-number">2</span>, height // <span class="code-number">2</span>))
+small_image.save(<span class="code-string">'ex_img/victory_small.jpg'</span>)
+<span class="code-function">print</span>(f<span class="code-string">"작은 이미지 저장: {small_image.size}"</span>)
+
+<span class="code-comment"># 2. 정사각형으로 만들기 (200x200)</span>
+square_image = image.resize((<span class="code-number">200</span>, <span class="code-number">200</span>))
+square_image.save(<span class="code-string">'ex_img/victory_square.jpg'</span>)
+<span class="code-function">print</span>(f<span class="code-string">"정사각형 이미지 저장: {square_image.size}"</span>)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-image mr-2 text-python-blue text-lg"></i><span>이미지 처리 | 4 / 6</span></div>
+</section>
+
+<!-- Slide 5: 이미지 자르기/회전/반전 -->
+<section id="slide5" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">이미지 처리</span> - <span class="python-yellow">이미지 변형</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">5.</span> 자르기, 회전, 반전</h2>
+            <p class="text-base text-gray-300 leading-relaxed">이미지의 특정 부분만 잘라내거나, 이미지를 회전시키고, 좌우 또는 상하로 뒤집는 등 다양한 기하학적 변형을 적용할 수 있습니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-crop-alt mr-2"></i>자르기(Crop) 좌표계</h4>
+                <p class="text-sm text-gray-400">`.crop((left, top, right, bottom))` 메서드는 왼쪽 위 모서리를 (0,0) 기준으로 하여 잘라낼 사각형 영역의 좌표를 받습니다.</p>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-keyword">from</span> PIL <span class="code-keyword">import</span> Image
+
+image = Image.open(<span class="code-string">'ex_img/victory.jpg'</span>)
+width, height = image.size
+
+<span class="code-comment"># 1. 이미지 중앙 부분 자르기</span>
+box = (width//<span class="code-number">4</span>, height//<span class="code-number">4</span>, width*<span class="code-number">3</span>//<span class="code-number">4</span>, height*<span class="code-number">3</span>//<span class="code-number">4</span>)
+cropped_image = image.crop(box)
+cropped_image.save(<span class="code-string">'ex_img/victory_cropped.jpg'</span>)
+
+<span class="code-comment"># 2. 이미지 90도 회전</span>
+rotated_90 = image.rotate(<span class="code-number">90</span>, expand=<span class="code-keyword">True</span>)
+rotated_90.save(<span class="code-string">'ex_img/victory_rotated.jpg'</span>)
+
+<span class="code-comment"># 3. 이미지 좌우 반전</span>
+flipped_h = image.transpose(Image.FLIP_LEFT_RIGHT)
+flipped_h.save(<span class="code-string">'ex_img/victory_flipped.jpg'</span>)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-image mr-2 text-python-blue text-lg"></i><span>이미지 처리 | 5 / 6</span></div>
+</section>
+
+<!-- Slide 6: 이미지 색상 모드 변환 -->
+<section id="slide6" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">이미지 처리</span> - <span class="python-yellow">이미지 변형</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">6.</span> 색상 모드 변환</h2>
+            <p class="text-base text-gray-300 leading-relaxed">`.convert()` 메서드를 사용하여 이미지의 색상 모드를 변경할 수 있습니다. 컬러 이미지를 흑백으로 바꾸거나, 특정 모드로 변환하여 처리 효율을 높일 수 있습니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-palette mr-2"></i>주요 색상 모드</h4>
+                <ul class="text-sm text-gray-400 list-disc pl-5">
+                    <li><b>'RGB'</b>: 3채널 컬러 이미지 (빨강, 초록, 파랑)</li>
+                    <li><b>'L'</b>: 1채널 그레이스케일 (밝기 정보만)</li>
+                    <li><b>'1'</b>: 1비트 흑백 이미지 (검정 또는 흰색)</li>
+                    <li><b>'RGBA'</b>: RGB에 투명도(Alpha) 채널 추가</li>
+                </ul>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-keyword">from</span> PIL <span class="code-keyword">import</span> Image
+
+image = Image.open(<span class="code-string">'ex_img/victory.jpg'</span>)
+
+<span class="code-comment"># 1. 그레이스케일로 변환</span>
+grayscale = image.convert(<span class="code-string">'L'</span>)
+grayscale.save(<span class="code-string">'ex_img/victory_grayscale.jpg'</span>)
+<span class="code-function">print</span>(f<span class="code-string">"그레이스케일 저장 완료: {grayscale.mode}"</span>)
+
+<span class="code-comment"># 2. 흑백 (1비트) 이미지로 변환</span>
+black_white = image.convert(<span class="code-string">'1'</span>)
+black_white.save(<span class="code-string">'ex_img/victory_black_white.jpg'</span>)
+<span class="code-function">print</span>(f<span class="code-string">"흑백 이미지 저장 완료: {black_white.mode}"</span>)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-image mr-2 text-python-blue text-lg"></i><span>이미지 처리 | 6 / 6</span></div>
+</section>
+
+<!-- SlideController JavaScript -->
+<script src="slide-controller.js"></script>
+
+<script>
+// 페이지 로드 후 SlideController 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    window.slideController = new SlideController({
+        slideSelector: '.slide-container',
+        showKeyboardGuide: true,
+        enableSwipe: true,
+        enableKeyboard: true
+    });
+});
+</script>
+
+</body>
+</html>

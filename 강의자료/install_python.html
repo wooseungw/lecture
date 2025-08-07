@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Python 설치 가이드 (SlideController 적용)</title>
+
+<!-- 로컬 CSS 파일 -->
+<link href="css/tailwind.min.css" rel="stylesheet"/>
+<link href="css/fontawesome.min.css" rel="stylesheet"/>
+<link href="slide-controller.css" rel="stylesheet"/>
+<!-- SlideController CSS -->
+<style>
+/* ====================================
+   SlideController CSS Library v1.0
+   ==================================== */
+
+body.slide-mode {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.slide-container {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.5s ease-in-out;
+    box-sizing: border-box;
+}
+
+.slide-container.active {
+    opacity: 1;
+    transform: translateX(0);
+    z-index: 10;
+}
+
+.slide-container.prev {
+    transform: translateX(-100%);
+}
+
+.slide-container.next {
+    transform: translateX(100%);
+}
+
+/* 슬라이드 제어 UI */
+.slide-controls {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(45, 45, 45, 0.95);
+    padding: 15px 25px;
+    border-radius: 50px;
+    border: 1px solid #4a4a4a;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.control-btn {
+    background: none;
+    border: none;
+    color: #a0aec0;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    min-height: 36px;
+}
+
+.control-btn:hover {
+    color: #FFD43B;
+    background-color: rgba(255, 212, 59, 0.1);
+    transform: scale(1.1);
+}
+
+.control-btn:disabled {
+    color: #555;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.slide-indicator {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.indicator-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #555;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.indicator-dot:hover {
+    background-color: #888;
+    transform: scale(1.2);
+}
+
+.indicator-dot.active {
+    background-color: #FFD43B;
+    transform: scale(1.3);
+    box-shadow: 0 0 10px rgba(255, 212, 59, 0.5);
+}
+
+.slide-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    background-color: #FFD43B;
+    z-index: 1001;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px rgba(255, 212, 59, 0.3);
+}
+
+.slide-number {
+    color: #a0aec0;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Consolas', 'Monaco', monospace;
+    min-width: 60px;
+    text-align: center;
+}
+
+.keyboard-guide {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background-color: rgba(45, 45, 45, 0.9);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #4a4a4a;
+    z-index: 100;
+    font-size: 12px;
+    color: #a0aec0;
+    backdrop-filter: blur(5px);
+    transition: opacity 0.3s ease;
+}
+
+.keyboard-guide.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.keyboard-guide h4 {
+    margin: 0 0 10px 0;
+    color: #FFD43B;
+    font-size: 13px;
+}
+
+.keyboard-guide div {
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.keyboard-guide kbd {
+    background-color: #252525;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    border: 1px solid #4a4a4a;
+    font-size: 11px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* 모바일 최적화 */
+@media (max-width: 768px) {
+    .slide-container {
+        padding: 2rem 1rem;
+    }
+    
+    .slide-controls {
+        bottom: 10px;
+        padding: 10px 20px;
+        gap: 15px;
+    }
+    
+    .control-btn {
+        font-size: 16px;
+        padding: 6px;
+        min-width: 32px;
+        min-height: 32px;
+    }
+    
+    .keyboard-guide {
+        display: none;
+    }
+}
+</style>
+
+<!-- Python 가이드 전용 스타일 -->
+<style>
+        html { scroll-behavior: smooth; }
+        body { 
+            font-family: 'Segoe UI', 'Noto Sans KR', sans-serif; 
+            background-color: #1e1e1e; 
+            color: #ffffff; 
+        }
+        .python-blue { color: #306998; }
+        .python-yellow { color: #FFD43B; }
+        .content-wrapper { display: flex; align-items: center; gap: 2rem; }
+        .text-content { flex: 1; }
+        .image-content { flex: 1.1; }
+        .step-image { border: 2px solid #4a4a4a; border-radius: 0.75rem; box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+        .tip-box { background-color: #2d2d2d; border-left: 4px solid #FFD43B; padding: 1rem; margin-top: 1.25rem; border-radius: 0 8px 8px 0; }
+        .important-text { color: #ff8a8a; font-weight: bold; background-color: rgba(255, 138, 138, 0.1); padding: 2px 6px; border-radius: 4px;}
+        .code-snippet { background-color: #252525; padding: 4px 8px; border-radius: 4px; font-family: 'Consolas', monospace; }
+        
+        /* 모바일 반응형 조정 */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            .text-content, .image-content {
+                flex: none;
+                width: 100%;
+            }
+            .step-image {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+</style>
+</head>
+<body class="bg-gray-900">
+
+<!-- Slide 0 -->
+<section id="step0" class="slide-container">
+    <div class="flex flex-col items-center justify-center h-full w-full">
+        <div class="mb-8">
+            <i class="fab fa-python text-7xl python-blue mb-4"></i>
+            <h1 class="text-5xl font-extrabold mb-4">
+                <span class="python-blue">파이썬 설치하기</span>
+            </h1>
+            <h2 class="text-2xl font-semibold python-yellow mb-2">Python 설치 가이드</h2>
+            <div class="w-32 h-1 bg-yellow-400 rounded mx-auto"></div>
+        </div>
+        <p class="text-lg text-gray-300 mt-6 text-center">이 자료는 Windows 환경에서<br>Python을 안전하게 설치하는 방법을 안내합니다.</p>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm">
+        <i class="fab fa-python mr-2 text-python-blue text-lg"></i>
+        <span>Python 설치 | 시작</span>
+    </div>
+</section>
+
+<!-- Slide 1 -->
+<section id="step1" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">개발 환경 설정</span> - <span class="python-yellow">Python 설치</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">1단계:</span> 공식 설치 파일 다운로드</h2>
+            <p class="text-base text-gray-300 leading-relaxed">가장 먼저, Python 공식 홈페이지에 접속하여 설치 파일을 다운로드해야 합니다. 브라우저를 열고 <a href="https://python.org" target="_blank" class="text-blue-400 hover:underline font-semibold">python.org</a> 로 이동하세요.<br><br>메인 화면의 'Downloads' 메뉴에서 최신 버전의 설치 파일을 클릭하여 다운로드합니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-shield-alt mr-2"></i>공식 홈페이지를 이용하는 이유</h4>
+                <p class="text-sm text-gray-400">공식 홈페이지는 바이러스나 악성 코드로부터 가장 안전하며, 안정적인 최신 버전을 제공합니다. 비공식 경로의 파일은 보안에 취약할 수 있으니 항상 공식 사이트를 이용하세요.</p>
+            </div>
+        </div>
+        <div class="image-content">
+            <img src="https://placehold.co/600x375/3a3a3a/ffffff?text=python.org+Downloads+Page" alt="파이썬 공식 홈페이지 다운로드 화면" class="step-image">
+            <p class="text-center text-sm text-gray-500 mt-3">python.org 홈페이지의 다운로드 버튼 강조 이미지</p>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 설치 | 1 / 4</span></div>
+</section>
+
+<!-- Slide 2 -->
+<section id="step2" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">개발 환경 설정</span> - <span class="python-yellow">Python 설치</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">2단계:</span> 설치 옵션 선택 (매우 중요)</h2>
+            <p class="text-base text-gray-300 leading-relaxed">다운로드한 설치 파일을 실행하면 설정 창이 나타납니다. 여기서 가장 중요한 단계는 설치 프로그램 창 하단에 있는 <span class="important-text">'Add python.exe to PATH'</span> 옵션을 체크하는 것입니다.<br><br>이 옵션을 반드시 체크한 후, 'Install Now'를 클릭하여 다음 단계로 진행하세요.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-route mr-2"></i>'PATH'에 추가란?</h4>
+                <p class="text-sm text-gray-400">운영체제가 'python' 명령어 실행 파일을 찾을 수 있도록 경로를 등록하는 과정입니다. 이 설정을 해야 터미널의 어느 위치에서든 python을 바로 실행할 수 있어 편리합니다.</p>
+            </div>
+        </div>
+        <div class="image-content">
+            <img src="https://placehold.co/600x375/3a3a3a/ffffff?text=Python+Installer+with+PATH+option" alt="파이썬 설치 프로그램의 PATH 설정 옵션 강조 화면" class="step-image">
+            <p class="text-center text-sm text-gray-500 mt-3">'Add python.exe to PATH' 체크박스를 강조한 이미지</p>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 설치 | 2 / 4</span></div>
+</section>
+
+<!-- Slide 3 -->
+<section id="step3" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">개발 환경 설정</span> - <span class="python-yellow">Python 설치</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">3단계:</span> 설치 진행 및 완료</h2>
+            <p class="text-base text-gray-300 leading-relaxed">'Install Now'를 클릭하면 설치가 자동으로 진행됩니다. 컴퓨터 사양에 따라 몇 분 정도 소요될 수 있습니다.<br><br>설치가 끝나면 <span class="font-semibold text-green-400">'Setup was successful'</span> 이라는 메시지가 나타납니다. 'Close' 버튼을 눌러 설치 프로그램을 닫습니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-info-circle mr-2"></i>경로 길이 제한 해제 (선택 사항)</h4>
+                <p class="text-sm text-gray-400">완료 화면에 'Disable path length limit' 버튼이 보일 수 있습니다. 이는 260자 이상의 긴 파일 경로를 사용할 수 있게 하는 설정으로, 클릭해두면 나중에 발생할 수 있는 문제를 예방할 수 있습니다.</p>
+            </div>
+        </div>
+        <div class="image-content">
+            <img src="https://placehold.co/600x375/3a3a3a/ffffff?text=Setup+was+successful" alt="파이썬 설치 성공 화면" class="step-image">
+            <p class="text-center text-sm text-gray-500 mt-3">설치 성공(Setup was successful) 메시지 화면</p>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 설치 | 3 / 4</span></div>
+</section>
+
+<!-- Slide 4 -->
+<section id="step4" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">개발 환경 설정</span> - <span class="python-yellow">Python 설치</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">4단계:</span> 터미널에서 설치 확인</h2>
+            <p class="text-base text-gray-300 leading-relaxed">이제 Python이 잘 설치되었는지 최종 확인할 차례입니다. 시작 메뉴에서 'cmd' 또는 'PowerShell'을 검색하여 터미널을 실행하세요.<br><br>터미널 창에 <code class="code-snippet">python --version</code> 을 입력하고 Enter를 누르면 설치된 버전이 표시됩니다. 이어서 <code class="code-snippet">pip --version</code> 도 확인합니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-check-double mr-2"></i>무엇을 확인한 건가요?</h4>
+                <p class="text-sm text-gray-400"><code class="code-snippet">python</code>은 프로그래밍 언어 자체를, <code class="code-snippet">pip</code>는 다른 개발자들이 만든 유용한 도구(패키지)를 설치하는 관리자입니다. 둘 다 정상적으로 확인되면 모든 준비가 끝난 것입니다.</p>
+            </div>
+        </div>
+        <div class="image-content">
+            <img src="https://placehold.co/600x375/3a3a3a/ffffff?text=Terminal+Verification+Commands" alt="터미널에서 python과 pip 버전 확인 명령어 실행 결과" class="step-image">
+            <p class="text-center text-sm text-gray-500 mt-3">터미널에 버전 확인 명령어를 입력하고 결과가 출력된 화면</p>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 설치 | 4 / 4</span></div>
+</section>
+
+<!-- 완료 슬라이드 추가 -->
+<section class="slide-container">
+    <div class="flex flex-col items-center justify-center h-full w-full text-center">
+        <div class="mb-8">
+            <i class="fas fa-check-circle text-7xl text-green-400 mb-4"></i>
+            <h1 class="text-5xl font-extrabold mb-4">
+                <span class="text-green-400">설치 완료!</span>
+            </h1>
+            <h2 class="text-2xl font-semibold python-yellow mb-2">Python 개발 환경이 준비되었습니다</h2>
+            <div class="w-32 h-1 bg-green-400 rounded mx-auto"></div>
+        </div>
+        
+        <div class="max-w-3xl">
+            <p class="text-lg text-gray-300 mb-6">축하합니다! Python이 성공적으로 설치되었습니다.<br>이제 프로그래밍을 시작할 수 있습니다.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                    <h3 class="text-xl font-semibold python-yellow mb-3">
+                        <i class="fas fa-code mr-2"></i>다음 단계
+                    </h3>
+                    <ul class="text-left text-gray-300 space-y-2">
+                        <li>• IDE 설치 (VS Code, PyCharm)</li>
+                        <li>• 첫 번째 Python 프로그램 작성</li>
+                        <li>• 패키지 관리자 pip 활용</li>
+                        <li>• 가상환경 설정 (Miniconda)</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                    <h3 class="text-xl font-semibold python-blue mb-3">
+                        <i class="fas fa-book mr-2"></i>추천 학습 자료
+                    </h3>
+                    <ul class="text-left text-gray-300 space-y-2">
+                        <li>• Python 공식 튜토리얼</li>
+                        <li>• 온라인 코딩 강의</li>
+                        <li>• 실습 프로젝트</li>
+                        <li>• 개발자 커뮤니티 참여</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm">
+        <i class="fab fa-python mr-2 text-python-blue text-lg"></i>
+        <span>Python 설치 | 완료</span>
+    </div>
+</section>
+
+<!-- SlideController JavaScript -->
+<script src="slide-controller.js"></script>
+
+
+</body>
+</html>

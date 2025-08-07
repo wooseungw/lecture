@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Miniconda 설치 및 가상환경 생성 가이드 (SlideController 적용)</title>
+
+<!-- 로컬 CSS 파일 -->
+<link href="css/tailwind.min.css" rel="stylesheet"/>
+<link href="css/fontawesome.min.css" rel="stylesheet"/>
+<link href="slide-controller.css" rel="stylesheet"/>
+<!-- SlideController CSS -->
+<style>
+/* ====================================
+   SlideController CSS Library v1.0
+   ==================================== */
+
+body.slide-mode {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.slide-container {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.5s ease-in-out;
+    box-sizing: border-box;
+}
+
+.slide-container.active {
+    opacity: 1;
+    transform: translateX(0);
+    z-index: 10;
+}
+
+.slide-container.prev {
+    transform: translateX(-100%);
+}
+
+.slide-container.next {
+    transform: translateX(100%);
+}
+
+/* 슬라이드 제어 UI */
+.slide-controls {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(45, 45, 45, 0.95);
+    padding: 15px 25px;
+    border-radius: 50px;
+    border: 1px solid #4a4a4a;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.control-btn {
+    background: none;
+    border: none;
+    color: #a0aec0;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    min-height: 36px;
+}
+
+.control-btn:hover {
+    color: #FFD43B;
+    background-color: rgba(255, 212, 59, 0.1);
+    transform: scale(1.1);
+}
+
+.control-btn:disabled {
+    color: #555;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.slide-indicator {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.indicator-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #555;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.indicator-dot:hover {
+    background-color: #888;
+    transform: scale(1.2);
+}
+
+.indicator-dot.active {
+    background-color: #FFD43B;
+    transform: scale(1.3);
+    box-shadow: 0 0 10px rgba(255, 212, 59, 0.5);
+}
+
+.slide-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    background-color: #FFD43B;
+    z-index: 1001;
+    transition: width 0.5s ease;
+    box-shadow: 0 0 10px rgba(255, 212, 59, 0.3);
+}
+
+.slide-number {
+    color: #a0aec0;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Consolas', 'Monaco', monospace;
+    min-width: 60px;
+    text-align: center;
+}
+
+.keyboard-guide {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background-color: rgba(45, 45, 45, 0.9);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #4a4a4a;
+    z-index: 100;
+    font-size: 12px;
+    color: #a0aec0;
+    backdrop-filter: blur(5px);
+    transition: opacity 0.3s ease;
+}
+
+.keyboard-guide.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.keyboard-guide h4 {
+    margin: 0 0 10px 0;
+    color: #FFD43B;
+    font-size: 13px;
+}
+
+.keyboard-guide div {
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.keyboard-guide kbd {
+    background-color: #252525;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    border: 1px solid #4a4a4a;
+    font-size: 11px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* 모바일 최적화 */
+@media (max-width: 768px) {
+    .slide-container {
+        padding: 2rem 1rem;
+    }
+    
+    .slide-controls {
+        bottom: 10px;
+        padding: 10px 20px;
+        gap: 15px;
+    }
+    
+    .control-btn {
+        font-size: 16px;
+        padding: 6px;
+        min-width: 32px;
+        min-height: 32px;
+    }
+    
+    .keyboard-guide {
+        display: none;
+    }
+}
+</style>
+
+<!-- 기존 Miniconda 가이드 스타일 -->
+<style>
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Segoe UI', 'Noto Sans KR', sans-serif; background-color: #1e1e1e; color: #ffffff; }
+        .python-blue { color: #306998; }
+        .python-yellow { color: #FFD43B; }
+        .content-wrapper { display: flex; align-items: center; gap: 2rem; }
+        .text-content { flex: 1; }
+        .image-content { flex: 1.1; }
+        .step-image { border: 2px solid #4a4a4a; border-radius: 0.75rem; box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+        .tip-box { background-color: #2d2d2d; border-left: 4px solid #FFD43B; padding: 1rem; margin-top: 1.25rem; border-radius: 0 8px 8px 0; }
+        .important-text { color: #ff8a8a; font-weight: bold; background-color: rgba(255, 138, 138, 0.1); padding: 2px 6px; border-radius: 4px;}
+        .info-text { color: #87ceeb; font-weight: bold; background-color: rgba(135, 206, 235, 0.1); padding: 2px 6px; border-radius: 4px;}
+        .code-block { background-color: #252525; padding: 1rem; border-radius: 8px; font-family: 'Consolas', monospace; }
+        .code-snippet { background-color: #252525; padding: 4px 8px; border-radius: 4px; font-family: 'Consolas', monospace; }
+        
+        /* 모바일 반응형 조정 */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            .text-content, .image-content {
+                flex: none;
+                width: 100%;
+            }
+            .step-image {
+                max-width: 100%;
+                height: auto;
+            }
+            .code-block {
+                font-size: 14px;
+                padding: 0.8rem;
+            }
+        }
+</style>
+</head>
+<body class="bg-gray-900">
+
+<!-- 제목 슬라이드 추가 -->
+<section class="slide-container">
+    <div class="flex flex-col items-center justify-center h-full w-full">
+        <div class="mb-8">
+            <i class="fas fa-cogs text-7xl python-blue mb-4"></i>
+            <h1 class="text-5xl font-extrabold mb-4">
+                <span class="python-blue">Miniconda</span> <span class="python-yellow">설치하기</span>
+            </h1>
+            <h2 class="text-2xl font-semibold python-yellow mb-2">가상환경 생성 및 관리 가이드</h2>
+            <div class="w-32 h-1 bg-yellow-400 rounded mx-auto"></div>
+        </div>
+        <p class="text-lg text-gray-300 mt-6 text-center">프로젝트별 독립된 개발환경을 구축하여<br>패키지 충돌 없이 안정적으로 개발할 수 있습니다.</p>
+        
+
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm">
+        <i class="fas fa-cogs mr-2 text-python-blue text-lg"></i>
+        <span>Miniconda 설치 | 시작</span>
+    </div>
+</section>
+
+<!-- Slide 1 -->
+<section class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Miniconda</span> <span class="python-yellow">설치 및 가상환경 생성</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">1단계:</span> Miniconda 다운로드</h2>
+            <p class="text-base text-gray-300 leading-relaxed">Miniconda는 프로젝트별 독립된 개발 환경을 구축하는 데 필수적인 도구입니다.<br><br><a href="https://www.anaconda.com/download/success" target="_blank" class="text-blue-400 hover:underline font-semibold">Anaconda 공식 홈페이지</a>에 접속하여 자신의 운영체제에 맞는 <strong>Miniconda Installers</strong>를 다운로드합니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-boxes mr-2"></i>Miniconda, 왜 사용하나요?</h4>
+                <p class="text-sm text-gray-400">프로젝트마다 필요한 라이브러리 버전이 다를 때, Miniconda는 독립된 '가상환경'을 만들어 충돌을 막아줍니다. 이를 통해 여러 프로젝트를 안정적으로 관리할 수 있습니다.</p>
+            </div>
+        </div>
+        <div class="image-content">
+            <img src="https://placehold.co/600x375/3a3a3a/ffffff?text=Miniconda+Download+Button" alt="미니콘다 다운로드 페이지" class="step-image">
+            <p class="text-center text-sm text-gray-500 mt-3">운영체제에 맞는 Miniconda 설치 파일 다운로드</p>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-cogs mr-2 text-python-blue text-lg"></i><span>Miniconda 설치 | 1 / 8</span></div>
+</section>
+
+<!-- Slide 2 -->
+<section class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Miniconda</span> <span class="python-yellow">설치 및 가상환경 생성</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">2단계:</span> 설치 및 사용자 범위 선택</h2>
+            <p class="text-base text-gray-300 leading-relaxed">다운로드한 설치 파일을 실행하고 라이선스에 동의합니다.<br><br>설치 유형을 선택하는 화면에서 <span class="info-text">'All Users (requires admin privileges)'</span>를 선택합니다. 이 옵션은 PC의 모든 사용자가 Miniconda를 사용할 수 있게 합니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-user-shield mr-2"></i>관리자 권한으로 실행</h4>
+                <p class="text-sm text-gray-400">'All Users' 옵션을 선택하려면 설치 파일 자체를 '관리자 권한으로 실행'하는 것이 안정적입니다. (Windows 해당) 이는 시스템 폴더에 파일을 쓰는 데 필요한 권한을 부여합니다.</p>
+            </div>
+        </div>
+        <div class="image-content">
+            <img src="https://placehold.co/600x375/3a3a3a/ffffff?text=Miniconda+Installation+Type" alt="미니콘다 설치 유형 선택 화면" class="step-image">
+            <p class="text-center text-sm text-gray-500 mt-3">'All Users' 옵션을 선택하는 화면</p>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-cogs mr-2 text-python-blue text-lg"></i><span>Miniconda 설치 | 2 / 8</span></div>
+</section>
+
+<!-- Slide 3 -->
+<section class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Miniconda</span> <span class="python-yellow">설치 및 가상환경 생성</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">3단계:</span> PATH 환경변수 설정</h2>
+            <p class="text-base text-gray-300 leading-relaxed">고급 설치 옵션 창에서 <span class="important-text">'Add Miniconda3 to the system PATH'</span> 옵션을 체크합니다.<br><br>이 설정은 일반 터미널(cmd, PowerShell)에서도 <code class="code-snippet">conda</code> 명령어를 바로 사용할 수 있게 해줍니다. 'Install' 버튼을 눌러 설치를 시작합니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-exclamation-triangle mr-2"></i>PATH 설정 시 주의사항</h4>
+                <p class="text-sm text-gray-400">이 옵션은 편리하지만, 시스템에 다른 Python 버전이 이미 설치된 경우 충돌을 일으킬 수 있습니다. Conda 사용이 처음이라면 체크하는 것이 편리하며, 문제 발생 시에는 재설치 시 이 옵션을 해제하고 'Anaconda Prompt'를 사용하는 것이 좋습니다.</p>
+            </div>
+        </div>
+        <div class="image-content">
+            <img src="https://placehold.co/600x375/3a3a3a/ffffff?text=Miniconda+Advanced+Options+(PATH+Checked)" alt="미니콘다 고급 설치 옵션 화면" class="step-image">
+            <p class="text-center text-sm text-gray-500 mt-3">PATH 환경변수 추가 옵션을 체크한 화면</p>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-cogs mr-2 text-python-blue text-lg"></i><span>Miniconda 설치 | 3 / 8</span></div>
+</section>
+
+<!-- Slide 4 -->
+<section class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Miniconda</span> <span class="python-yellow">설치 및 가상환경 생성</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">4단계:</span> Conda 환경 초기화</h2>
+            <p class="text-base text-gray-300 leading-relaxed">설치 후, 터미널에서 <code class="code-snippet">conda</code> 명령어를 사용하기 위한 초기화 작업을 진행합니다.<br><br>Windows는 <strong>Anaconda Prompt</strong>, Mac은 <strong>터미널</strong>을 실행하고 아래 명령어를 입력하세요.</p>
+            <div class="code-block mt-4">
+                <span class="text-green-400">conda init</span>
+            </div>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-magic mr-2"></i><code class="code-snippet">conda init</code>은 무엇을 하나요?</h4>
+                <p class="text-sm text-gray-400">사용자가 주로 사용하는 셸(bash, zsh, powershell 등)의 설정 파일에 conda를 활성화하는 스크립트를 자동으로 추가합니다. 이 작업을 통해 터미널이 시작될 때마다 conda를 바로 사용할 수 있게 됩니다.</p>
+            </div>
+        </div>
+        <div class="image-content">
+            <img src="https://placehold.co/600x375/3a3a3a/ffffff?text=conda+init+command" alt="conda init 명령어 실행 화면" class="step-image">
+            <p class="text-center text-sm text-gray-500 mt-3">터미널에서 <code class="code-snippet">conda init</code>을 실행한 모습</p>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-cogs mr-2 text-python-blue text-lg"></i><span>Miniconda 설치 | 4 / 8</span></div>
+</section>
+
+<!-- Slide 5 -->
+<section class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Miniconda</span> <span class="python-yellow">설치 및 가상환경 생성</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">5단계:</span> 가상환경 생성</h2>
+            <p class="text-base text-gray-300 leading-relaxed"><code class="code-snippet">conda create</code> 명령어를 사용하여 새로운 가상환경을 만듭니다. 이 환경은 다른 프로젝트와 완전히 분리된 공간이 됩니다.</p>
+            <div class="code-block mt-4">
+                <span class="text-green-400">conda create -n</span> <span class="text-yellow-400">[가상환경이름]</span> <span class="text-green-400">python=</span><span class="text-yellow-400">[파이썬버전]</span>
+                <hr class="border-gray-600 my-2">
+                <span class="text-gray-400"># 예시: action 이라는 이름, python 3.12 버전</span><br>
+                <span class="text-green-400">conda create -n</span> <span class="text-yellow-400">action</span> <span class="text-green-400">python=</span><span class="text-yellow-400">3.12</span>
+            </div>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-check mr-2"></i>Proceed? [y]/n</h4>
+                <p class="text-sm text-gray-400">생성 과정에서 설치될 패키지 목록을 보여주며 진행 여부를 묻습니다. <code class="code-snippet">y</code>를 입력하고 Enter를 눌러 계속 진행합니다.</p>
+            </div>
+        </div>
+        <div class="image-content">
+            <img src="https://placehold.co/600x375/3a3a3a/ffffff?text=conda+create+command" alt="conda create 명령어 실행 화면" class="step-image">
+            <p class="text-center text-sm text-gray-500 mt-3">가상환경 생성 명령어 및 확인 프롬프트</p>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-cogs mr-2 text-python-blue text-lg"></i><span>Miniconda 설치 | 5 / 8</span></div>
+</section>
+
+<!-- Slide 6 -->
+<section class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Miniconda</span> <span class="python-yellow">설치 및 가상환경 생성</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">6단계:</span> 가상환경 활성화</h2>
+            <p class="text-base text-gray-300 leading-relaxed">생성한 가상환경에 진입하여 작업을 시작합니다. <code class="code-snippet">conda activate</code> 명령어를 사용합니다.</p>
+            <div class="code-block mt-4">
+                <span class="text-green-400">conda activate</span> <span class="text-yellow-400">[가상환경이름]</span>
+                <hr class="border-gray-600 my-2">
+                <span class="text-gray-400"># 예시: action 가상환경 활성화</span><br>
+                <span class="text-green-400">conda activate</span> <span class="text-yellow-400">action</span>
+            </div>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-toggle-on mr-2"></i>활성화 확인 방법</h4>
+                <p class="text-sm text-gray-400">명령어가 성공적으로 실행되면 터미널 프롬프트 맨 앞에 <code class="code-snippet">(base)</code> 대신 <code class="code-snippet">(action)</code>과 같이 현재 활성화된 가상환경의 이름이 표시됩니다.</p>
+            </div>
+        </div>
+        <div class="image-content">
+            <img src="https://placehold.co/600x375/3a3a3a/ffffff?text=conda+activate+command" alt="conda activate 명령어 실행 화면" class="step-image">
+            <p class="text-center text-sm text-gray-500 mt-3">프롬프트 앞에 <code class="code-snippet">(action)</code>이 표시된 모습</p>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-cogs mr-2 text-python-blue text-lg"></i><span>Miniconda 설치 | 6 / 8</span></div>
+</section>
+
+<!-- Slide 7 -->
+<section class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Miniconda</span> <span class="python-yellow">설치 및 가상환경 생성</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">7단계:</span> 패키지 설치</h2>
+            <p class="text-base text-gray-300 leading-relaxed">가상환경이 활성화된 상태에서 프로젝트에 필요한 라이브러리(패키지)를 <code class="code-snippet">pip</code> 또는 <code class="code-snippet">conda</code> 명령어로 설치합니다.</p>
+            <div class="code-block mt-4">
+                <span class="text-gray-400"># 예시: OpenCV, Jupyter Notebook 패키지 설치</span><br>
+                <span class="text-green-400">pip install</span> <span class="text-yellow-400">opencv-python</span><br>
+                <span class="text-green-400">conda install</span> <span class="text-yellow-400">jupyter</span>
+                <hr class="border-gray-600 my-2">
+                <span class="text-gray-400"># 설치된 패키지 목록 확인</span><br>
+                <span class="text-green-400">pip list</span>
+            </div>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-question-circle mr-2"></i>pip vs conda install</h4>
+                <p class="text-sm text-gray-400">일반적인 Python 패키지는 <code class="code-snippet">pip</code>로 설치하고, 데이터 과학 관련 패키지나 의존성 관리가 중요한 패키지는 <code class="code-snippet">conda</code>로 설치하는 것을 권장합니다. 둘을 혼용하여 사용할 수 있습니다.</p>
+            </div>
+        </div>
+        <div class="image-content">
+            <img src="https://placehold.co/600x375/3a3a3a/ffffff?text=pip+install+command" alt="pip install 명령어 실행 화면" class="step-image">
+            <p class="text-center text-sm text-gray-500 mt-3"><code class="code-snippet">pip install</code> 명령어로 패키지를 설치하는 모습</p>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-cogs mr-2 text-python-blue text-lg"></i><span>Miniconda 설치 | 7 / 8</span></div>
+</section>
+
+<!-- Slide 8 -->
+<section class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Miniconda</span> <span class="python-yellow">설치 및 가상환경 생성</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">8단계:</span> VSCode 인터프리터 설정</h2>
+            <p class="text-base text-gray-300 leading-relaxed">VSCode가 우리가 만든 가상환경을 사용하도록 설정합니다.<br>1. VSCode에서 <code class="code-snippet">Ctrl + Shift + P</code>를 눌러 명령 팔레트를 엽니다.<br>2. <code class="code-snippet">Python: Select Interpreter</code>를 검색하여 선택합니다.<br>3. 목록에서 방금 생성한 가상환경(예: 'action')을 선택합니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-link mr-2"></i>연동 확인</h4>
+                <p class="text-sm text-gray-400">설정이 완료되면 VSCode 창의 오른쪽 하단에 선택한 가상환경의 이름과 Python 버전이 표시됩니다. 이제 해당 환경에서 코드를 실행하고 디버깅할 수 있습니다.</p>
+            </div>
+        </div>
+        <div class="image-content">
+            <img src="https://placehold.co/600x375/3a3a3a/ffffff?text=VSCode+Select+Interpreter" alt="VSCode 인터프리터 선택 화면" class="step-image">
+            <p class="text-center text-sm text-gray-500 mt-3">명령 팔레트에서 인터프리터를 선택하는 모습</p>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-cogs mr-2 text-python-blue text-lg"></i><span>Miniconda 설치 | 8 / 8</span></div>
+</section>
+
+<!-- 완료 슬라이드 추가 -->
+<section class="slide-container">
+    <div class="flex flex-col items-center justify-center h-full w-full text-center">
+        <div class="mb-8">
+            <i class="fas fa-check-circle text-7xl text-green-400 mb-4"></i>
+            <h1 class="text-5xl font-extrabold mb-4">
+                <span class="text-green-400">설치 완료!</span>
+            </h1>
+            <h2 class="text-2xl font-semibold python-yellow mb-2">Miniconda 가상환경이 준비되었습니다</h2>
+            <div class="w-32 h-1 bg-green-400 rounded mx-auto"></div>
+        </div>
+        
+        <div class="max-w-4xl">
+            <p class="text-lg text-gray-300 mb-6">축하합니다! 이제 프로젝트별로 독립된 개발환경을 만들고 관리할 수 있습니다.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                    <h3 class="text-xl font-semibold python-yellow mb-3">
+                        <i class="fas fa-terminal mr-2"></i>주요 명령어 정리
+                    </h3>
+                    <div class="text-left text-gray-300 space-y-2 text-sm">
+                        <div><code class="code-snippet">conda create -n 환경명 python=3.12</code></div>
+                        <div><code class="code-snippet">conda activate 환경명</code></div>
+                        <div><code class="code-snippet">conda deactivate</code></div>
+                        <div><code class="code-snippet">conda env list</code></div>
+                        <div><code class="code-snippet">pip install 패키지명</code></div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                    <h3 class="text-xl font-semibold python-blue mb-3">
+                        <i class="fas fa-lightbulb mr-2"></i>활용 팁
+                    </h3>
+                    <ul class="text-left text-gray-300 space-y-2 text-sm">
+                        <li>• 프로젝트마다 별도 환경 생성</li>
+                        <li>• requirements.txt로 의존성 관리</li>
+                        <li>• 환경 이름은 프로젝트명으로</li>
+                        <li>• 주기적으로 불필요한 환경 정리</li>
+                        <li>• VSCode 인터프리터 설정 확인</li>
+                    </ul>
+                </div>
+            </div>
+            
+
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm">
+        <i class="fas fa-cogs mr-2 text-python-blue text-lg"></i>
+        <span>Miniconda 설치 | 완료</span>
+    </div>
+</section>
+
+<!-- SlideController JavaScript 외부 파일 -->
+<script src="slide-controller.js"></script>
+
+<script>
+// 페이지 로드 후 SlideController 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    window.slideController = new SlideController({
+        slideSelector: '.slide-container',
+        showKeyboardGuide: true,
+        enableSwipe: true,
+        enableKeyboard: true
+    });
+});
+</script>
+
+</body>
+</html>

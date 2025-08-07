@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>파이썬 기초 문법 강의 자료 (통합본)</title>
+<!-- 로컬 CSS 파일 -->
+<link href="css/tailwind.min.css" rel="stylesheet"/>
+<link href="css/fontawesome.min.css" rel="stylesheet"/>
+<link href="slide-controller.css" rel="stylesheet"/>
+<style>
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Segoe UI', 'Noto Sans KR', sans-serif; background-color: #1e1e1e; color: #ffffff; }
+        .python-blue { color: #306998; }
+        .python-yellow { color: #FFD43B; }
+        
+        /* SlideController와 호환되는 스타일 재정의 */
+        .slide-container { 
+            width: 100vw !important; 
+            height: 100vh !important; 
+            margin: 0 !important; 
+            position: absolute !important; 
+            top: 0 !important;
+            left: 0 !important;
+            display: flex !important; 
+            flex-direction: column !important; 
+            justify-content: center !important; 
+            padding: 4rem !important; 
+            border-bottom: none !important;
+            opacity: 0 !important;
+            transform: translateX(100%) !important;
+            transition: all 0.5s ease-in-out !important;
+            box-sizing: border-box !important;
+        }
+        
+        .slide-container.active {
+            opacity: 1 !important;
+            transform: translateX(0) !important;
+            z-index: 10 !important;
+        }
+        
+        .content-wrapper { display: flex; align-items: center; gap: 2rem; }
+        .text-content { flex: 1; }
+        .code-content { flex: 1.1; background-color: #252525; padding: 1.5rem; border-radius: 8px; font-family: 'Consolas', 'D2Coding', monospace; overflow-x: auto; max-height: 500px; }
+        .tip-box { background-color: #2d2d2d; border-left: 4px solid #FFD43B; padding: 1rem; margin-top: 1.25rem; border-radius: 0 8px 8px 0; }
+        
+        /* TOC를 슬라이드 모드에서 숨김 */
+        .toc { display: none; }
+        
+        .code-comment { color: #6A9955; }
+        .code-keyword { color: #569cd6; }
+        .code-string { color: #ce9178; }
+        .code-number { color: #b5cea8; }
+        .code-function { color: #DCDCAA; }
+</style>
+</head>
+<body class="bg-gray-900">
+
+<!-- Table of Contents -->
+<div class="toc">
+    <h4>파이썬 기초 문법</h4>
+    <a href="#slide1">1. 변수 선언과 자료형</a>
+    <a href="#slide2">2. 변수 활용</a>
+    <a href="#slide3">3. 형변환</a>
+    <a href="#slide4">4. 산술/비교 연산자</a>
+    <a href="#slide5">5. 논리/할당 연산자</a>
+    <a href="#slide6">6. if-else 조건문</a>
+    <a href="#slide7">7. 중첩 조건문</a>
+    <a href="#slide8">8. for 반복문</a>
+    <a href="#slide9">9. while 반복문</a>
+    <a href="#slide10">10. 리스트 생성과 접근</a>
+    <a href="#slide11">11. 리스트 조작과 정렬</a>
+    <a href="#slide12">12. 딕셔너리 생성과 활용</a>
+    <a href="#slide13">13. 딕셔너리 반복과 중첩</a>
+    <a href="#slide14">14. 튜플 생성과 언패킹</a>
+    <a href="#slide15">15. 튜플의 활용</a>
+    <a href="#slide16" style="border-top: 1px solid #4a4a4a; padding-top: 0.5rem; margin-top: 0.5rem;">16. 함수 정의와 호출</a>
+    <a href="#slide17">17. 클래스 기본</a>
+    <a href="#slide18">18. 클래스 활용</a>
+    <a href="#slide19">19. 경로 다루기</a>
+    <a href="#slide20">20. 파일 읽고 쓰기</a>
+    <a href="#slide21">21. 파일 입출력 활용</a>
+    <a href="#slide22">22. 파일 시스템 탐색</a>
+</div>
+
+<!-- Slide 1: 변수 선언과 자료형 -->
+<section id="slide1" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 기초</span> - <span class="python-yellow">변수와 자료형</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">1.</span> 변수 선언과 기본 자료형</h2>
+            <p class="text-base text-gray-300 leading-relaxed">변수는 데이터를 저장하는 공간입니다. 파이썬은 변수 선언 시 자료형을 명시하지 않으며, 할당되는 값에 따라 동적으로 타입이 결정됩니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-lightbulb mr-2"></i>주요 기본 자료형</h4>
+                <ul class="text-sm text-gray-400 list-disc pl-5">
+                    <li><b class="text-green-400">str</b>: 문자열 (예: "안녕하세요")</li>
+                    <li><b class="text-green-400">int</b>: 정수 (예: 10, -5)</li>
+                    <li><b class="text-green-400">float</b>: 실수 (예: 3.14, -0.5)</li>
+                    <li><b class="text-green-400">bool</b>: 불리언 (True 또는 False)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-comment"># 1. 기본 변수 선언 및 값 할당</span>
+name = <span class="code-string">"김철수"</span>  <span class="code-comment"># 문자열(str) 변수</span>
+age = <span class="code-number">25</span>        <span class="code-comment"># 정수(int) 변수</span>
+height = <span class="code-number">175.5</span>   <span class="code-comment"># 실수(float) 변수</span>
+is_student = <span class="code-keyword">True</span>  <span class="code-comment"># 불리언(bool) 변수</span>
+
+<span class="code-function">print</span>(f<span class="code-string">"이름: {name}"</span>)
+<span class="code-function">print</span>(f<span class="code-string">"나이: {age}"</span>)
+
+<span class="code-comment"># 2. 변수 타입 확인</span>
+<span class="code-function">print</span>(f<span class="code-string">"name의 타입: {type(name)}"</span>)
+<span class="code-function">print</span>(f<span class="code-string">"age의 타입: {type(age)}"</span>)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 1 / 22</span></div>
+</section>
+
+<!-- Slide 2: 변수 활용 -->
+<section id="slide2" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 기초</span> - <span class="python-yellow">변수와 자료형</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">2.</span> 변수의 활용</h2>
+            <p class="text-base text-gray-300 leading-relaxed">변수는 값을 변경할 수 있으며, 여러 변수에 동시에 값을 할당하거나 변수끼리 값을 교환하는 등 다양하게 활용됩니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-pencil-alt mr-2"></i>변수 이름 규칙</h4>
+                <p class="text-sm text-gray-400">변수명은 보통 소문자로 시작하며, 여러 단어로 이루어진 경우 단어 사이에 언더스코어(_)를 사용합니다. (예: `student_name`)</p>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-comment"># 3. 변수 값 변경</span>
+age = <span class="code-number">26</span>
+<span class="code-function">print</span>(f<span class="code-string">"변경 후 나이: {age}"</span>)
+
+<span class="code-comment"># 4. 여러 변수에 동시 할당</span>
+x, y, z = <span class="code-number">10</span>, <span class="code-number">20</span>, <span class="code-number">30</span>
+<span class="code-function">print</span>(f<span class="code-string">"x={x}, y={y}, z={z}"</span>)
+
+<span class="code-comment"># 9. 변수 교환 (Swapping)</span>
+<span class="code-function">print</span>(f<span class="code-string">"교환 전: x={x}, y={y}"</span>)
+x, y = y, x <span class="code-comment"># 파이썬의 강력한 기능</span>
+<span class="code-function">print</span>(f<span class="code-string">"교환 후: x={x}, y={y}"</span>)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 2 / 22</span></div>
+</section>
+
+<!-- Slide 3: 형변환 -->
+<section id="slide3" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 기초</span> - <span class="python-yellow">형변환(Type Casting)</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">3.</span> 자료형 변환</h2>
+            <p class="text-base text-gray-300 leading-relaxed">데이터의 자료형을 다른 자료형으로 바꾸는 것을 '형변환'이라고 합니다. `str()`, `int()`, `float()`, `bool()` 등의 내장 함수를 사용합니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-exchange-alt mr-2"></i>형변환이 필요한 순간</h4>
+                <p class="text-sm text-gray-400">사용자로부터 입력받은 값은 항상 문자열(`str`)입니다. 이를 숫자로 계산하려면 반드시 `int()`나 `float()`로 변환해야 합니다.</p>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-comment"># 6. 실생활 예제 - 나이 계산</span>
+birth_year_str = <span class="code-string">"1998"</span> <span class="code-comment"># input()으로 받은 값</span>
+current_year = <span class="code-number">2024</span>
+
+<span class="code-comment"># 문자열을 정수로 변환</span>
+birth_year = <span class="code-function">int</span>(birth_year_str)
+age = current_year - birth_year
+
+<span class="code-function">print</span>(f<span class="code-string">"입력값: '{birth_year_str}' ({type(birth_year_str)})"</span>)
+<span class="code-function">print</span>(f<span class="code-string">"변환값: {birth_year} ({type(birth_year)})"</span>)
+<span class="code-function">print</span>(f<span class="code-string">"현재 나이: {age}살"</span>)
+
+<span class="code-comment"># 숫자 -> 문자열 변환</span>
+score = <span class="code-number">85</span>
+message = <span class="code-string">"당신의 점수는 "</span> + <span class="code-function">str</span>(score) + <span class="code-string">"점 입니다."</span>
+<span class="code-function">print</span>(message)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 3 / 22</span></div>
+</section>
+
+<!-- Slide 4: 산술/비교 연산자 -->
+<section id="slide4" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 기초</span> - <span class="python-yellow">연산자(Operators)</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">4.</span> 산술 및 비교 연산자</h2>
+            <p class="text-base text-gray-300 leading-relaxed"><b>산술 연산자</b>는 기본적인 사칙연산을 수행하며, <b>비교 연산자</b>는 두 값의 크기를 비교하여 `True` 또는 `False`를 반환합니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-calculator mr-2"></i>주요 산술 연산자</h4>
+                <ul class="text-sm text-gray-400 list-disc pl-5">
+                    <li>`//` : 나눗셈의 몫</li>
+                    <li>`%` : 나눗셈의 나머지</li>
+                    <li>`**` : 거듭제곱</li>
+                </ul>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-comment"># 1. 산술 연산자</span>
+a = <span class="code-number">15</span>
+b = <span class="code-number">4</span>
+<span class="code-function">print</span>(f<span class="code-string">"{a} // {b} = {a // b}"</span>)  <span class="code-comment"># 몫</span>
+<span class="code-function">print</span>(f<span class="code-string">"{a} % {b} = {a % b}"</span>)   <span class="code-comment"># 나머지</span>
+<span class="code-function">print</span>(f<span class="code-string">"{a} ** {b} = {a ** b}"</span>) <span class="code-comment"># 15의 4제곱</span>
+
+<span class="code-comment"># 2. 비교 연산자</span>
+x = <span class="code-number">10</span>
+y = <span class="code-number">20</span>
+<span class="code-function">print</span>(f<span class="code-string">"{x} == {y}: {x == y}"</span>) <span class="code-comment"># 같음</span>
+<span class="code-function">print</span>(f<span class="code-string">"{x} != {y}: {x != y}"</span>) <span class="code-comment"># 다름</span>
+<span class="code-function">print</span>(f<span class="code-string">"{x} < {y}: {x < y}"</span>)   <span class="code-comment"># 작음</span>
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 4 / 22</span></div>
+</section>
+
+<!-- Slide 5: 논리/할당 연산자 -->
+<section id="slide5" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 기초</span> - <span class="python-yellow">연산자(Operators)</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">5.</span> 논리 및 할당 연산자</h2>
+            <p class="text-base text-gray-300 leading-relaxed"><b>논리 연산자</b>는 여러 조건을 조합하거나 반전시킬 때 사용합니다. <b>할당 연산자</b>는 변수에 값을 할당하거나 연산 결과를 누적시킬 때 사용됩니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-check-double mr-2"></i>논리 연산자 종류</h4>
+                <ul class="text-sm text-gray-400 list-disc pl-5">
+                    <li>`and`: 두 조건이 모두 참일 때 True</li>
+                    <li>`or`: 두 조건 중 하나라도 참일 때 True</li>
+                    <li>`not`: 조건의 결과를 반전 (True -> False)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-comment"># 3. 논리 연산자</span>
+age = <span class="code-number">25</span>
+has_license = <span class="code-keyword">True</span>
+<span class="code-function">print</span>(f<span class="code-string">"운전 가능: {age >= 18 and has_license}"</span>)
+
+<span class="code-comment"># 4. 할당 연산자</span>
+score = <span class="code-number">80</span>
+<span class="code-function">print</span>(f<span class="code-string">"초기 점수: {score}"</span>)
+score += <span class="code-number">10</span>  <span class="code-comment"># score = score + 10</span>
+<span class="code-function">print</span>(f<span class="code-string">"10점 추가 후: {score}"</span>)
+score -= <span class="code-number">5</span>   <span class="code-comment"># score = score - 5</span>
+<span class="code-function">print</span>(f<span class="code-string">"5점 감점 후: {score}"</span>)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 5 / 22</span></div>
+</section>
+
+<!-- Slide 6: if-else 조건문 -->
+<section id="slide6" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 기초</span> - <span class="python-yellow">조건문</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">6.</span> if-else 조건문</h2>
+            <p class="text-base text-gray-300 leading-relaxed">`if`문은 특정 조건이 참(True)일 때만 코드 블록을 실행합니다. `else`를 사용하면 조건이 거짓(False)일 때 실행할 코드를 지정할 수 있습니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-sitemap mr-2"></i>들여쓰기의 중요성</h4>
+                <p class="text-sm text-gray-400">파이썬은 중괄호 `{}` 대신 들여쓰기(indentation)로 코드의 종속 관계를 구분합니다. `if`나 `else`에 속한 코드는 반드시 4칸(또는 탭 1개) 들여써야 합니다.</p>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-comment"># 1. 기본 if 문</span>
+age = <span class="code-number">20</span>
+<span class="code-keyword">if</span> age >= <span class="code-number">19</span>:
+    <span class="code-function">print</span>(f<span class="code-string">"나이: {age}세, 성인입니다."</span>)
+
+<span class="code-comment"># 2. if-else 문</span>
+score = <span class="code-number">85</span>
+<span class="code-keyword">if</span> score >= <span class="code-number">60</span>:
+    <span class="code-function">print</span>(f<span class="code-string">"점수: {score}점, 합격입니다!"</span>)
+<span class="code-keyword">else</span>:
+    <span class="code-function">print</span>(f<span class="code-string">"점수: {score}점, 불합격입니다."</span>)
+
+<span class="code-comment"># 6. 짝수/홀수 판별</span>
+number = <span class="code-number">15</span>
+<span class="code-keyword">if</span> number % <span class="code-number">2</span> == <span class="code-number">0</span>:
+    <span class="code-function">print</span>(f<span class="code-string">"{number}는 짝수입니다."</span>)
+<span class="code-keyword">else</span>:
+    <span class="code-function">print</span>(f<span class="code-string">"{number}는 홀수입니다."</span>)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 6 / 22</span></div>
+</section>
+
+<!-- Slide 7: 중첩 조건문 -->
+<section id="slide7" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 기초</span> - <span class="python-yellow">조건문</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">7.</span> 중첩 조건문과 elif</h2>
+            <p class="text-base text-gray-300 leading-relaxed">조건문 안에 또 다른 조건문을 넣어 더 복잡한 조건을 처리할 수 있습니다. 여러 조건을 순차적으로 검사할 때는 `elif` (else if)를 사용합니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-layer-group mr-2"></i>if, elif, else의 흐름</h4>
+                <p class="text-sm text-gray-400">`if` 조건부터 순서대로 확인하고, 참인 조건을 만나면 해당 코드 블록만 실행한 뒤 전체 조건문을 빠져나옵니다. 모든 `if`와 `elif`가 거짓일 때만 `else`가 실행됩니다.</p>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-comment"># 로그인 로직 (중첩 if)</span>
+CORRECT_ID = <span class="code-string">"python_user"</span>
+CORRECT_PW = <span class="code-string">"12345"</span>
+
+user_id = <span class="code-function">input</span>(<span class="code-string">"아이디: "</span>)
+<span class="code-keyword">if</span> user_id == CORRECT_ID:
+    user_pw = <span class="code-function">input</span>(<span class="code-string">"비밀번호: "</span>)
+    <span class="code-keyword">if</span> user_pw == CORRECT_PW:
+        <span class="code-function">print</span>(<span class="code-string">"로그인 성공!"</span>)
+    <span class="code-keyword">else</span>:
+        <span class="code-function">print</span>(<span class="code-string">"비밀번호가 틀렸습니다."</span>)
+<span class="code-keyword">else</span>:
+    <span class="code-function">print</span>(<span class="code-string">"존재하지 않는 아이디입니다."</span>)
+
+<span class="code-comment"># 학점 계산 (elif)</span>
+score = <span class="code-number">85</span>
+<span class="code-keyword">if</span> score >= <span class="code-number">90</span>:
+    grade = <span class="code-string">"A"</span>
+<span class="code-keyword">elif</span> score >= <span class="code-number">80</span>:
+    grade = <span class="code-string">"B"</span>
+<span class="code-keyword">elif</span> score >= <span class="code-number">70</span>:
+    grade = <span class="code-string">"C"</span>
+<span class="code-keyword">else</span>:
+    grade = <span class="code-string">"F"</span>
+<span class="code-function">print</span>(f<span class="code-string">"학점: {grade}"</span>)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 7 / 22</span></div>
+</section>
+
+<!-- Slide 8: for 반복문 -->
+<section id="slide8" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 기초</span> - <span class="python-yellow">반복문</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">8.</span> for 반복문</h2>
+            <p class="text-base text-gray-300 leading-relaxed">`for`문은 정해진 횟수만큼 또는 리스트, 문자열 등 순회 가능한(iterable) 객체의 모든 요소를 차례대로 방문하며 코드를 반복 실행합니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-redo-alt mr-2"></i>`range()` 함수</h4>
+                <p class="text-sm text-gray-400">`range(start, stop)`는 `start`부터 `stop-1`까지의 숫자 시퀀스를 생성합니다. `for`문과 함께 사용하여 특정 횟수만큼 반복하는 데 매우 유용합니다.</p>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-comment"># 구구단 출력 예제</span>
+dan = <span class="code-number">7</span>
+<span class="code-keyword">if</span> <span class="code-number">2</span> <= dan <= <span class="code-number">9</span>:
+    <span class="code-function">print</span>(f<span class="code-string">"--- {dan}단 ---"</span>)
+    <span class="code-comment"># for 반복문: 1부터 9까지 순회</span>
+    <span class="code-keyword">for</span> i <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">1</span>, <span class="code-number">10</span>):
+        <span class="code-function">print</span>(f<span class="code-string">"{dan} x {i} = {dan * i}"</span>)
+<span class="code-keyword">else</span>:
+    <span class="code-function">print</span>(<span class="code-string">"2~9 사이의 숫자만 입력해주세요."</span>)
+
+<span class="code-comment"># 리스트 순회</span>
+fruits = [<span class="code-string">"사과"</span>, <span class="code-string">"바나나"</span>, <span class="code-string">"오렌지"</span>]
+<span class="code-keyword">for</span> fruit <span class="code-keyword">in</span> fruits:
+    <span class="code-function">print</span>(fruit)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 8 / 22</span></div>
+</section>
+
+<!-- Slide 9: while 반복문 -->
+<section id="slide9" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 기초</span> - <span class="python-yellow">반복문</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">9.</span> while 반복문</h2>
+            <p class="text-base text-gray-300 leading-relaxed">`while`문은 주어진 조건이 참(True)인 동안 코드를 계속해서 반복 실행합니다. 주로 반복 횟수가 정해지지 않았을 때 사용됩니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-infinity mr-2"></i>무한 루프와 `break`</h4>
+                <p class="text-sm text-gray-400">`while True:`는 의도적인 무한 루프를 만듭니다. 루프 내부에서 특정 조건을 만족했을 때 `break`를 사용하여 반복을 강제로 종료해야 합니다.</p>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-comment"># 숫자 맞추기 게임</span>
+<span class="code-keyword">import</span> random
+secret_number = random.randint(<span class="code-number">1</span>, <span class="code-number">100</span>)
+attempts = <span class="code-number">0</span>
+
+<span class="code-keyword">while</span> <span class="code-keyword">True</span>:
+    guess = <span class="code-function">int</span>(<span class="code-function">input</span>(<span class="code-string">"숫자를 맞춰보세요: "</span>))
+    attempts += <span class="code-number">1</span>
+
+    <span class="code-keyword">if</span> guess < secret_number:
+        <span class="code-function">print</span>(<span class="code-string">"더 큰 숫자입니다!"</span>)
+    <span class="code-keyword">elif</span> guess > secret_number:
+        <span class="code-function">print</span>(<span class="code-string">"더 작은 숫자입니다!"</span>)
+    <span class="code-keyword">else</span>:
+        <span class="code-function">print</span>(f<span class="code-string">"정답! {attempts}번 만에 맞췄습니다."</span>)
+        <span class="code-keyword">break</span> <span class="code-comment"># 루프 탈출</span>
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 9 / 22</span></div>
+</section>
+
+<!-- Slide 10: 리스트 생성과 접근 -->
+<section id="slide10" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 기초</span> - <span class="python-yellow">리스트(List)</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">10.</span> 리스트 생성과 요소 접근</h2>
+            <p class="text-base text-gray-300 leading-relaxed">리스트는 여러 개의 데이터를 순서대로 저장하는 자료구조입니다. 대괄호 `[]`를 사용하여 생성하며, 각 요소는 쉼표로 구분합니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-list-ol mr-2"></i>인덱스(Index)</h4>
+                <p class="text-sm text-gray-400">리스트의 각 요소는 0부터 시작하는 고유한 번호(인덱스)를 가집니다. 인덱스를 사용하여 특정 위치의 요소에 접근할 수 있습니다. 음수 인덱스는 뒤에서부터 접근합니다. (예: `-1`은 마지막 요소)</p>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-comment"># 1. 리스트 생성</span>
+fruits = [<span class="code-string">"사과"</span>, <span class="code-string">"바나나"</span>, <span class="code-string">"오렌지"</span>]
+numbers = [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">4</span>, <span class="code-number">5</span>]
+mixed = [<span class="code-string">"안녕"</span>, <span class="code-number">123</span>, <span class="code-keyword">True</span>]
+
+<span class="code-comment"># 2. 리스트 요소 접근 (인덱스)</span>
+<span class="code-function">print</span>(f<span class="code-string">"첫 번째 과일: {fruits[0]}"</span>)
+<span class="code-function">print</span>(f<span class="code-string">"마지막 과일: {fruits[-1]}"</span>)
+
+<span class="code-comment"># 6. 리스트 슬라이싱</span>
+<span class="code-function">print</span>(f<span class="code-string">"처음 3개 숫자: {numbers[0:3]}"</span>)
+<span class="code-function">print</span>(f<span class="code-string">"3번째부터 끝까지: {numbers[3:]}"</span>)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 10 / 22</span></div>
+</section>
+
+<!-- Slide 11: 리스트 조작 -->
+<section id="slide11" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 기초</span> - <span class="python-yellow">리스트(List)</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">11.</span> 리스트 조작과 정렬</h2>
+            <p class="text-base text-gray-300 leading-relaxed">리스트는 생성 후에도 요소를 추가, 수정, 삭제할 수 있는 '가변(mutable)' 자료형입니다. 다양한 내장 메서드를 제공합니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-cogs mr-2"></i>자주 쓰이는 리스트 메서드</h4>
+                <ul class="text-sm text-gray-400 list-disc pl-5">
+                    <li>`.append()`: 맨 뒤에 요소 추가</li>
+                    <li>`.insert()`: 특정 위치에 요소 삽입</li>
+                    <li>`.remove()`: 특정 값을 찾아 제거</li>
+                    <li>`.pop()`: 특정 위치의 요소를 제거하고 반환</li>
+                    <li>`.sort()`: 리스트를 정렬</li>
+                </ul>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+fruits = [<span class="code-string">"사과"</span>, <span class="code-string">"바나나"</span>, <span class="code-string">"오렌지"</span>]
+
+<span class="code-comment"># 3. 요소 추가</span>
+fruits.append(<span class="code-string">"포도"</span>)
+fruits.insert(<span class="code-number">1</span>, <span class="code-string">"딸기"</span>)
+<span class="code-function">print</span>(f<span class="code-string">"추가 후: {fruits}"</span>)
+
+<span class="code-comment"># 4. 요소 제거</span>
+fruits.remove(<span class="code-string">"바나나"</span>)
+<span class="code-function">print</span>(f<span class="code-string">"제거 후: {fruits}"</span>)
+
+<span class="code-comment"># 7. 리스트 정렬</span>
+random_numbers = [<span class="code-number">5</span>, <span class="code-number">2</span>, <span class="code-number">8</span>, <span class="code-number">1</span>, <span class="code-number">9</span>]
+random_numbers.sort() <span class="code-comment"># 오름차순</span>
+<span class="code-function">print</span>(f<span class="code-string">"정렬 후: {random_numbers}"</span>)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 11 / 22</span></div>
+</section>
+
+<!-- Slide 12: 딕셔너리 생성과 활용 -->
+<section id="slide12" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 기초</span> - <span class="python-yellow">딕셔너리(Dictionary)</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">12.</span> 딕셔너리 생성과 활용</h2>
+            <p class="text-base text-gray-300 leading-relaxed">딕셔너리는 '키(Key)'와 '값(Value)'을 하나의 쌍으로 묶어 저장하는 자료구조입니다. 중괄호 `{}`를 사용하여 생성하며, 순서가 없습니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-key mr-2"></i>키(Key)의 특징</h4>
+                <p class="text-sm text-gray-400">키는 딕셔너리 내에서 고유해야 하며, 변하지 않는 값(주로 문자열이나 숫자)을 사용합니다. 키를 통해 해당 값을 빠르고 효율적으로 찾을 수 있습니다.</p>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-comment"># 1. 딕셔너리 생성</span>
+student = {
+    <span class="code-string">"이름"</span>: <span class="code-string">"김철수"</span>,
+    <span class="code-string">"나이"</span>: <span class="code-number">20</span>,
+    <span class="code-string">"학과"</span>: <span class="code-string">"컴퓨터공학"</span>
+}
+
+<span class="code-comment"># 2. 값 접근</span>
+<span class="code-function">print</span>(f<span class="code-string">"학생 이름: {student['이름']}"</span>)
+
+<span class="code-comment"># 3. 새 항목 추가</span>
+student[<span class="code-string">"성적"</span>] = <span class="code-string">"A"</span>
+<span class="code-function">print</span>(f<span class="code-string">"추가 후: {student}"</span>)
+
+<span class="code-comment"># 4. 값 수정</span>
+student[<span class="code-string">"나이"</span>] = <span class="code-number">21</span>
+<span class="code-function">print</span>(f<span class="code-string">"수정 후: {student}"</span>)
+
+<span class="code-comment"># 5. 항목 삭제</span>
+student.pop(<span class="code-string">"학과"</span>)
+<span class="code-function">print</span>(f<span class="code-string">"삭제 후: {student}"</span>)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 12 / 22</span></div>
+</section>
+
+<!-- Slide 13: 딕셔너리 반복과 중첩 -->
+<section id="slide13" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 기초</span> - <span class="python-yellow">딕셔너리(Dictionary)</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">13.</span> 딕셔너리 반복과 중첩</h2>
+            <p class="text-base text-gray-300 leading-relaxed">딕셔너리는 `for`문을 통해 키, 값, 또는 키-값 쌍을 순회할 수 있습니다. 딕셔너리의 값으로 또 다른 딕셔너리를 넣어 복잡한 데이터를 구조화할 수 있습니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-project-diagram mr-2"></i>`.items()` 메서드</h4>
+                <p class="text-sm text-gray-400">`for key, value in student.items():` 와 같이 사용하면 딕셔너리의 키와 값을 동시에 가져와 반복문을 실행할 수 있어 매우 편리합니다.</p>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-comment"># 7. 딕셔너리 반복문</span>
+student = {<span class="code-string">"이름"</span>: <span class="code-string">"김철수"</span>, <span class="code-string">"나이"</span>: <span class="code-number">20</span>, <span class="code-string">"학과"</span>: <span class="code-string">"컴퓨터공학"</span>}
+
+<span class="code-keyword">for</span> key, value <span class="code-keyword">in</span> student.items():
+    <span class="code-function">print</span>(f<span class="code-string">"  {key} → {value}"</span>)
+
+<span class="code-comment"># 8. 중첩 딕셔너리</span>
+students = {
+    <span class="code-string">"김철수"</span>: {<span class="code-string">"나이"</span>: <span class="code-number">20</span>, <span class="code-string">"성적"</span>: <span class="code-string">"A"</span>},
+    <span class="code-string">"이영희"</span>: {<span class="code-string">"나이"</span>: <span class="code-number">19</span>, <span class="code-string">"성적"</span>: <span class="code-string">"B"</span>}
+}
+
+<span class="code-comment"># 이영희의 나이 접근</span>
+<span class="code-function">print</span>(f<span class="code-string">"이영희의 나이: {students['이영희']['나이']}"</span>)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 13 / 22</span></div>
+</section>
+
+<!-- Slide 14: 튜플 생성과 언패킹 -->
+<section id="slide14" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 기초</span> - <span class="python-yellow">튜플(Tuple)</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">14.</span> 튜플 생성과 언패킹</h2>
+            <p class="text-base text-gray-300 leading-relaxed">튜플은 리스트와 유사하지만, 생성된 후에 그 값을 변경할 수 없는 '불변(immutable)' 자료형입니다. 소괄호 `()`를 사용하여 생성합니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-box-open mr-2"></i>튜플 언패킹(Unpacking)</h4>
+                <p class="text-sm text-gray-400">튜플의 각 요소를 여러 변수에 한 번에 할당하는 기능입니다. 함수의 다중 반환 값 처리나 변수 값 교환에 유용하게 사용됩니다.</p>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-comment"># 1. 튜플 생성</span>
+coordinates = (<span class="code-number">10</span>, <span class="code-number">20</span>)
+colors = (<span class="code-string">"빨강"</span>, <span class="code-string">"초록"</span>, <span class="code-string">"파랑"</span>)
+
+<span class="code-comment"># 3. 튜플은 수정할 수 없음</span>
+<span class="code-comment"># colors[0] = "노랑"  -> TypeError 발생</span>
+
+<span class="code-comment"># 4. 튜플 언패킹</span>
+x, y = coordinates
+<span class="code-function">print</span>(f<span class="code-string">"x 좌표: {x}, y 좌표: {y}"</span>)
+
+<span class="code-comment"># 언패킹으로 변수 교환</span>
+a, b = <span class="code-number">10</span>, <span class="code-number">20</span>
+a, b = b, a <span class="code-comment"># (20, 10) 튜플이 생성되어 언패킹됨</span>
+<span class="code-function">print</span>(f<span class="code-string">"교환 후: a={a}, b={b}"</span>)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 14 / 22</span></div>
+</section>
+
+<!-- Slide 15: 튜플의 활용 -->
+<section id="slide15" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 기초</span> - <span class="python-yellow">튜플(Tuple)</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">15.</span> 튜플의 활용</h2>
+            <p class="text-base text-gray-300 leading-relaxed">튜플은 불변성이라는 특징 덕분에 함수에서 여러 개의 값을 안전하게 반환하거나, 딕셔너리의 키로 사용되는 등 특별한 용도로 활용됩니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-lock mr-2"></i>언제 튜플을 사용할까?</h4>
+                <p class="text-sm text-gray-400">프로그램 실행 중에 절대 변하면 안 되는 데이터(예: 좌표, 설정값, 함수의 반환값)를 저장할 때 리스트 대신 튜플을 사용하면 데이터의 무결성을 보장할 수 있습니다.</p>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-comment"># 9. 함수에서 여러 값 반환</span>
+<span class="code-keyword">def</span> <span class="code-function">get_student_info</span>():
+    <span class="code-keyword">return</span> <span class="code-string">"홍길동"</span>, <span class="code-number">25</span>, <span class="code-string">"컴퓨터공학과"</span>
+
+<span class="code-comment"># 함수 결과를 언패킹으로 받기</span>
+name, age, major = get_student_info()
+<span class="code-function">print</span>(f<span class="code-string">"{name}, {age}세, {major}"</span>)
+
+<span class="code-comment"># 13. 튜플을 딕셔너리 키로 사용</span>
+<span class="code-comment"># 리스트는 변경 가능하므로 키가 될 수 없음</span>
+game_map = {
+    (<span class="code-number">0</span>, <span class="code-number">0</span>): <span class="code-string">"시작점"</span>,
+    (<span class="code-number">5</span>, <span class="code-number">3</span>): <span class="code-string">"보물"</span>
+}
+<span class="code-function">print</span>(game_map[(<span class="code-number">5</span>, <span class="code-number">3</span>)])
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 15 / 22</span></div>
+</section>
+
+<!-- Slide 16: 함수 정의와 호출 -->
+<section id="slide16" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 중급</span> - <span class="python-yellow">함수(Function)</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">16.</span> 함수 정의와 호출</h2>
+            <p class="text-base text-gray-300 leading-relaxed">함수는 특정 작업을 수행하는 코드 묶음입니다. `def` 키워드로 정의하며, 코드의 재사용성을 높이고 프로그램을 구조적으로 만들어줍니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-cogs mr-2"></i>함수의 구성 요소</h4>
+                <ul class="text-sm text-gray-400 list-disc pl-5">
+                    <li><b>매개변수(Parameter)</b>: 함수에 전달되는 값.</li>
+                    <li><b>반환값(Return)</b>: 함수의 실행 결과를 돌려주는 값.</li>
+                    <li><b>독스트링(Docstring)</b>: `""" """`으로 함수에 대한 설명을 작성.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-keyword">def</span> <span class="code-function">print_gugudan</span>(dan):
+    <span class="code-string">"""
+    하나의 정수(dan)를 매개변수로 받아,
+    해당 단의 구구단을 출력하는 함수입니다.
+    """</span>
+    <span class="code-function">print</span>(f<span class="code-string">"--- {dan}단 ---"</span>)
+    <span class="code-keyword">for</span> i <span class="code-keyword">in</span> <span class="code-function">range</span>(<span class="code-number">1</span>, <span class="code-number">10</span>):
+        <span class="code-function">print</span>(f<span class="code-string">"{dan} x {i} = {dan * i}"</span>)
+
+<span class="code-comment"># --- 메인 로직 ---</span>
+input_dan = <span class="code-function">int</span>(<span class="code-function">input</span>(<span class="code-string">"출력할 단을 입력하세요: "</span>))
+
+<span class="code-keyword">if</span> <span class="code-number">2</span> <= input_dan <= <span class="code-number">9</span>:
+    <span class="code-comment"># 정의된 함수를 호출</span>
+    print_gugudan(input_dan)
+<span class="code-keyword">else</span>:
+    <span class="code-function">print</span>(<span class="code-string">"오류: 2~9 사이의 숫자만 입력"</span>)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 16 / 22</span></div>
+</section>
+
+<!-- Slide 17: 클래스 기본 -->
+<section id="slide17" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 중급</span> - <span class="python-yellow">클래스(Class)</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">17.</span> 클래스 기본 구조</h2>
+            <p class="text-base text-gray-300 leading-relaxed">클래스는 객체를 만들기 위한 '설계도'입니다. 관련된 데이터(속성)와 기능(메서드)을 하나로 묶어 관리할 수 있습니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-puzzle-piece mr-2"></i>주요 용어</h4>
+                <ul class="text-sm text-gray-400 list-disc pl-5">
+                    <li><b>객체(Object)</b>: 클래스라는 설계도로 만들어진 실체.</li>
+                    <li><b>속성(Attribute)</b>: 객체가 가지는 데이터. (예: `self.name`)</li>
+                    <li><b>메서드(Method)</b>: 객체가 수행할 수 있는 동작(함수).</li>
+                    <li><b>`__init__`</b>: 객체가 생성될 때 속성을 초기화하는 특별한 메서드.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-keyword">class</span> <span class="code-function">ClassName</span>:
+    <span class="code-comment"># 초기화 메서드 (객체 생성 시 호출)</span>
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-keyword">self</span>, param1, param2):
+        <span class="code-comment"># 인스턴스 속성 (객체별 데이터)</span>
+        <span class="code-keyword">self</span>.attribute1 = param1
+        <span class="code-keyword">self</span>.attribute2 = param2
+
+    <span class="code-comment"># 메서드 (객체의 기능)</span>
+    <span class="code-keyword">def</span> <span class="code-function">method_name</span>(<span class="code-keyword">self</span>, param):
+        <span class="code-function">print</span>(f<span class="code-string">"메서드 호출됨: {self.attribute1}"</span>)
+        
+<span class="code-comment"># 클래스로부터 객체(인스턴스)를 생성</span>
+my_object = ClassName(<span class="code-string">"값1"</span>, <span class="code-string">"값2"</span>)
+
+<span class="code-comment"># 객체의 속성과 메서드에 접근</span>
+<span class="code-function">print</span>(my_object.attribute1)
+my_object.method_name(<span class="code-string">"전달값"</span>)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 17 / 22</span></div>
+</section>
+
+<!-- Slide 18: 클래스 활용 -->
+<section id="slide18" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 중급</span> - <span class="python-yellow">클래스(Class)</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">18.</span> 클래스 활용 예제</h2>
+            <p class="text-base text-gray-300 leading-relaxed">클래스를 조합하여 더 복잡한 객체를 만들 수 있습니다. 예를 들어, `Point2D`라는 점 클래스를 부품으로 사용하여 `Figure`(도형) 클래스를 조립할 수 있습니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas-project-diagram mr-2"></i>객체 지향 프로그래밍 (OOP)</h4>
+                <p class="text-sm text-gray-400">이처럼 독립적인 객체들을 만들고, 이 객체들이 서로 상호작용하도록 프로그램을 설계하는 방식을 객체 지향 프로그래밍이라고 합니다.</p>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-keyword">class</span> <span class="code-function">Point2D</span>:
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-keyword">self</span>, x, y):
+        <span class="code-keyword">self</span>.x, <span class="code-keyword">self</span>.y = x, y
+
+<span class="code-keyword">class</span> <span class="code-function">Figure</span>:
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-keyword">self</span>, name):
+        <span class="code-keyword">self</span>.name = name
+        <span class="code-keyword">self</span>.points = {}
+
+    <span class="code-keyword">def</span> <span class="code-function">add_point</span>(<span class="code-keyword">self</span>, name, x, y):
+        <span class="code-keyword">self</span>.points[name] = Point2D(x, y)
+
+    <span class="code-keyword">def</span> <span class="code-function">show_info</span>(<span class="code-keyword">self</span>):
+        <span class="code-function">print</span>(f<span class="code-string">"--- 도형 '{self.name}' 정보 ---"</span>)
+        <span class="code-keyword">for</span> name, point <span class="code-keyword">in</span> <span class="code-keyword">self</span>.points.items():
+            <span class="code-function">print</span>(f<span class="code-string">"  - {name}: ({point.x}, {point.y})"</span>)
+
+<span class="code-comment"># 클래스 사용</span>
+person = Figure(<span class="code-string">"사람1"</span>)
+person.add_point(<span class="code-string">"코"</span>, <span class="code-number">95</span>, <span class="code-number">50</span>)
+person.add_point(<span class="code-string">"왼쪽_어깨"</span>, <span class="code-number">60</span>, <span class="code-number">80</span>)
+person.show_info()
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 18 / 22</span></div>
+</section>
+
+<!-- Slide 19: 경로 다루기 -->
+<section id="slide19" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 중급</span> - <span class="python-yellow">파일 시스템</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">19.</span> 경로 다루기</h2>
+            <p class="text-base text-gray-300 leading-relaxed">`os` 모듈을 사용하면 파일이나 디렉토리의 경로를 효과적으로 다룰 수 있습니다. 운영체제(Windows, Mac)에 상관없이 동작하는 코드를 작성하는 데 필수적입니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-map-signs mr-2"></i>절대경로 vs 상대경로</h4>
+                <ul class="text-sm text-gray-400 list-disc pl-5">
+                    <li><b>절대경로</b>: 루트 디렉토리부터 시작하는 전체 경로. (예: `C:\Users\...`)</li>
+                    <li><b>상대경로</b>: 현재 작업 위치를 기준으로 한 경로. (예: `data/sample.txt`, `../images`)</li>
+                </ul>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-keyword">import</span> os
+
+<span class="code-comment"># 1. 현재 작업 디렉토리 확인</span>
+current_dir = os.getcwd()
+<span class="code-function">print</span>(f<span class="code-string">"현재 디렉토리: {current_dir}"</span>)
+
+<span class="code-comment"># 5. 경로 조작 (결합)</span>
+data_dir = <span class="code-string">"data"</span>
+filename = <span class="code-string">"student_info.txt"</span>
+full_path = os.path.join(data_dir, filename)
+<span class="code-function">print</span>(f<span class="code-string">"결합된 경로: {full_path}"</span>)
+
+<span class="code-comment"># 6. 경로 분리</span>
+sample_path = <span class="code-string">"data/documents/report.pdf"</span>
+directory = os.path.dirname(sample_path)
+basename = os.path.basename(sample_path)
+name, ext = os.path.splitext(basename)
+
+<span class="code-function">print</span>(f<span class="code-string">"디렉토리: {directory}"</span>)
+<span class="code-function">print</span>(f<span class="code-string">"파일명: {basename}"</span>)
+<span class="code-function">print</span>(f<span class="code-string">"이름: {name}, 확장자: {ext}"</span>)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 19 / 22</span></div>
+</section>
+
+<!-- Slide 20: 파일 읽고 쓰기 -->
+<section id="slide20" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 중급</span> - <span class="python-yellow">파일 시스템</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">20.</span> 파일 읽고 쓰기</h2>
+            <p class="text-base text-gray-300 leading-relaxed">`open()` 함수를 사용하여 파일을 열고, `.read()`, `.write()` 등의 메서드로 내용을 읽거나 쓸 수 있습니다. `with`문을 사용하면 파일을 안전하게 자동으로 닫아줍니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-file-alt mr-2"></i>파일 모드(mode)</h4>
+                <ul class="text-sm text-gray-400 list-disc pl-5">
+                    <li>`'r'`: 읽기 (Read) - 기본값</li>
+                    <li>`'w'`: 쓰기 (Write) - 기존 내용을 덮어씀</li>
+                    <li>`'a'`: 추가 (Append) - 파일 끝에 이어씀</li>
+                    <li>`encoding='utf-8'`: 한글 깨짐 방지를 위해 필수</li>
+                </ul>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-comment"># 1. 텍스트 파일 쓰기 (w: write)</span>
+filename = <span class="code-string">"data/sample.txt"</span>
+content = <span class="code-string">"안녕하세요, 파이썬!"</span>
+
+<span class="code-keyword">with</span> <span class="code-function">open</span>(filename, <span class="code-string">"w"</span>, encoding=<span class="code-string">"utf-8"</span>) <span class="code-keyword">as</span> file:
+    file.write(content)
+
+<span class="code-comment"># 2. 텍스트 파일 읽기 (r: read)</span>
+<span class="code-keyword">with</span> <span class="code-function">open</span>(filename, <span class="code-string">"r"</span>, encoding=<span class="code-string">"utf-8"</span>) <span class="code-keyword">as</span> file:
+    read_content = file.read()
+    <span class="code-function">print</span>(f<span class="code-string">"파일 내용: {read_content}"</span>)
+
+<span class="code-comment"># 4. 파일에 내용 추가하기 (a: append)</span>
+additional = <span class="code-string">"\n이 줄은 추가되었습니다."</span>
+<span class="code-keyword">with</span> <span class="code-function">open</span>(filename, <span class="code-string">"a"</span>, encoding=<span class="code-string">"utf-8"</span>) <span class="code-keyword">as</span> file:
+    file.write(additional)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 20 / 22</span></div>
+</section>
+
+<!-- Slide 21: 파일 입출력 활용 -->
+<section id="slide21" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 중급</span> - <span class="python-yellow">파일 시스템</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">21.</span> 파일 입출력 활용</h2>
+            <p class="text-base text-gray-300 leading-relaxed">파일 입출력은 데이터를 영구적으로 저장하고 관리하는 핵심 기술입니다. CSV 형태의 데이터를 파일로 저장하고, 이를 다시 읽어와 통계를 내는 등 다양하게 활용할 수 있습니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-stream mr-2"></i>한 줄씩 처리하기</h4>
+                <p class="text-sm text-gray-400">대용량 파일을 다룰 때는 `.read()`로 전체를 읽는 대신 `for line in file:` 구문을 사용하여 한 줄씩 처리하는 것이 메모리 효율에 좋습니다.</p>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-comment"># 5. 학생 정보 파일 만들기 (CSV 형태)</span>
+students = [
+    <span class="code-string">"김철수,20,컴퓨터공학,A"</span>,
+    <span class="code-string">"이영희,19,수학과,B"</span>
+]
+student_file = <span class="code-string">"data/students.csv"</span>
+
+<span class="code-keyword">with</span> <span class="code-function">open</span>(student_file, <span class="code-string">"w"</span>, encoding=<span class="code-string">"utf-8"</span>) <span class="code-keyword">as</span> file:
+    file.write(<span class="code-string">"이름,나이,전공,성적\n"</span>) <span class="code-comment"># 헤더</span>
+    <span class="code-keyword">for</span> student <span class="code-keyword">in</span> students:
+        file.write(student + <span class="code-string">"\n"</span>)
+
+<span class="code-comment"># 6. CSV 파일 읽고 처리하기</span>
+<span class="code-keyword">with</span> <span class="code-function">open</span>(student_file, <span class="code-string">"r"</span>, encoding=<span class="code-string">"utf-8"</span>) <span class="code-keyword">as</span> file:
+    <span class="code-keyword">for</span> line <span class="code-keyword">in</span> file.readlines()[<span class="code-number">1</span>:]: <span class="code-comment"># 헤더 제외</span>
+        name, age, major, grade = line.strip().split(<span class="code-string">","</span>)
+        <span class="code-function">print</span>(f<span class="code-string">"{name}: {age}세, {major}"</span>)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 21 / 22</span></div>
+</section>
+
+<!-- Slide 22: 파일 시스템 탐색 -->
+<section id="slide22" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Python 중급</span> - <span class="python-yellow">파일 시스템</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">22.</span> 파일 시스템 탐색</h2>
+            <p class="text-base text-gray-300 leading-relaxed">`os` 모듈의 다양한 함수를 이용해 현재 디렉토리의 파일 목록을 얻거나, 파일의 크기, 수정 시간 등의 상세 정보를 확인할 수 있습니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-search mr-2"></i>자주 쓰이는 `os` 모듈 함수</h4>
+                <ul class="text-sm text-gray-400 list-disc pl-5">
+                    <li>`os.listdir(path)`: 경로의 파일/폴더 목록 반환</li>
+                    <li>`os.path.isfile(path)`: 파일인지 확인</li>
+                    <li>`os.path.isdir(path)`: 폴더인지 확인</li>
+                    <li>`os.path.getsize(path)`: 파일 크기 반환</li>
+                </ul>
+            </div>
+        </div>
+        <div class="code-content">
+<pre>
+<span class="code-keyword">import</span> os
+
+<span class="code-comment"># 1. 현재 디렉토리 탐색</span>
+current_path = <span class="code-string">"."</span>
+items = os.listdir(current_path)
+<span class="code-function">print</span>(f<span class="code-string">"현재 위치의 항목 수: {len(items)}"</span>)
+
+<span class="code-comment"># 2. 파일 상세 정보 확인</span>
+<span class="code-keyword">for</span> item <span class="code-keyword">in</span> items[:<span class="code-number">3</span>]: <span class="code-comment"># 3개만 예시로</span>
+    <span class="code-keyword">if</span> os.path.isfile(item):
+        size = os.path.getsize(item)
+        <span class="code-function">print</span>(f<span class="code-string">"📄 {item} ({size} bytes)"</span>)
+    <span class="code-keyword">elif</span> os.path.isdir(item):
+        <span class="code-function">print</span>(f<span class="code-string">"📁 {item}"</span>)
+
+<span class="code-comment"># 3. 특정 확장자 파일 찾기</span>
+py_files = [f <span class="code-keyword">for</span> f <span class="code-keyword">in</span> items <span class="code-keyword">if</span> f.endswith(<span class="code-string">'.py'</span>)]
+<span class="code-function">print</span>(f<span class="code-string">"\n.py 파일 개수: {len(py_files)}"</span>)
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-python mr-2 text-python-blue text-lg"></i><span>Python 기초 | 22 / 22</span></div>
+</section>
+
+<!-- SlideController JavaScript -->
+<script src="slide-controller.js"></script>
+
+<script>
+// 페이지 로드 후 SlideController 초기화
+document.addEventListener('DOMContentLoaded', function() {
+    window.slideController = new SlideController({
+        slideSelector: '.slide-container',
+        showKeyboardGuide: true,
+        enableSwipe: true,
+        enableKeyboard: true
+    });
+});
+</script>
+
+</body>
+</html>
