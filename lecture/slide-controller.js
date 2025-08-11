@@ -20,7 +20,7 @@ class SlideController {
         this.config = {
             slideSelector: '.slide-container',
             autoPlay: false,
-            autoPlayInterval: 5000,
+            autoPlayInterval: 0,
             showKeyboardGuide: true,
             showTimer: false,
             enableSwipe: true,
@@ -79,9 +79,15 @@ class SlideController {
     removeExistingUI() {
         const existingElements = ['.slide-progress', '.slide-controls', '.keyboard-guide'];
         existingElements.forEach(selector => {
-            const element = document.querySelector(selector);
-            if (element) element.remove();
+            // 여러 개의 중복 요소들을 모두 제거
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(element => {
+                if (element) element.remove();
+            });
         });
+        
+        // body에서 slide-mode 클래스 제거 후 다시 추가 (초기화)
+        document.body.classList.remove('slide-mode');
     }
     
     createProgressBar() {
@@ -151,6 +157,7 @@ class SlideController {
         }
         
         this.bindIndicatorEvents();
+        this.bindFullscreenEvents();
     }
     
     bindButtonEvents() {
@@ -221,6 +228,36 @@ class SlideController {
         });
     }
     
+    bindFullscreenEvents() {
+        // 전체화면 상태 변경 이벤트 리스너들
+        document.addEventListener('fullscreenchange', () => this.handleFullscreenChange());
+        document.addEventListener('webkitfullscreenchange', () => this.handleFullscreenChange());
+        document.addEventListener('mozfullscreenchange', () => this.handleFullscreenChange());
+        document.addEventListener('MSFullscreenChange', () => this.handleFullscreenChange());
+    }
+    
+    handleFullscreenChange() {
+        const isFullscreen = !!(document.fullscreenElement || 
+                                document.webkitFullscreenElement || 
+                                document.mozFullScreenElement || 
+                                document.msFullscreenElement);
+        
+        const controls = document.querySelector('.slide-controls');
+        const progressBar = document.querySelector('.slide-progress');
+        
+        if (isFullscreen) {
+            // 전체화면일 때 컨트롤러 숨기기
+            if (controls) controls.style.display = 'none';
+            if (progressBar) progressBar.style.display = 'none';
+            console.log('전체화면 진입: 컨트롤러 숨김');
+        } else {
+            // 전체화면 해제 시 컨트롤러 다시 표시
+            if (controls) controls.style.display = 'flex';
+            if (progressBar) progressBar.style.display = 'block';
+            console.log('전체화면 해제: 컨트롤러 표시');
+        }
+    }
+    
     goToSlide(index) {
         if (index < 0 || index >= this.totalSlides || index === this.currentSlide) return;
         
@@ -286,12 +323,40 @@ class SlideController {
 // 전역에서 사용 가능하도록 설정
 window.SlideController = SlideController;
 
+// 중복 초기화 방지를 위한 변수
+let slideControllerInitialized = false;
+
 // 페이지 로드 후 자동 초기화
 document.addEventListener('DOMContentLoaded', function() {
+    // 이미 초기화되었다면 실행하지 않음
+    if (slideControllerInitialized) {
+        console.log('SlideController 이미 초기화됨');
+        return;
+    }
+    
+    // 기존 인스턴스가 있다면 제거
+    if (window.slideController) {
+        console.log('기존 SlideController 인스턴스 정리');
+        window.slideController = null;
+    }
+    
+    // 기존 UI 요소들 정리
+    const elementsToRemove = ['.slide-progress', '.slide-controls', '.keyboard-guide'];
+    elementsToRemove.forEach(selector => {
+        const element = document.querySelector(selector);
+        if (element) {
+            element.remove();
+        }
+    });
+    
+    // 새로운 인스턴스 생성
     window.slideController = new SlideController({
         slideSelector: '.slide-container',
-        showKeyboardGuide: true,
+        showKeyboardGuide: false,
         enableSwipe: true,
         enableKeyboard: true
     });
+    
+    slideControllerInitialized = true;
+    console.log('SlideController 초기화 완료');
 });

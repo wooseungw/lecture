@@ -56,16 +56,25 @@
 </head>
 <body class="bg-gray-900">
 
-<!-- Table of Contents -->
-<div class="toc">
-    <h4>Pillow 이미지 처리</h4>
-    <a href="#slide1">1. 소개 및 설치</a>
-    <a href="#slide2">2. 이미지 열기/정보 확인</a>
-    <a href="#slide3">3. 이미지 저장/형식 변환</a>
-    <a href="#slide4">4. 이미지 크기 조절</a>
-    <a href="#slide5">5. 자르기, 회전, 반전</a>
-    <a href="#slide6">6. 색상 모드 변환</a>
-</div>
+
+
+<!-- Title Slide: Pillow 강의 제목 -->
+<section id="slide0" class="slide-container active">
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center;">
+        <div style="margin-bottom: 3rem;">
+            <h1 style="font-size: 4rem; font-weight: bold; margin-bottom: 1rem; background: linear-gradient(45deg, #306998, #FFD43B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Pillow</h1>
+            <h2 style="font-size: 2.5rem; font-weight: 300; color: #d1d5db; margin-bottom: 2rem;">이미지 처리</h2>
+            <div style="width: 200px; height: 4px; background: linear-gradient(45deg, #306998, #FFD43B); margin: 0 auto; border-radius: 2px;"></div>
+        </div>
+        <div style="margin-top: 2rem;">
+            <p style="font-size: 1.25rem; color: #9ca3af; margin-bottom: 1rem;">Python Image Library</p>
+            <p style="font-size: 1rem; color: #6b7280;">파이썬 이미지 처리 라이브러리 기초</p>
+        </div>
+        <div style="position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%); color: #6b7280; font-size: 0.875rem;">
+            <p>Space 키 또는 방향키로 슬라이드를 넘겨주세요</p>
+        </div>
+    </div>
+</section>
 
 <!-- Slide 1: Pillow 소개 및 설치 -->
 <section id="slide1" class="slide-container">

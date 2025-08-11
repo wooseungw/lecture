@@ -190,6 +190,21 @@ body.slide-mode {
         padding: 2rem 1rem;
     }
     
+    .content-wrapper {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .text-content, .image-content {
+        flex: 1;
+        width: 100%;
+    }
+    
+    .step-image {
+        max-height: 250px;
+        width: 100%;
+    }
+    
     .slide-controls {
         bottom: 10px;
         padding: 10px 20px;
@@ -217,6 +232,17 @@ body.slide-mode {
         .python-yellow { color: #FBBC05; } /* Google Yellow */
         .content-wrapper { display: flex; align-items: center; gap: 2rem; }
         .text-content { flex: 1; }
+        .image-content { flex: 1.1; display: flex; flex-direction: column; align-items: center; }
+        .step-image { 
+            max-width: 100%; 
+            max-height: 400px; 
+            width: auto; 
+            height: auto; 
+            border: 2px solid #4a4a4a; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            object-fit: contain;
+        }
         .code-content { flex: 1.1; background-color: #252525; padding: 1.5rem; border-radius: 8px; font-family: 'Consolas', 'D2Coding', monospace; overflow-x: auto; max-height: 500px; }
         .tip-box { background-color: #2d2d2d; border-left: 4px solid #FBBC05; padding: 1rem; margin-top: 1.25rem; border-radius: 0 8px 8px 0; }
         .toc { position: fixed; top: 20px; right: 20px; background-color: rgba(45, 45, 45, 0.9); padding: 1rem; border-radius: 8px; border: 1px solid #4a4a4a; z-index: 100; max-height: 90vh; overflow-y: auto; }
@@ -231,10 +257,25 @@ body.slide-mode {
 </head>
 <body class="bg-gray-900">
 
+<!-- Title Slide: Gemini CLI 강의 제목 -->
+<section id="slide0" class="slide-container active">
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center;">
+        <div style="margin-bottom: 3rem;">
+            <h1 style="font-size: 4rem; font-weight: bold; margin-bottom: 1rem; background: linear-gradient(45deg, #306998, #FFD43B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Gemini CLI</h1>
+            <h2 style="font-size: 2.5rem; font-weight: 300; color: #d1d5db; margin-bottom: 2rem;">설치 및 활용 가이드</h2>
+            <div style="width: 200px; height: 4px; background: linear-gradient(45deg, #306998, #FFD43B); margin: 0 auto; border-radius: 2px;"></div>
+        </div>
+        <div style="margin-top: 2rem;">
+            <p style="font-size: 1.25rem; color: #9ca3af; margin-bottom: 1rem;">터미널에서 바로 사용하는 AI 도구</p>
+            <p style="font-size: 1rem; color: #6b7280;">Google Gemini AI 모델 커맨드라인 활용법</p>
+        </div>
+        
+    </div>
+</section>
 
 
 <!-- Slide 1: Gemini CLI 소개 -->
-<section id="slide1" class="slide-container active">
+<section id="slide1" class="slide-container">
     <div class="absolute top-10 left-10">
         <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Gemini CLI</span> - <span class="python-yellow">설치 및 활용 가이드</span></h1>
         <div class="w-20 h-1 bg-python-blue rounded"></div>
@@ -242,21 +283,19 @@ body.slide-mode {
     <div class="content-wrapper">
         <div class="text-content">
             <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">1.</span> Gemini CLI란?</h2>
-            <p class="text-base text-gray-300 leading-relaxed">Gemini CLI는 텍스트 기반의 터미널 환경에서 Google의 강력한 AI 모델 Gemini를 직접 사용할 수 있는 커맨드 라인 도구입니다.<br><br>브라우저 없이, 가벼운 터미널 창에서 바로 AI와 대화하고 파일 생성, 코드 작성, 웹 검색 등 다양한 작업을 수행할 수 있습니다.</p>
-            <div class="tip-box">
-                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-check-circle mr-2"></i>주요 특징</h4>
-                <ul class="text-sm text-gray-400 list-disc pl-5">
+            <p class="text-base text-gray-300 leading-relaxed">Gemini CLI는 텍스트 기반의 터미널 환경에서 Google의 강력한 AI 모델 Gemini를 직접 사용할 수 있는 커맨드 라인 도구입니다.<br>브라우저 없이, 가벼운 터미널 창에서 바로 AI와 대화하고 파일 생성, 코드 작성, 웹 검색 등 다양한 작업을 수행할 수 있습니다.</p>
+            <ul class="text-base text-gray-300 leading-relaxed">
+                    <br><br>
                     <li><b>무료 사용</b>: 신용카드 등록 없이 하루 1,000회 요청 가능</li>
                     <li><b>가볍고 빠름</b>: 별도의 프로그램 설치 없이 터미널에서 즉시 실행</li>
                     <li><b>강력한 기능</b>: 단순 대화를 넘어 파일 시스템 제어, 웹 접근 등 확장 기능 제공</li>
                 </ul>
-            </div>
         </div>
         <div class="code-content">
 <pre>
 <span class="code-comment"># Gemini CLI는 이런 대화형 인터페이스를 제공합니다.</span>
 
-Gemini › <span class="code-string">"풍선을 든 ASCII 고양이 그려 줘."</span>
+Gemini > <span class="code-string">"풍선을 든 ASCII 고양이 그려 줘."</span>
 
 <span class="code-comment"># AI가 즉시 터미널에 결과를 출력합니다.</span>
   /\_/\
@@ -283,26 +322,23 @@ Gemini › <span class="code-string">"풍선을 든 ASCII 고양이 그려 줘."
         <div class="text-content">
             <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">2.</span> 사전 준비: Node.js 설치</h2>
             <p class="text-base text-gray-300 leading-relaxed">Gemini CLI는 Node.js의 패키지 매니저인 `npm`을 통해 설치됩니다. 따라서 Node.js를 먼저 컴퓨터에 설치해야 합니다.</p>
+            <p class="text-base text-gray-300 leading-relaxed">
+            <li>웹 브라우저에서 'Node.js LTS 다운로드'를 검색하여 공식 사이트로 이동합니다.</li>
+            <li>LTS (Long Term Support) 버전 설치 파일을 다운로드합니다.</li>
+            <li>설치 프로그램을 실행하고, 별다른 설정 변경 없이 '다음' 버튼을 눌러 설치를 완료합니다.</li>
+            </p>
             <div class="tip-box">
                 <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-tasks mr-2"></i>설치 절차</h4>
                 <ol class="text-sm text-gray-400 list-decimal pl-5">
-                    <li>웹 브라우저에서 'Node.js LTS'를 검색하여 공식 사이트로 이동합니다.</li>
-                    <li>LTS (Long Term Support) 버전 설치 파일을 다운로드합니다.</li>
-                    <li>설치 프로그램을 실행하고, 별다른 설정 변경 없이 '다음' 버튼을 눌러 설치를 완료합니다.</li>
+                    <li>Node.js의 웹사이트에서 사용자의 OS를 조회해 설치 프로그램 방식을 자동을 보여줍니다.</li>
+                    <li>LTS 버전은 안정성과 호환성이 뛰어나므로, 최신 버전이 아닌 LTS 버전을 선택하는 것이 좋습니다.</li>
+                    <li>CLI를 통해 설치할 수 있지만, 처음 사용하는 경우에는 GUI 설치가 더 간편합니다.</li>
                 </ol>
             </div>
         </div>
-        <div class="code-content">
-<pre>
-<span class="code-comment"># 설치가 완료되면 터미널에서 버전을 확인하여</span>
-<span class="code-comment"># 정상적으로 설치되었는지 검증할 수 있습니다.</span>
-
-<span class="code-comment">></span> node -v
-v20.11.0  <span class="code-comment"># 버전 번호가 표시되면 성공</span>
-
-<span class="code-comment">></span> npm -v
-10.2.4    <span class="code-comment"># npm 버전도 함께 표시되면 성공</span>
-</pre>
+        <div class="image-content">
+            <img src="imgs/gemini1.png" alt="NodeJS 설치" class="step-image">
+            <p class="text-center text-sm text-gray-500 mt-3">Node.js 공식 웹사이트에서 LTS 버전 다운로드</p>
         </div>
     </div>
     <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-google mr-2 text-python-blue text-lg"></i><span>Gemini CLI 가이드 | 2 / 9</span></div>
@@ -542,7 +578,7 @@ Gemini › <span class="code-string">"2025년 서울의 'best ramen' 검색해�
         </div>
         <div class="code-content">
 <pre>
-<span class="code-comment"># VS Code 통합 터미널 예시</span>
+<span class="code-comment"># VS Code 통합 터미널 예시(Mac)</span>
 
 user@MacBook-Air ~/my_project % <span class="code-keyword">gemini</span>
 Welcome to Gemini!
@@ -556,149 +592,7 @@ Gemini › <span class="code-string">"이 프로젝트에 대한 README.md 파�
     <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-google mr-2 text-python-blue text-lg"></i><span>Gemini CLI 가이드 | 9 / 10</span></div>
 </section>
 
-<!-- Slide 9: VS Code 터미널에서 사용 -->
-<section id="slide9" class="slide-container">
-    <div class="absolute top-10 left-10">
-        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Gemini CLI</span> - <span class="python-yellow">설치 및 활용 가이드</span></h1>
-        <div class="w-20 h-1 bg-python-blue rounded"></div>
-    </div>
-    <div class="content-wrapper">
-        <div class="text-content">
-            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">9.</span> VS Code 터미널에서 사용</h2>
-            <p class="text-base text-gray-300 leading-relaxed">Visual Studio Code (VS Code)를 사용한다면, 별도의 경로 설정 없이 내 작업 환경에서 바로 Gemini CLI를 활용할 수 있습니다. VS Code의 통합 터미널은 현재 작업 중인 프로젝트 폴더를 기본 경로로 사용하기 때문입니다.</p>
-            <div class="tip-box">
-                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-terminal mr-2"></i>사용 방법</h4>
-                <ol class="text-sm text-gray-400 list-decimal pl-5">
-                    <li>VS Code를 실행하고 프로젝트 폴더를 엽니다.</li>
-                    <li>상단 메뉴에서 <b>터미널(Terminal) > 새 터미널(New Terminal)</b>을 선택하여 통합 터미널을 엽니다.</li>
-                    <li>터미널이 열리면 자동으로 현재 프로젝트 폴더 경로로 설정됩니다.</li>
-                    <li>이제 `gemini`를 입력하여 Gemini CLI를 바로 사용할 수 있습니다.</li>
-                </ol>
-            </div>
-        </div>
-        <div class="code-content">
-<pre>
-<span class="code-comment"># VS Code 통합 터미널 예시</span>
 
-user@MacBook-Air ~/my_project % <span class="code-keyword">gemini</span>
-Welcome to Gemini!
-Gemini › <span class="code-string">"이 프로젝트에 대한 README.md 파일 초안 작성해 줘."</span>
-
-<span class="code-comment"># AI가 현재 프로젝트 컨텍스트에서 응답합니다.</span>
-<span class="code-comment"># 파일 생성 요청 시, 현재 폴더에 바로 생성됩니다.</span>
-</pre>
-        </div>
-    </div>
-    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-google mr-2 text-python-blue text-lg"></i><span>Gemini CLI 가이드 | 9 / 10</span></div>
-</section>
-
-<!-- Slide 9: VS Code 터미널에서 사용 -->
-<section id="slide9" class="slide-container">
-    <div class="absolute top-10 left-10">
-        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Gemini CLI</span> - <span class="python-yellow">설치 및 활용 가이드</span></h1>
-        <div class="w-20 h-1 bg-python-blue rounded"></div>
-    </div>
-    <div class="content-wrapper">
-        <div class="text-content">
-            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">9.</span> VS Code 터미널에서 사용</h2>
-            <p class="text-base text-gray-300 leading-relaxed">Visual Studio Code (VS Code)를 사용한다면, 별도의 경로 설정 없이 내 작업 환경에서 바로 Gemini CLI를 활용할 수 있습니다. VS Code의 통합 터미널은 현재 작업 중인 프로젝트 폴더를 기본 경로로 사용하기 때문입니다.</p>
-            <div class="tip-box">
-                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-terminal mr-2"></i>사용 방법</h4>
-                <ol class="text-sm text-gray-400 list-decimal pl-5">
-                    <li>VS Code를 실행하고 프로젝트 폴더를 엽니다.</li>
-                    <li>상단 메뉴에서 <b>터미널(Terminal) > 새 터미널(New Terminal)</b>을 선택하여 통합 터미널을 엽니다.</li>
-                    <li>터미널이 열리면 자동으로 현재 프로젝트 폴더 경로로 설정됩니다.</li>
-                    <li>이제 `gemini`를 입력하여 Gemini CLI를 바로 사용할 수 있습니다.</li>
-                </ol>
-            </div>
-        </div>
-        <div class="code-content">
-<pre>
-<span class="code-comment"># VS Code 통합 터미널 예시</span>
-
-user@MacBook-Air ~/my_project % <span class="code-keyword">gemini</span>
-Welcome to Gemini!
-Gemini › <span class="code-string">"이 프로젝트에 대한 README.md 파일 초안 작성해 줘."</span>
-
-<span class="code-comment"># AI가 현재 프로젝트 컨텍스트에서 응답합니다.</span>
-<span class="code-comment"># 파일 생성 요청 시, 현재 폴더에 바로 생성됩니다.</span>
-</pre>
-        </div>
-    </div>
-    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-google mr-2 text-python-blue text-lg"></i><span>Gemini CLI 가이드 | 9 / 10</span></div>
-</section>
-
-<!-- Slide 9: VS Code 터미널에서 사용 -->
-<section id="slide9" class="slide-container">
-    <div class="absolute top-10 left-10">
-        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Gemini CLI</span> - <span class="python-yellow">설치 및 활용 가이드</span></h1>
-        <div class="w-20 h-1 bg-python-blue rounded"></div>
-    </div>
-    <div class="content-wrapper">
-        <div class="text-content">
-            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">9.</span> VS Code 터미널에서 사용</h2>
-            <p class="text-base text-gray-300 leading-relaxed">Visual Studio Code (VS Code)를 사용한다면, 별도의 경로 설정 없이 내 작업 환경에서 바로 Gemini CLI를 활용할 수 있습니다. VS Code의 통합 터미널은 현재 작업 중인 프로젝트 폴더를 기본 경로로 사용하기 때문입니다.</p>
-            <div class="tip-box">
-                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-terminal mr-2"></i>사용 방법</h4>
-                <ol class="text-sm text-gray-400 list-decimal pl-5">
-                    <li>VS Code를 실행하고 프로젝트 폴더를 엽니다.</li>
-                    <li>상단 메뉴에서 <b>터미널(Terminal) > 새 터미널(New Terminal)</b>을 선택하여 통합 터미널을 엽니다.</li>
-                    <li>터미널이 열리면 자동으로 현재 프로젝트 폴더 경로로 설정됩니다.</li>
-                    <li>이제 `gemini`를 입력하여 Gemini CLI를 바로 사용할 수 있습니다.</li>
-                </ol>
-            </div>
-        </div>
-        <div class="code-content">
-<pre>
-<span class="code-comment"># VS Code 통합 터미널 예시</span>
-
-user@MacBook-Air ~/my_project % <span class="code-keyword">gemini</span>
-Welcome to Gemini!
-Gemini › <span class="code-string">"이 프로젝트에 대한 README.md 파일 초안 작성해 줘."</span>
-
-<span class="code-comment"># AI가 현재 프로젝트 컨텍스트에서 응답합니다.</span>
-<span class="code-comment"># 파일 생성 요청 시, 현재 폴더에 바로 생성됩니다.</span>
-</pre>
-        </div>
-    </div>
-    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-google mr-2 text-python-blue text-lg"></i><span>Gemini CLI 가이드 | 9 / 10</span></div>
-</section>
-
-<!-- Slide 9: VS Code 터미널에서 사용 -->
-<section id="slide9" class="slide-container">
-    <div class="absolute top-10 left-10">
-        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Gemini CLI</span> - <span class="python-yellow">설치 및 활용 가이드</span></h1>
-        <div class="w-20 h-1 bg-python-blue rounded"></div>
-    </div>
-    <div class="content-wrapper">
-        <div class="text-content">
-            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">9.</span> VS Code 터미널에서 사용</h2>
-            <p class="text-base text-gray-300 leading-relaxed">Visual Studio Code (VS Code)를 사용한다면, 별도의 경로 설정 없이 내 작업 환경에서 바로 Gemini CLI를 활용할 수 있습니다. VS Code의 통합 터미널은 현재 작업 중인 프로젝트 폴더를 기본 경로로 사용하기 때문입니다.</p>
-            <div class="tip-box">
-                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-terminal mr-2"></i>사용 방법</h4>
-                <ol class="text-sm text-gray-400 list-decimal pl-5">
-                    <li>VS Code를 실행하고 프로젝트 폴더를 엽니다.</li>
-                    <li>상단 메뉴에서 <b>터미널(Terminal) > 새 터미널(New Terminal)</b>을 선택하여 통합 터미널을 엽니다.</li>
-                    <li>터미널이 열리면 자동으로 현재 프로젝트 폴더 경로로 설정됩니다.</li>
-                    <li>이제 `gemini`를 입력하여 Gemini CLI를 바로 사용할 수 있습니다.</li>
-                </ol>
-            </div>
-        </div>
-        <div class="code-content">
-<pre>
-<span class="code-comment"># VS Code 통합 터미널 예시</span>
-
-user@MacBook-Air ~/my_project % <span class="code-keyword">gemini</span>
-Welcome to Gemini!
-Gemini › <span class="code-string">"이 프로젝트에 대한 README.md 파일 초안 작성해 줘."</span>
-
-<span class="code-comment"># AI가 현재 프로젝트 컨텍스트에서 응답합니다.</span>
-<span class="code-comment"># 파일 생성 요청 시, 현재 폴더에 바로 생성됩니다.</span>
-</pre>
-        </div>
-    </div>
-    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-google mr-2 text-python-blue text-lg"></i><span>Gemini CLI 가이드 | 9 / 10</span></div>
-</section>
 
 <!-- Slide 10: 문제 해결 -->
 <section id="slide10" class="slide-container">
