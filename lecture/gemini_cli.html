@@ -553,7 +553,7 @@ Gemini › <span class="code-string">"2025년 서울의 'best ramen' 검색해�
 </pre>
         </div>
     </div>
-    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-google mr-2 text-python-blue text-lg"></i><span>Gemini CLI 가이드 | 8 / 10</span></div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-google mr-2 text-python-blue text-lg"></i><span>Gemini CLI 가이드 | 8 / 11</span></div>
 </section>
 
 <!-- Slide 9: VS Code 터미널에서 사용 -->
@@ -589,7 +589,7 @@ Gemini › <span class="code-string">"이 프로젝트에 대한 README.md 파�
 </pre>
         </div>
     </div>
-    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-google mr-2 text-python-blue text-lg"></i><span>Gemini CLI 가이드 | 9 / 10</span></div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-google mr-2 text-python-blue text-lg"></i><span>Gemini CLI 가이드 | 9 / 11</span></div>
 </section>
 
 
@@ -635,7 +635,52 @@ sudo npm install -g @google/gemini-cli
 </pre>
         </div>
     </div>
-    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-google mr-2 text-python-blue text-lg"></i><span>Gemini CLI 가이드 | 10 / 10</span></div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-google mr-2 text-python-blue text-lg"></i><span>Gemini CLI 가이드 | 10 / 11</span></div>
+</section>
+
+<!-- Slide 11: 유용한 프롬프트 예시 -->
+<section id="slide11" class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Gemini CLI</span> - <span class="python-yellow">설치 및 활용 가이드</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">11.</span> 유용한 프롬프트 예시</h2>
+            <p class="text-base text-gray-300 leading-relaxed">Gemini CLI의 능력을 최대한 활용하기 위한 프롬프트 예시입니다. 명확하고 구체적으로 요청할수록 더 좋은 결과를 얻을 수 있습니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-lightbulb mr-2"></i>프롬프트 작성 Tip</h4>
+                <p class="text-sm text-gray-400" style="line-height: 1.6;">
+                    1. <b>무엇을</b> 원하는지 명확히 하세요.<br>
+                    2. <b>어떤 파일</b>을 대상으로 할지 지정하세요.<br>
+                    3. <b>구체적인 조건</b>을 추가하세요.
+                </p>
+            </div>
+        </div>
+        <div class="code-content" style="max-height: 550px;">
+<pre>
+<span class="code-comment">// --- 상황별 프롬프트 예시 ---</span>
+
+<span class="code-comment">// 1. 코드 분석 및 이해</span>
+Gemini › <span class="code-string">"현재 폴더의 파일 목록을 보여주고, 각 파일의 역할을 간단히 설명해줘."</span>
+Gemini › <span class="code-string">"yolo_ex_1_basic.py 파일의 코드를 한 줄씩 자세히 설명해줄 수 있어?"</span>
+Gemini › <span class="code-string">"이 프로젝트에서 'cv2.imshow'를 사용하는 모든 파일을 찾아줘."</span>
+
+<span class="code-comment">// 2. 새로운 코드 생성</span>
+Gemini › <span class="code-string">"웹캠을 흑백으로 보여주는 파이썬 코드를 `webcam_mono.py`로 만들어줘."</span>
+Gemini › <span class="code-string">"간단한 메모장 앱의 HTML, CSS, JS 파일을 각각 만들어줘."</span>
+
+<span class="code-comment">// 3. 기존 코드 수정 및 기능 추가</span>
+Gemini › <span class="code-string">"`webcam_mono.py`에 's' 키를 누르면 `capture.jpg`로 저장하는 기능을 추가해줘."</span>
+Gemini › <span class="code-string">"yolo_ex_3_counting.py 코드 25번째 줄의 `line_points` 변수 좌표를 (100, 500)에서 (800, 500)으로 변경해줘."</span>
+
+<span class="code-comment">// 4. 환경 설정 및 실행</span>
+Gemini › <span class="code-string">"이 파이썬 코드를 실행하려면 어떤 라이브러리가 필요하고, `requirements.txt` 파일로 만들어줘."</span>
+Gemini › <span class="code-string">"방금 만들어준 `webcam_mono.py` 코드를 실행해줘."</span>
+</pre>
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fab fa-google mr-2 text-python-blue text-lg"></i><span>Gemini CLI 가이드 | 11 / 11</span></div>
 </section>
 
 <!-- SlideController JavaScript -->

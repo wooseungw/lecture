@@ -287,12 +287,35 @@ body.slide-mode {
             </div>
         </div>
         <div class="image-content">
-            <img src="https://placehold.co/600x375/3a3a3a/ffffff?text=Miniconda+Download+Button" alt="미니콘다 다운로드 페이지" class="step-image">
-            <p class="text-center text-sm text-gray-500 mt-3">운영체제에 맞는 Miniconda 설치 파일 다운로드</p>
+            <img src="imgs/miniconda1.png" alt="미니콘다 다운로드 페이지" class="step-image">
+            <img src="imgs/miniconda2.png" alt="미니콘다 다운로드 페이지" class="step-image">
         </div>
     </div>
     <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-cogs mr-2 text-python-blue text-lg"></i><span>Miniconda 설치 | 1 / 8</span></div>
 </section>
+
+<!-- Slide 1.5 -->
+<section class="slide-container">
+    <div class="absolute top-10 left-10">
+        <h1 class="text-3xl font-bold mb-2"><span class="python-blue">Miniconda</span> <span class="python-yellow">설치 및 가상환경 생성</span></h1>
+        <div class="w-20 h-1 bg-python-blue rounded"></div>
+    </div>
+    <div class="content-wrapper">
+        <div class="text-content">
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">1단계:</span> Miniconda 다운로드</h2>
+            <p class="text-base text-gray-300 leading-relaxed">Miniconda는 프로젝트별 독립된 개발 환경을 구축하는 데 필수적인 도구입니다.<br><br><a href="https://www.anaconda.com/download/success" target="_blank" class="text-blue-400 hover:underline font-semibold">Anaconda 공식 홈페이지</a>에 접속하여 자신의 운영체제에 맞는 <strong>Miniconda Installers</strong>를 다운로드합니다.</p>
+            <div class="tip-box">
+                <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-boxes mr-2"></i>Miniconda, 왜 사용하나요?</h4>
+                <p class="text-sm text-gray-400">프로젝트마다 필요한 라이브러리 버전이 다를 때, Miniconda는 독립된 '가상환경'을 만들어 충돌을 막아줍니다. 이를 통해 여러 프로젝트를 안정적으로 관리할 수 있습니다.</p>
+            </div>
+        </div>
+        <div class="image-content">
+            <img src="imgs/miniconda3.png" alt="미니콘다 다운로드 페이지" class="step-image">
+        </div>
+    </div>
+    <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-cogs mr-2 text-python-blue text-lg"></i><span>Miniconda 설치 | 1 / 8</span></div>
+</section>
+
 
 <!-- Slide 2 -->
 <section class="slide-container">
@@ -310,8 +333,7 @@ body.slide-mode {
             </div>
         </div>
         <div class="image-content">
-            <img src="https://placehold.co/600x375/3a3a3a/ffffff?text=Miniconda+Installation+Type" alt="미니콘다 설치 유형 선택 화면" class="step-image">
-            <p class="text-center text-sm text-gray-500 mt-3">'All Users' 옵션을 선택하는 화면</p>
+            <img src="imgs/miniconda4.png" alt="미니콘다 설치 유형 선택 화면" class="step-image">
         </div>
     </div>
     <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-cogs mr-2 text-python-blue text-lg"></i><span>Miniconda 설치 | 2 / 8</span></div>
@@ -333,7 +355,7 @@ body.slide-mode {
             </div>
         </div>
         <div class="image-content">
-            <img src="https://placehold.co/600x375/3a3a3a/ffffff?text=Miniconda+Advanced+Options+(PATH+Checked)" alt="미니콘다 고급 설치 옵션 화면" class="step-image">
+            <img src="imgs/miniconda5.png" alt="미니콘다 고급 설치 옵션 화면" class="step-image">
             <p class="text-center text-sm text-gray-500 mt-3">PATH 환경변수 추가 옵션을 체크한 화면</p>
         </div>
     </div>
@@ -348,7 +370,7 @@ body.slide-mode {
     </div>
     <div class="content-wrapper">
         <div class="text-content">
-            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">4단계:</span> Conda 환경 초기화</h2>
+            <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">4단계:</span> Conda 환경 실행</h2>
             <p class="text-base text-gray-300 leading-relaxed">설치 후, 터미널에서 <code class="code-snippet">conda</code> 명령어를 사용하기 위한 초기화 작업을 진행합니다.<br><br>Windows는 <strong>Anaconda Prompt</strong>, Mac은 <strong>터미널</strong>을 실행하고 아래 명령어를 입력하세요.</p>
             <div class="code-block mt-4">
                 <span class="text-green-400">conda init</span>
@@ -359,7 +381,7 @@ body.slide-mode {
             </div>
         </div>
         <div class="image-content">
-            <img src="https://placehold.co/600x375/3a3a3a/ffffff?text=conda+init+command" alt="conda init 명령어 실행 화면" class="step-image">
+            <img src="imgs/miniconda6.png" alt="conda init 명령어 실행 화면" class="step-image">
             <p class="text-center text-sm text-gray-500 mt-3">터미널에서 <code class="code-snippet">conda init</code>을 실행한 모습</p>
         </div>
     </div>
@@ -379,17 +401,18 @@ body.slide-mode {
             <div class="code-block mt-4">
                 <span class="text-green-400">conda create -n</span> <span class="text-yellow-400">[가상환경이름]</span> <span class="text-green-400">python=</span><span class="text-yellow-400">[파이썬버전]</span>
                 <hr class="border-gray-600 my-2">
-                <span class="text-gray-400"># 예시: action 이라는 이름, python 3.12 버전</span><br>
-                <span class="text-green-400">conda create -n</span> <span class="text-yellow-400">action</span> <span class="text-green-400">python=</span><span class="text-yellow-400">3.12</span>
+                <span class="text-gray-400"># 예시: myconda 이라는 이름, python 3.12 버전</span><br>
+                <span class="text-green-400">conda create -n</span> <span class="text-yellow-400">myconda</span> <span class="text-green-400">python=</span><span class="text-yellow-400">3.12</span> <span class="text-gray-400">-y</span>
             </div>
             <div class="tip-box">
                 <h4 class="text-base font-bold text-yellow-400 mb-2"><i class="fas fa-check mr-2"></i>Proceed? [y]/n</h4>
-                <p class="text-sm text-gray-400">생성 과정에서 설치될 패키지 목록을 보여주며 진행 여부를 묻습니다. <code class="code-snippet">y</code>를 입력하고 Enter를 눌러 계속 진행합니다.</p>
+                <p class="text-sm text-gray-400"> <code class="code-snippet">-y</code> 키워드가 없다면, 생성 과정에서 설치될 패키지 목록을 보여주며 진행 여부를 묻습니다. <code class="code-snippet">y</code>를 입력하고 Enter를 눌러 계속 진행합니다.</p>
+                <p class="text-sm text-gray-400"> 가상환경 끄기는 conda deactivate 명령어를 사용합니다.</p>
             </div>
         </div>
         <div class="image-content">
-            <img src="https://placehold.co/600x375/3a3a3a/ffffff?text=conda+create+command" alt="conda create 명령어 실행 화면" class="step-image">
-            <p class="text-center text-sm text-gray-500 mt-3">가상환경 생성 명령어 및 확인 프롬프트</p>
+            <img src="imgs/miniconda7.png" alt="conda create 명령어 실행 화면" class="step-image">
+            <img src="imgs/miniconda8.png" alt="conda create 명령어 실행 화면" class="step-image">
         </div>
     </div>
     <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-cogs mr-2 text-python-blue text-lg"></i><span>Miniconda 설치 | 5 / 8</span></div>
@@ -417,7 +440,7 @@ body.slide-mode {
             </div>
         </div>
         <div class="image-content">
-            <img src="https://placehold.co/600x375/3a3a3a/ffffff?text=conda+activate+command" alt="conda activate 명령어 실행 화면" class="step-image">
+            <img src="imgs/miniconda9.png" alt="conda activate 명령어 실행 화면" class="step-image">
             <p class="text-center text-sm text-gray-500 mt-3">프롬프트 앞에 <code class="code-snippet">(action)</code>이 표시된 모습</p>
         </div>
     </div>
@@ -435,9 +458,9 @@ body.slide-mode {
             <h2 class="text-2xl font-semibold mb-4"><span class="python-yellow">7단계:</span> 패키지 설치</h2>
             <p class="text-base text-gray-300 leading-relaxed">가상환경이 활성화된 상태에서 프로젝트에 필요한 라이브러리(패키지)를 <code class="code-snippet">pip</code> 또는 <code class="code-snippet">conda</code> 명령어로 설치합니다.</p>
             <div class="code-block mt-4">
-                <span class="text-gray-400"># 예시: OpenCV, Jupyter Notebook 패키지 설치</span><br>
-                <span class="text-green-400">pip install</span> <span class="text-yellow-400">opencv-python</span><br>
-                <span class="text-green-400">conda install</span> <span class="text-yellow-400">jupyter</span>
+                <span class="text-gray-400"># 예시: OpenCV, mediapipe, Ultralytics 패키지 설치</span><br>
+                <span class="text-green-400">pip install</span> <span class="text-yellow-400">opencv-python, mediapipe</span><br>
+                <span class="text-green-400">conda install</span> <span class="text-yellow-400">ultralytics/span>
                 <hr class="border-gray-600 my-2">
                 <span class="text-gray-400"># 설치된 패키지 목록 확인</span><br>
                 <span class="text-green-400">pip list</span>
@@ -448,7 +471,7 @@ body.slide-mode {
             </div>
         </div>
         <div class="image-content">
-            <img src="https://placehold.co/600x375/3a3a3a/ffffff?text=pip+install+command" alt="pip install 명령어 실행 화면" class="step-image">
+            <img src="imgs/miniconda10.png" alt="pip install 명령어 실행 화면" class="step-image">
             <p class="text-center text-sm text-gray-500 mt-3"><code class="code-snippet">pip install</code> 명령어로 패키지를 설치하는 모습</p>
         </div>
     </div>
@@ -471,8 +494,8 @@ body.slide-mode {
             </div>
         </div>
         <div class="image-content">
-            <img src="https://placehold.co/600x375/3a3a3a/ffffff?text=VSCode+Select+Interpreter" alt="VSCode 인터프리터 선택 화면" class="step-image">
-            <p class="text-center text-sm text-gray-500 mt-3">명령 팔레트에서 인터프리터를 선택하는 모습</p>
+            <img src="imgs/miniconda11.png" alt="VSCode 인터프리터 선택 화면 1" class="step-image">
+            <img src="imgs/miniconda12.png" alt="VSCode 인터프리터 선택 화면 2" class="step-image">
         </div>
     </div>
     <div class="absolute bottom-6 right-10 flex items-center text-gray-500 text-sm"><i class="fas fa-cogs mr-2 text-python-blue text-lg"></i><span>Miniconda 설치 | 8 / 8</span></div>

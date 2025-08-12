@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MediaPipe 강의 자료 - 실전 예제로 배우는 비전 파이프라인</title>
+<link href="css/tailwind.min.css" rel="stylesheet"/>
+<link href="css/fontawesome.min.css" rel="stylesheet"/>
+<link href="slide-controller.css" rel="stylesheet"/>
+<style>
+        .python-blue { color: #306998; }
+        .python-yellow { color: #FFD43B; }
+        .slide-container { 
+            background-color: #1e1e1e; 
+            color: #ffffff; 
+            font-family: 'Segoe UI', 'Noto Sans KR', sans-serif;
+        }
+        .content-wrapper { display: flex; align-items: center; gap: 2rem; }
+        .text-content { flex: 1; }
+        .code-content { flex: 1.1; background-color: #252525; padding: 1.5rem; border-radius: 8px; font-family: 'Consolas', 'D2Coding', monospace; overflow-x: auto; max-height: 500px; }
+        .tip-box { background-color: #2d2d2d; border-left: 4px solid #FFD43B; padding: 1rem; margin-top: 1.25rem; border-radius: 0 8px 8px 0; }
+        .code-comment { color: #6A9955; }
+        .code-keyword { color: #569cd6; }
+        .code-string { color: #ce9178; }
+        .code-number { color: #b5cea8; }
+        .code-function { color: #DCDCAA; }
+        
+</style>
+</head>
+<body>
+
+  <!-- Title Slide: MediaPipe 강의 제목 -->
+  <section id="slide0" class="slide-container">
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center;">
+        <div style="margin-bottom: 3rem;">
+            <h1 style="font-size: 4rem; font-weight: bold; margin-bottom: 1rem; background: linear-gradient(45deg, #306998, #FFD43B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">MediaPipe</h1>
+            <h2 style="font-size: 2.5rem; font-weight: 300; color: #d1d5db; margin-bottom: 2rem;">실전 비전 파이프라인</h2>
+            <div style="width: 200px; height: 4px; background: linear-gradient(45deg, #306998, #FFD43B); margin: 0 auto; border-radius: 2px;"></div>
+        </div>
+        <div style="margin-top: 2rem;">
+            <p style="font-size: 1.25rem; color: #9ca3af; margin-bottom: 1rem;">손/얼굴/자세/제스처 등 다양한 비전 파이프라인을 실시간으로</p>
+            <p style="font-size: 1rem; color: #6b7280;">Python MediaPipe 라이브러리 실전 가이드</p>
+        </div>
+        <div style="position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%); color: #6b7280; font-size: 0.875rem;">
+            <p>Space 키 또는 방향키로 슬라이드를 넘겨주세요</p>
+        </div>
+    </div>
+  </section>
+
+  <!-- Slide 1: 환경 준비 -->
+  <section id="slide1" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">MediaPipe</span> - <span class="python-yellow">시작하기: 설치와 예제 실행</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;"><span class="python-yellow">1.</span> MediaPipe 환경 구성하기</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">MediaPipe는 Google에서 개발한 실시간 비전 처리 파이프라인으로, 손/얼굴/자세 추적을 단 몇 줄로 구현할 수 있습니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;">가상환경 사용을 권장하며, 웹캠 접근 권한과 충분한 조명이 필요합니다. 실행 시 창이 열리면 ESC로 종료합니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;">설치 후 간단한 웹캠 테스트로 환경이 정상 작동하는지 먼저 확인하세요.</p>
+        <div class="tip-box">
+          <h4 style="font-size: 1rem; font-weight: bold; color: #fbbf24; margin-bottom: 8px;">📦 패키지 설치</h4>
+          <p style="font-size: 0.875rem; color: #9ca3af;">pip install opencv-python mediapipe pillow matplotlib</p>
+          <p style="font-size: 0.875rem; color: #9ca3af; margin-top: 4px;">macOS: 시스템 환경설정 → 보안 및 개인 정보 보호 → 카메라 권한 허용</p>
+        </div>
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px; margin-top: 24px;"><span class="python-yellow">2.</span> 테스트 이미지 준비</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">제스처 인식 데모용 이미지들(thumbs_up.jpg, victory.jpg, pointing_up.jpg)이 작업 폴더에 있는지 확인하세요.</p>
+      </div>
+      <div class="code-content">
+<pre>
+<span class="code-comment"># 환경 테스트 - 웹캠과 MediaPipe 동작 확인</span>
+<span class="code-keyword">import</span> cv2
+<span class="code-keyword">import</span> mediapipe <span class="code-keyword">as</span> mp
+
+<span class="code-comment"># 웹캠이 제대로 열리는지 확인</span>
+cap = cv2.VideoCapture(<span class="code-number">0</span>)
+<span class="code-function">print</span>(<span class="code-string">"웹캠 접근 가능:"</span>, cap.isOpened())
+<span class="code-function">print</span>(<span class="code-string">"MediaPipe 버전:"</span>, mp.__version__)
+
+<span class="code-comment"># 간단한 프레임 캡처 테스트</span>
+ret, frame = cap.read()
+<span class="code-keyword">if</span> ret:
+    <span class="code-function">print</span>(<span class="code-string">f"프레임 크기: {frame.shape}"</span>)
+cap.release()
+</pre>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">🤖 <span style="margin-left: 8px;">MediaPipe | 1 / 18</span></div>
+  </section>
+
+  <!-- Slide 2: mediapipe_5_webcam.py (Hands 기본) -->
+  <section id="slide2" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">MediaPipe</span> - <span class="python-yellow">Hands 기초: 손 랜드마크</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;"><span class="python-yellow">2.</span> 손 랜드마크 검출의 핵심</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">MediaPipe Hands는 각 손에서 21개의 3D 랜드마크를 실시간으로 추출합니다. 손목부터 손가락 끝까지의 정확한 위치를 픽셀 좌표로 얻을 수 있습니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;"><strong>RGB 변환 이유:</strong> MediaPipe 모델은 RGB 입력을 기대하지만 OpenCV는 BGR을 사용하므로 변환이 필수입니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;"><strong>성능 최적화:</strong> writeable=False 설정으로 메모리 복사를 방지해 처리 속도를 향상시킵니다.</p>
+        <div class="tip-box">
+          <h4 style="font-size: 1rem; font-weight: bold; color: #fbbf24; margin-bottom: 8px;">🚀 실행 및 조정</h4>
+          <p style="font-size: 0.875rem; color: #9ca3af;">python mediapipe_5_webcam.py</p>
+          <p style="font-size: 0.875rem; color: #9ca3af; margin-top: 4px;">손이 잘 인식되지 않으면 min_detection_confidence를 0.3으로 낮추세요</p>
+        </div>
+      </div>
+      <div class="code-content">
+<pre>
+<span class="code-keyword">import</span> cv2, mediapipe <span class="code-keyword">as</span> mp
+
+<span class="code-comment"># MediaPipe 솔루션 초기화</span>
+mp_hands = mp.solutions.hands
+mp_draw = mp.solutions.drawing_utils
+cap = cv2.VideoCapture(<span class="code-number">0</span>)
+
+<span class="code-comment"># 손 검출 설정: 최대 2개 손, 신뢰도 임계값</span>
+<span class="code-keyword">with</span> mp_hands.Hands(
+    max_num_hands=<span class="code-number">2</span>,                    <span class="code-comment"># 동시 추적 가능한 손 개수</span>
+    min_detection_confidence=<span class="code-number">0.5</span>,      <span class="code-comment"># 최초 검출 신뢰도</span>
+    min_tracking_confidence=<span class="code-number">0.5</span>       <span class="code-comment"># 추적 유지 신뢰도</span>
+) <span class="code-keyword">as</span> hands:
+    
+  <span class="code-keyword">while</span> cap.isOpened():
+    ret, frame = cap.read()
+    <span class="code-keyword">if not</span> ret: <span class="code-keyword">break</span>
+    
+    <span class="code-comment"># BGR→RGB 변환 (MediaPipe 요구사항)</span>
+    rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    rgb_image.flags.writeable = <span class="code-keyword">False</span>  <span class="code-comment"># 성능 최적화</span>
+    
+    <span class="code-comment"># 손 랜드마크 검출</span>
+    results = hands.process(rgb_image)
+    
+    <span class="code-comment"># 결과 시각화를 위해 RGB→BGR 복원</span>
+    rgb_image.flags.writeable = <span class="code-keyword">True</span>
+    bgr_image = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2BGR)
+    
+    <span class="code-comment"># 검출된 손 랜드마크와 연결선 그리기</span>
+    <span class="code-keyword">if</span> results.multi_hand_landmarks:
+      <span class="code-keyword">for</span> hand_landmarks <span class="code-keyword">in</span> results.multi_hand_landmarks:
+        mp_draw.draw_landmarks(
+            bgr_image, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+    
+    cv2.imshow(<span class="code-string">'손 랜드마크 추적'</span>, bgr_image)
+    <span class="code-keyword">if</span> cv2.waitKey(<span class="code-number">1</span>) & <span class="code-number">0xFF</span> == <span class="code-number">27</span>: <span class="code-keyword">break</span>  <span class="code-comment"># ESC 종료</span>
+
+cap.release()
+cv2.destroyAllWindows()
+</pre>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">✋ <span style="margin-left: 8px;">MediaPipe | 2 / 18</span></div>
+  </section>
+
+  <!-- Slide 3: mediapipe_2.py (Face Mesh 기본) -->
+  <section id="slide3" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">MediaPipe</span> - <span class="python-yellow">Face Mesh: 정밀 얼굴 랜드마크</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;"><span class="python-yellow">3.</span> 얼굴 메시 - 468개 정밀 포인트</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">Face Mesh는 얼굴에서 468개의 3D 랜드마크를 추출하여 입술, 눈, 눈썹, 얼굴 윤곽을 정밀하게 추적합니다. 표정 분석이나 AR 필터 제작에 필수적입니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;"><strong>정규화 좌표:</strong> 랜드마크는 0~1 범위로 화면 크기와 무관합니다. 실제 픽셀 좌표는 width/height를 곱해 계산합니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;"><strong>refine_landmarks=True:</strong> 눈동자와 입술 주변을 더 정밀하게 추적합니다.</p>
+        <div class="tip-box">
+          <h4 style="font-size: 1rem; font-weight: bold; color: #fbbf24; margin-bottom: 8px;">💡 활용 팁</h4>
+          <p style="font-size: 0.875rem; color: #9ca3af;">특정 랜드마크만 추출하려면 FACEMESH_LIPS, FACEMESH_LEFT_EYE 등을 사용하세요</p>
+        </div>
+      </div>
+      <div class="code-content">
+<pre>
+<span class="code-keyword">import</span> cv2, mediapipe <span class="code-keyword">as</span> mp
+
+<span class="code-comment"># Face Mesh 솔루션 초기화</span>
+mp_face_mesh = mp.solutions.face_mesh
+mp_draw = mp.solutions.drawing_utils
+
+<span class="code-comment"># 얼굴 메시 설정</span>
+face_mesh = mp_face_mesh.FaceMesh(
+    max_num_faces=<span class="code-number">2</span>,              <span class="code-comment"># 최대 추적 얼굴 수</span>
+    refine_landmarks=<span class="code-keyword">True</span>,       <span class="code-comment"># 눈/입술 정밀도 향상</span>
+    min_detection_confidence=<span class="code-number">0.5</span>,
+    min_tracking_confidence=<span class="code-number">0.5</span>
+)
+
+cap = cv2.VideoCapture(<span class="code-number">0</span>)
+<span class="code-keyword">while</span> cap.isOpened():
+    success, image = cap.read()
+    <span class="code-keyword">if not</span> success: <span class="code-keyword">break</span>
+    
+    <span class="code-comment"># BGR→RGB 변환 및 처리</span>
+    rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    results = face_mesh.process(rgb_image)
+    
+    <span class="code-comment"># 468개 랜드마크를 개별 점으로 그리기</span>
+    <span class="code-keyword">if</span> results.multi_face_landmarks:
+        <span class="code-keyword">for</span> face_landmarks <span class="code-keyword">in</span> results.multi_face_landmarks:
+            <span class="code-keyword">for</span> landmark <span class="code-keyword">in</span> face_landmarks.landmark:
+                <span class="code-comment"># 정규화된 좌표를 픽셀 좌표로 변환</span>
+                x = <span class="code-function">int</span>(landmark.x * image.shape[<span class="code-number">1</span>])
+                y = <span class="code-function">int</span>(landmark.y * image.shape[<span class="code-number">0</span>])
+                
+                <span class="code-comment"># 작은 초록색 점으로 랜드마크 표시</span>
+                cv2.circle(image, (x, y), <span class="code-number">1</span>, (<span class="code-number">0</span>, <span class="code-number">255</span>, <span class="code-number">0</span>), -<span class="code-number">1</span>)
+    
+    cv2.imshow(<span class="code-string">'얼굴 메시 - 468개 포인트'</span>, image)
+    <span class="code-keyword">if</span> cv2.waitKey(<span class="code-number">1</span>) & <span class="code-number">0xFF</span> == <span class="code-number">27</span>: <span class="code-keyword">break</span>
+
+cap.release()
+cv2.destroyAllWindows()
+</pre>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">😊 <span style="margin-left: 8px;">MediaPipe | 3 / 18</span></div>
+  </section>
+
+  <!-- Slide 4: mediapipe_3.py (Pose 기본) -->
+  <section id="slide4" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">MediaPipe</span> - <span class="python-yellow">Pose: 신체 랜드마크</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;"><span class="python-yellow">4.</span> 전신 자세 추적 - 33개 핵심 포인트</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">MediaPipe Pose는 머리부터 발끝까지 33개의 신체 랜드마크를 실시간으로 추적합니다. 운동 분석, 자세 교정, 피트니스 앱 개발에 활용됩니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;"><strong>POSE_CONNECTIONS:</strong> 어깨-팔꿈치-손목, 엉덩이-무릎-발목 등의 연결선을 자동으로 그려 골격을 시각화합니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;"><strong>성능 팁:</strong> 480p 해상도로 시작하여 필요시 720p로 올리거나, model_complexity=0으로 경량 모델을 사용하세요.</p>
+        <div class="tip-box">
+          <h4 style="font-size: 1rem; font-weight: bold; color: #fbbf24; margin-bottom: 8px;">📐 주요 랜드마크</h4>
+          <p style="font-size: 0.875rem; color: #9ca3af;">NOSE(0), LEFT_SHOULDER(11), RIGHT_SHOULDER(12), LEFT_HIP(23), RIGHT_HIP(24) 등이 핵심</p>
+        </div>
+      </div>
+      <div class="code-content">
+<pre>
+<span class="code-keyword">import</span> cv2, mediapipe <span class="code-keyword">as</span> mp
+
+<span class="code-comment"># Pose 솔루션 초기화</span>
+mp_pose = mp.solutions.pose
+mp_draw = mp.solutions.drawing_utils
+
+<span class="code-comment"># 자세 추적 설정</span>
+<span class="code-keyword">with</span> mp_pose.Pose(
+    min_detection_confidence=<span class="code-number">0.5</span>,      <span class="code-comment"># 초기 검출 신뢰도</span>
+    min_tracking_confidence=<span class="code-number">0.5</span>,       <span class="code-comment"># 추적 유지 신뢰도</span>
+    model_complexity=<span class="code-number">1</span>                 <span class="code-comment"># 0(빠름), 1(균형), 2(정확)</span>
+) <span class="code-keyword">as</span> pose:
+    
+    cap = cv2.VideoCapture(<span class="code-number">0</span>)
+    <span class="code-keyword">while</span> cap.isOpened():
+        success, image = cap.read()
+        <span class="code-keyword">if not</span> success: <span class="code-keyword">break</span>
+        
+        <span class="code-comment"># 성능 최적화를 위한 BGR→RGB 변환</span>
+        rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        rgb_image.flags.writeable = <span class="code-keyword">False</span>
+        
+        <span class="code-comment"># 자세 랜드마크 검출</span>
+        results = pose.process(rgb_image)
+        
+        <span class="code-comment"># 그리기 위해 다시 BGR로 변환</span>
+        rgb_image.flags.writeable = <span class="code-keyword">True</span>
+        bgr_image = cv2.cvtColor(rgb_image, cv2.COLOR_RGB2BGR)
+        
+        <span class="code-comment"># 33개 랜드마크와 연결선 그리기</span>
+        <span class="code-keyword">if</span> results.pose_landmarks:
+            mp_draw.draw_landmarks(
+                bgr_image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+        
+        cv2.imshow(<span class="code-string">'전신 자세 추적'</span>, bgr_image)
+        <span class="code-keyword">if</span> cv2.waitKey(<span class="code-number">1</span>) & <span class="code-number">0xFF</span> == <span class="code-number">27</span>: <span class="code-keyword">break</span>
+
+cap.release()
+cv2.destroyAllWindows()
+</pre>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">🏃‍♂️ <span style="margin-left: 8px;">MediaPipe | 4 / 18</span></div>
+  </section>
+
+  <!-- Slide 5: mediapipe_4.py (간단 액션 인식) -->
+  <section id="slide5" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">MediaPipe</span> - <span class="python-yellow">간단 액션 인식: 손들기/앉기</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;"><span class="python-yellow">5.</span> 좌표 기반 간단 동작 인식</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">복잡한 AI 모델 없이도 랜드마크 좌표 비교로 기본 동작을 분류할 수 있습니다. 손 들기, 앉기/서기, 점프 등의 동작을 실시간으로 판별합니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;"><strong>좌표 비교 원리:</strong> 손목이 어깨보다 위에 있으면 손 든 상태, 엉덩이와 무릎의 y좌표 차이가 작으면 앉은 상태로 판단합니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;"><strong>확장 방법:</strong> 여러 프레임의 평균으로 노이즈 제거, 임계값 조정으로 민감도 최적화가 가능합니다.</p>
+        <div class="tip-box">
+          <h4 style="font-size: 1rem; font-weight: bold; color: #fbbf24; margin-bottom: 8px;">🎯 실용 팁</h4>
+          <p style="font-size: 0.875rem; color: #9ca3af;">visibility > 0.5인 랜드마크만 사용하여 가려진 부위로 인한 오류를 방지하세요</p>
+        </div>
+      </div>
+      <div class="code-content">
+<pre>
+<span class="code-keyword">import</span> cv2, mediapipe <span class="code-keyword">as</span> mp
+
+<span class="code-keyword">def</span> <span class="code-function">detect_action</span>(pose_landmarks):
+    <span class="code-string">"""랜드마크 좌표로 간단한 동작을 분류하는 함수"""</span>
+    landmarks = pose_landmarks.landmark
+    
+    <span class="code-comment"># 주요 관절 랜드마크 가져오기</span>
+    left_shoulder = landmarks[mp.solutions.pose.PoseLandmark.LEFT_SHOULDER.value]
+    left_wrist = landmarks[mp.solutions.pose.PoseLandmark.LEFT_WRIST.value]
+    left_hip = landmarks[mp.solutions.pose.PoseLandmark.LEFT_HIP.value]
+    left_knee = landmarks[mp.solutions.pose.PoseLandmark.LEFT_KNEE.value]
+    
+    <span class="code-comment"># 동작 분류 로직</span>
+    <span class="code-keyword">if</span> left_wrist.y < left_shoulder.y <span class="code-keyword">and</span> left_wrist.visibility > <span class="code-number">0.5</span>:
+        <span class="code-keyword">return</span> <span class="code-string">"손 들기"</span>
+    <span class="code-keyword">elif</span> <span class="code-function">abs</span>(left_hip.y - left_knee.y) < <span class="code-number">0.1</span>:
+        <span class="code-keyword">return</span> <span class="code-string">"앉기"</span>
+    <span class="code-keyword">else</span>:
+        <span class="code-keyword">return</span> <span class="code-string">"서 있기"</span>
+
+<span class="code-comment"># 메인 실행 부분</span>
+mp_pose = mp.solutions.pose
+mp_draw = mp.solutions.drawing_utils
+
+<span class="code-keyword">with</span> mp_pose.Pose(min_detection_confidence=<span class="code-number">0.5</span>) <span class="code-keyword">as</span> pose:
+    cap = cv2.VideoCapture(<span class="code-number">0</span>)
+    
+    <span class="code-keyword">while</span> cap.isOpened():
+        ret, frame = cap.read()
+        <span class="code-keyword">if not</span> ret: <span class="code-keyword">break</span>
+        
+        <span class="code-comment"># 자세 검출</span>
+        rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        results = pose.process(rgb_image)
+        
+        <span class="code-comment"># 동작 인식 및 표시</span>
+        <span class="code-keyword">if</span> results.pose_landmarks:
+            action = <span class="code-function">detect_action</span>(results.pose_landmarks)
+            
+            <span class="code-comment"># 결과를 화면에 표시</span>
+            cv2.putText(frame, f<span class="code-string">"동작: {action}"</span>, (<span class="code-number">10</span>, <span class="code-number">30</span>), 
+                       cv2.FONT_HERSHEY_SIMPLEX, <span class="code-number">1</span>, (<span class="code-number">0</span>, <span class="code-number">255</span>, <span class="code-number">0</span>), <span class="code-number">2</span>)
+            
+            <span class="code-comment"># 골격도 그리기</span>
+            mp_draw.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+        
+        cv2.imshow(<span class="code-string">'간단 동작 인식'</span>, frame)
+        <span class="code-keyword">if</span> cv2.waitKey(<span class="code-number">1</span>) & <span class="code-number">0xFF</span> == <span class="code-number">27</span>: <span class="code-keyword">break</span>
+
+cap.release()
+cv2.destroyAllWindows()
+</pre>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">🎯 <span style="margin-left: 8px;">MediaPipe | 5 / 18</span></div>
+  </section>
+
+  <!-- Slide 6: face_detection.py (얼굴 감지/통계) -->
+  <section id="slide6" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">MediaPipe</span> - <span class="python-yellow">Face Detection: 감지/ID/통계</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;"><span class="python-yellow">6.</span> 핵심 요약</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">FaceDetection으로 박스/신뢰도를 얻고, 간단한 기준으로 ID 트래킹과 요약 통계를 냅니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;">confidence, size, orientation 등을 HUD 형태로 표시하면 분석에 도움이 됩니다.</p>
+      </div>
+      <div class="code-content">
+<pre>
+det = mp.solutions.face_detection.FaceDetection(model_selection=<span class="code-number">0</span>,
+  min_detection_confidence=<span class="code-number">0.7</span>)
+res = det.process(rgb)
+<span class="code-keyword">for</span> d <span class="code-keyword">in</span> (res.detections <span class="code-keyword">or</span> []):
+  bb = d.location_data.relative_bounding_box; conf = d.score[<span class="code-number">0</span>]
+  x,y,w,h = <span class="code-function">int</span>(bb.xmin*W), <span class="code-function">int</span>(bb.ymin*H), <span class="code-function">int</span>(bb.width*W), <span class="code-function">int</span>(bb.height*H)
+  cv2.rectangle(frame,(x,y),(x+w,y+h),(<span class="code-number">0</span>,<span class="code-number">255</span>,<span class="code-number">0</span>),<span class="code-number">2</span>)
+  cv2.putText(frame, f<span class="code-string">"Conf:{conf:.2f}"</span>, (x,y-<span class="code-number">6</span>), <span class="code-number">0</span>, .<span class="code-number">5</span>, (<span class="code-number">255</span>,<span class="code-number">255</span>,<span class="code-number">255</span>), <span class="code-number">1</span>)
+</pre>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">👤 <span style="margin-left: 8px;">MediaPipe | 6 / 18</span></div>
+  </section>
+
+  <!-- Slide 7: emotion_analyzer.py (얼굴+손 기분 분석) -->
+  <section id="slide7" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">MediaPipe</span> - <span class="python-yellow">Emotion Analyzer: 얼굴/손 종합</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;"><span class="python-yellow">7.</span> 핵심 요약</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">FaceMesh의 입/눈 지표와 Hands 제스처를 조합해 간단한 감정/상태를 추론합니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;">룰 기반으로 시작하고, 데이터가 쌓이면 ML 분류기로 확장하세요.</p>
+      </div>
+      <div class="code-content">
+<pre>
+<span class="code-keyword">def</span> <span class="code-function">analyze_face_emotion</span>(lm):
+  mouth_curve = ((lm[<span class="code-number">61</span>].y + lm[<span class="code-number">291</span>].y)/<span class="code-number">2</span>) - lm[<span class="code-number">13</span>].y
+  <span class="code-keyword">if</span> mouth_curve < -<span class="code-number">0.01</span>: <span class="code-keyword">return</span> <span class="code-string">"행복"</span>
+  <span class="code-keyword">elif</span> mouth_curve > <span class="code-number">0.01</span>: <span class="code-keyword">return</span> <span class="code-string">"슬픔"</span>
+  <span class="code-keyword">else</span>: <span class="code-keyword">return</span> <span class="code-string">"중립"</span>
+</pre>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">😄 <span style="margin-left: 8px;">MediaPipe | 7 / 18</span></div>
+  </section>
+
+  <!-- Slide 8: holistic_analyzer.py (Holistic 종합 분석) -->
+  <section id="slide8" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">MediaPipe</span> - <span class="python-yellow">Holistic: 얼굴/손/자세 한 번에</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;"><span class="python-yellow">8.</span> 핵심 요약</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">Holistic.process 한 번으로 얼굴/손/자세를 모두 얻어 종합 판단을 합니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;">UI 오버레이를 만들어 분석 결과를 보기 쉽게 정리하세요.</p>
+      </div>
+      <div class="code-content">
+<pre>
+hol = mp.solutions.holistic.Holistic(min_detection_confidence=<span class="code-number">0.5</span>,
+  min_tracking_confidence=<span class="code-number">0.5</span>)
+res = hol.process(rgb)
+<span class="code-keyword">if</span> res.face_landmarks: ...
+<span class="code-keyword">if</span> res.left_hand_landmarks: ...
+<span class="code-keyword">if</span> res.pose_landmarks: ...
+</pre>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">🤖 <span style="margin-left: 8px;">MediaPipe | 8 / 18</span></div>
+  </section>
+
+  <!-- Slide 9: action_counter.py (스쿼트 카운터) -->
+  <section id="slide9" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">MediaPipe</span> - <span class="python-yellow">스쿼트 카운터: 각도 기반</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;"><span class="python-yellow">9.</span> 스쿼트 카운터 - 각도 계산 활용</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">3개 점(엉덩이-무릎-발목)으로 무릎 각도를 계산하여 스쿼트 동작을 자동 카운트합니다. 피트니스 앱이나 운동 분석에 직접 활용할 수 있습니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;"><strong>각도 임계값:</strong> 일반적으로 서 있을 때 160°, 스쿼트 최저점에서 90° 기준으로 up↔down 전환을 감지합니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;"><strong>상태 관리:</strong> "up"→"down"→"up" 순서로 완전한 1회 동작을 카운트하여 부분 동작을 제외합니다.</p>
+        <div class="tip-box">
+          <h4 style="font-size: 1rem; font-weight: bold; color: #fbbf24; margin-bottom: 8px;">💪 개선 방법</h4>
+          <p style="font-size: 0.875rem; color: #9ca3af;">양쪽 다리 각도의 평균 사용, 3-5프레임 평균으로 노이즈 제거, 속도 체크로 너무 빠른 동작 필터링</p>
+        </div>
+      </div>
+      <div class="code-content">
+<pre>
+<span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np
+<span class="code-keyword">import</span> cv2, mediapipe <span class="code-keyword">as</span> mp
+
+<span class="code-keyword">def</span> <span class="code-function">calculate_angle</span>(point_a, point_b, point_c):
+    <span class="code-string">"""3개 점으로 각도를 계산하는 함수 (point_b가 꼭짓점)"""</span>
+    a = np.array([point_a.x, point_a.y])  <span class="code-comment"># 첫 번째 점</span>
+    b = np.array([point_b.x, point_b.y])  <span class="code-comment"># 꼭짓점 (무릎)</span>
+    c = np.array([point_c.x, point_c.y])  <span class="code-comment"># 세 번째 점</span>
+    
+    <span class="code-comment"># 벡터 계산</span>
+    radians = np.arctan2(c[<span class="code-number">1</span>] - b[<span class="code-number">1</span>], c[<span class="code-number">0</span>] - b[<span class="code-number">0</span>]) - np.arctan2(a[<span class="code-number">1</span>] - b[<span class="code-number">1</span>], a[<span class="code-number">0</span>] - b[<span class="code-number">0</span>])
+    angle = np.abs(radians * <span class="code-number">180.0</span> / np.pi)
+    
+    <span class="code-keyword">if</span> angle > <span class="code-number">180.0</span>:
+        angle = <span class="code-number">360</span> - angle
+    
+    <span class="code-keyword">return</span> angle
+
+<span class="code-comment"># 스쿼트 카운터 메인 코드</span>
+mp_pose = mp.solutions.pose
+mp_draw = mp.solutions.drawing_utils
+
+counter = <span class="code-number">0</span>
+stage = <span class="code-string">"up"</span>  <span class="code-comment"># "up" 또는 "down" 상태</span>
+
+<span class="code-keyword">with</span> mp_pose.Pose(min_detection_confidence=<span class="code-number">0.5</span>, min_tracking_confidence=<span class="code-number">0.5</span>) <span class="code-keyword">as</span> pose:
+    cap = cv2.VideoCapture(<span class="code-number">0</span>)
+    
+    <span class="code-keyword">while</span> cap.isOpened():
+        ret, frame = cap.read()
+        <span class="code-keyword">if not</span> ret: <span class="code-keyword">break</span>
+        
+        <span class="code-comment"># 자세 검출</span>
+        rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        results = pose.process(rgb_image)
+        
+        <span class="code-keyword">if</span> results.pose_landmarks:
+            landmarks = results.pose_landmarks.landmark
+            
+            <span class="code-comment"># 왼쪽 다리 랜드마크 추출</span>
+            hip = landmarks[mp_pose.PoseLandmark.LEFT_HIP.value]
+            knee = landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value]
+            ankle = landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value]
+            
+            <span class="code-comment"># 무릎 각도 계산</span>
+            angle = <span class="code-function">calculate_angle</span>(hip, knee, ankle)
+            
+            <span class="code-comment"># 스쿼트 카운팅 로직</span>
+            <span class="code-keyword">if</span> angle > <span class="code-number">160</span>:
+                stage = <span class="code-string">"up"</span>
+            <span class="code-keyword">elif</span> angle < <span class="code-number">90</span> <span class="code-keyword">and</span> stage == <span class="code-string">"up"</span>:
+                stage = <span class="code-string">"down"</span>
+                counter += <span class="code-number">1</span>
+            
+            <span class="code-comment"># 결과 표시</span>
+            cv2.putText(frame, f<span class="code-string">'카운트: {counter}'</span>, (<span class="code-number">10</span>, <span class="code-number">30</span>), 
+                       cv2.FONT_HERSHEY_SIMPLEX, <span class="code-number">1</span>, (<span class="code-number">255</span>, <span class="code-number">255</span>, <span class="code-number">255</span>), <span class="code-number">2</span>)
+            cv2.putText(frame, f<span class="code-string">'각도: {int(angle)}'</span>, (<span class="code-number">10</span>, <span class="code-number">70</span>), 
+                       cv2.FONT_HERSHEY_SIMPLEX, <span class="code-number">1</span>, (<span class="code-number">255</span>, <span class="code-number">255</span>, <span class="code-number">255</span>), <span class="code-number">2</span>)
+            
+            <span class="code-comment"># 자세 그리기</span>
+            mp_draw.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+        
+        cv2.imshow(<span class="code-string">'스쿼트 카운터'</span>, frame)
+        <span class="code-keyword">if</span> cv2.waitKey(<span class="code-number">1</span>) & <span class="code-number">0xFF</span> == <span class="code-number">27</span>: <span class="code-keyword">break</span>
+
+cap.release()
+cv2.destroyAllWindows()
+</pre>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">💪 <span style="margin-left: 8px;">MediaPipe | 9 / 18</span></div>
+  </section>
+
+  <!-- Slide 10: activity_tracker.py (활동량/자세 상태) -->
+  <section id="slide10" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">MediaPipe</span> - <span class="python-yellow">Activity Tracker: 움직임/자세 기록</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;"><span class="python-yellow">10.</span> Activity Tracker - 움직임 패턴 분석</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">전신 랜드마크의 중심 좌표 변화를 시계열로 추적하여 사용자의 활동 패턴을 분석합니다. 앉기/서기/걷기 상태를 자동 분류할 수 있습니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;"><strong>움직임 측정:</strong> 프레임 간 중심점 거리를 계산하여 활동량을 수치화합니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;"><strong>패턴 인식:</strong> 움직임 히스토리에서 평균/최대값으로 앉음/서있음/걷기를 구분합니다.</p>
+        <div class="tip-box">
+          <h4 style="font-size: 1rem; font-weight: bold; color: #fbbf24; margin-bottom: 8px;">📈 활용 아이디어</h4>
+          <p style="font-size: 0.875rem; color: #9ca3af;">운동량 측정, 업무 자세 모니터링, 헬스케어 앱, 게임 제어, 재택근무 활동 추적</p>
+        </div>
+      </div>
+      <div class="code-content">
+<pre>
+<span class="code-keyword">import</span> cv2, mediapipe <span class="code-keyword">as</span> mp
+<span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np
+<span class="code-keyword">from</span> collections <span class="code-keyword">import</span> deque
+<span class="code-keyword">import</span> json, time
+
+<span class="code-keyword">class</span> <span class="code-function">ActivityTracker</span>:
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-function">self</span>, history_size=<span class="code-number">300</span>):
+        <span class="code-string">"""활동 추적기 초기화"""</span>
+        <span class="code-function">self</span>.movement_history = deque(maxlen=history_size)  <span class="code-comment"># 10초간 기록</span>
+        <span class="code-function">self</span>.center_history = deque(maxlen=<span class="code-number">10</span>)
+        <span class="code-function">self</span>.activity_log = []
+        <span class="code-function">self</span>.prev_center = <span class="code-keyword">None</span>
+        <span class="code-function">self</span>.session_start = time.time()
+    
+    <span class="code-keyword">def</span> <span class="code-function">calculate_body_center</span>(<span class="code-function">self</span>, landmarks):
+        <span class="code-string">"""전신 랜드마크에서 중심점 계산"""</span>
+        <span class="code-comment"># 주요 랜드마크만 사용 (노이즈 제거)</span>
+        key_points = [
+            landmarks[mp.solutions.pose.PoseLandmark.LEFT_SHOULDER.value],
+            landmarks[mp.solutions.pose.PoseLandmark.RIGHT_SHOULDER.value],
+            landmarks[mp.solutions.pose.PoseLandmark.LEFT_HIP.value],
+            landmarks[mp.solutions.pose.PoseLandmark.RIGHT_HIP.value],
+        ]
+        
+        x_coords = [p.x <span class="code-keyword">for</span> p <span class="code-keyword">in</span> key_points <span class="code-keyword">if</span> p.visibility > <span class="code-number">0.5</span>]
+        y_coords = [p.y <span class="code-keyword">for</span> p <span class="code-keyword">in</span> key_points <span class="code-keyword">if</span> p.visibility > <span class="code-number">0.5</span>]
+        
+        <span class="code-keyword">if</span> <span class="code-function">len</span>(x_coords) >= <span class="code-number">2</span>:
+            <span class="code-keyword">return</span> (np.mean(x_coords), np.mean(y_coords))
+        <span class="code-keyword">return</span> <span class="code-keyword">None</span>
+    
+    <span class="code-keyword">def</span> <span class="code-function">update_activity</span>(<span class="code-function">self</span>, landmarks):
+        <span class="code-string">"""프레임마다 활동 상태 업데이트"""</span>
+        center = <span class="code-function">self</span>.<span class="code-function">calculate_body_center</span>(landmarks)
+        <span class="code-keyword">if</span> center <span class="code-keyword">is</span> <span class="code-keyword">None</span>:
+            <span class="code-keyword">return</span> <span class="code-keyword">None</span>
+        
+        <span class="code-comment"># 움직임 계산</span>
+        movement = <span class="code-number">0</span>
+        <span class="code-keyword">if</span> <span class="code-function">self</span>.prev_center <span class="code-keyword">is not None</span>:
+            dx = center[<span class="code-number">0</span>] - <span class="code-function">self</span>.prev_center[<span class="code-number">0</span>]
+            dy = center[<span class="code-number">1</span>] - <span class="code-function">self</span>.prev_center[<span class="code-number">1</span>]
+            movement = np.hypot(dx, dy)
+        
+        <span class="code-function">self</span>.movement_history.append(movement)
+        <span class="code-function">self</span>.center_history.append(center)
+        <span class="code-function">self</span>.prev_center = center
+        
+        <span class="code-comment"># 활동 상태 분류</span>
+        <span class="code-keyword">if</span> <span class="code-function">len</span>(<span class="code-function">self</span>.movement_history) >= <span class="code-number">30</span>:  <span class="code-comment"># 1초간 데이터</span>
+            recent_movements = <span class="code-function">list</span>(<span class="code-function">self</span>.movement_history)[-<span class="code-number">30</span>:]
+            avg_movement = np.mean(recent_movements)
+            max_movement = <span class="code-function">max</span>(recent_movements)
+            
+            <span class="code-keyword">if</span> avg_movement < <span class="code-number">0.005</span>:
+                activity = <span class="code-string">"앉아있음"</span>
+            <span class="code-keyword">elif</span> avg_movement < <span class="code-number">0.02</span>:
+                activity = <span class="code-string">"서있음"</span>
+            <span class="code-keyword">else</span>:
+                activity = <span class="code-string">"움직임"</span>
+            
+            <span class="code-keyword">return</span> {
+                <span class="code-string">'activity'</span>: activity,
+                <span class="code-string">'movement_avg'</span>: avg_movement,
+                <span class="code-string">'movement_max'</span>: max_movement,
+                <span class="code-string">'timestamp'</span>: time.time() - <span class="code-function">self</span>.session_start
+            }
+        
+        <span class="code-keyword">return</span> <span class="code-keyword">None</span>
+    
+    <span class="code-keyword">def</span> <span class="code-function">save_session</span>(<span class="code-function">self</span>, filename=<span class="code-string">'activity_log.json'</span>):
+        <span class="code-string">"""세션 데이터를 JSON으로 저장"""</span>
+        <span class="code-keyword">with</span> <span class="code-function">open</span>(filename, <span class="code-string">'w'</span>, encoding=<span class="code-string">'utf-8'</span>) <span class="code-keyword">as</span> f:
+            json.dump(<span class="code-function">self</span>.activity_log, f, ensure_ascii=<span class="code-keyword">False</span>, indent=<span class="code-number">2</span>)
+
+<span class="code-comment"># 메인 실행 코드</span>
+mp_pose = mp.solutions.pose
+mp_draw = mp.solutions.drawing_utils
+
+tracker = <span class="code-function">ActivityTracker</span>()
+
+<span class="code-keyword">with</span> mp_pose.Pose(min_detection_confidence=<span class="code-number">0.5</span>, min_tracking_confidence=<span class="code-number">0.5</span>) <span class="code-keyword">as</span> pose:
+    cap = cv2.VideoCapture(<span class="code-number">0</span>)
+    
+    <span class="code-keyword">while</span> cap.isOpened():
+        ret, frame = cap.read()
+        <span class="code-keyword">if not</span> ret: <span class="code-keyword">break</span>
+        
+        <span class="code-comment"># 자세 검출</span>
+        rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        results = pose.process(rgb_image)
+        
+        <span class="code-keyword">if</span> results.pose_landmarks:
+            <span class="code-comment"># 활동 추적 업데이트</span>
+            status = tracker.update_activity(results.pose_landmarks.landmark)
+            
+            <span class="code-keyword">if</span> status:
+                tracker.activity_log.append(status)
+                
+                <span class="code-comment"># 화면에 정보 표시</span>
+                cv2.putText(frame, f<span class="code-string">"활동: {status['activity']}"</span>, 
+                           (<span class="code-number">10</span>, <span class="code-number">30</span>), cv2.FONT_HERSHEY_SIMPLEX, <span class="code-number">1</span>, (<span class="code-number">0</span>, <span class="code-number">255</span>, <span class="code-number">0</span>), <span class="code-number">2</span>)
+                cv2.putText(frame, f<span class="code-string">"움직임: {status['movement_avg']:.4f}"</span>, 
+                           (<span class="code-number">10</span>, <span class="code-number">70</span>), cv2.FONT_HERSHEY_SIMPLEX, <span class="code-number">0.7</span>, (<span class="code-number">255</span>, <span class="code-number">255</span>, <span class="code-number">255</span>), <span class="code-number">2</span>)
+            
+            <span class="code-comment"># 자세 그리기</span>
+            mp_draw.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+        
+        cv2.imshow(<span class="code-string">'Activity Tracker'</span>, frame)
+        <span class="code-keyword">if</span> cv2.waitKey(<span class="code-number">1</span>) & <span class="code-number">0xFF</span> == <span class="code-number">27</span>: <span class="code-keyword">break</span>
+
+<span class="code-comment"># 종료 시 로그 저장</span>
+tracker.save_session()
+cap.release()
+cv2.destroyAllWindows()
+</pre>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">📊 <span style="margin-left: 8px;">MediaPipe | 10 / 18</span></div>
+  </section>
+
+  <!-- Slide 11: posture_checker.py (자세 교정) -->
+  <section id="slide11" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">MediaPipe</span> - <span class="python-yellow">Posture Checker: 어깨/목 정렬</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;"><span class="python-yellow">11.</span> Posture Checker - 실시간 자세 교정</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">어깨 기울기, 머리 전방 이동, 등의 굽힘 각도를 실시간으로 분석하여 올바른 자세 유지를 도와줍니다. 사무직 거북목 예방에 특히 유용합니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;"><strong>측정 항목:</strong> 어깨 수평도(±5°), 목-어깨 정렬도, 등 굽힘각(20° 이하 권장)</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;"><strong>피드백:</strong> 경고음 + 시각적 가이드라인으로 즉시 교정 가능</p>
+        <div class="tip-box">
+          <h4 style="font-size: 1rem; font-weight: bold; color: #fbbf24; margin-bottom: 8px;">💡 개선 방향</h4>
+          <p style="font-size: 0.875rem; color: #9ca3af;">개인별 기준점 저장, 자세 히스토리 분석, 스트레칭 타이머, 모바일 알림 연동</p>
+        </div>
+      </div>
+      <div class="code-content">
+<pre>
+<span class="code-keyword">import</span> cv2, mediapipe <span class="code-keyword">as</span> mp
+<span class="code-keyword">import</span> numpy <span class="code-keyword">as</span> np
+<span class="code-keyword">import</span> math
+
+<span class="code-keyword">class</span> <span class="code-function">PostureChecker</span>:
+    <span class="code-keyword">def</span> <span class="code-function">__init__</span>(<span class="code-function">self</span>):
+        <span class="code-string">"""자세 체커 초기화"""</span>
+        <span class="code-function">self</span>.warnings = []
+        <span class="code-function">self</span>.good_posture_count = <span class="code-number">0</span>
+        <span class="code-function">self</span>.total_frames = <span class="code-number">0</span>
+    
+    <span class="code-keyword">def</span> <span class="code-function">calculate_angle_2d</span>(<span class="code-function">self</span>, point1, point2):
+        <span class="code-string">"""두 점 사이의 각도 계산"""</span>
+        dx = point2[<span class="code-number">0</span>] - point1[<span class="code-number">0</span>]
+        dy = point2[<span class="code-number">1</span>] - point1[<span class="code-number">1</span>]
+        <span class="code-keyword">return</span> math.degrees(math.atan2(dy, dx))
+    
+    <span class="code-keyword">def</span> <span class="code-function">analyze_posture</span>(<span class="code-function">self</span>, landmarks):
+        <span class="code-string">"""자세 분석 및 피드백 생성"""</span>
+        <span class="code-function">self</span>.warnings.clear()
+        <span class="code-function">self</span>.total_frames += <span class="code-number">1</span>
+        
+        <span class="code-comment"># 주요 랜드마크 추출</span>
+        left_shoulder = landmarks[mp.solutions.pose.PoseLandmark.LEFT_SHOULDER.value]
+        right_shoulder = landmarks[mp.solutions.pose.PoseLandmark.RIGHT_SHOULDER.value]
+        nose = landmarks[mp.solutions.pose.PoseLandmark.NOSE.value]
+        left_hip = landmarks[mp.solutions.pose.PoseLandmark.LEFT_HIP.value]
+        right_hip = landmarks[mp.solutions.pose.PoseLandmark.RIGHT_HIP.value]
+        
+        <span class="code-comment"># 1. 어깨 수평도 체크</span>
+        shoulder_y_diff = <span class="code-function">abs</span>(left_shoulder.y - right_shoulder.y)
+        <span class="code-keyword">if</span> shoulder_y_diff > <span class="code-number">0.05</span>:  <span class="code-comment"># 임계값 조정 가능</span>
+            side = <span class="code-string">"왼쪽"</span> <span class="code-keyword">if</span> left_shoulder.y < right_shoulder.y <span class="code-keyword">else</span> <span class="code-string">"오른쪽"</span>
+            <span class="code-function">self</span>.warnings.append(f<span class="code-string">"⚠️ {side} 어깨가 올라가 있습니다"</span>)
+        
+        <span class="code-comment"># 2. 머리 전방 이동 체크 (거북목)</span>
+        shoulder_center_x = (left_shoulder.x + right_shoulder.x) / <span class="code-number">2</span>
+        head_forward_distance = <span class="code-function">abs</span>(nose.x - shoulder_center_x)
+        <span class="code-keyword">if</span> head_forward_distance > <span class="code-number">0.1</span>:
+            <span class="code-function">self</span>.warnings.append(<span class="code-string">"🐢 목이 너무 앞으로 나와있습니다 (거북목)"</span>)
+        
+        <span class="code-comment"># 3. 등 굽힘 각도 체크</span>
+        shoulder_center_y = (left_shoulder.y + right_shoulder.y) / <span class="code-number">2</span>
+        hip_center_y = (left_hip.y + right_hip.y) / <span class="code-number">2</span>
+        
+        <span class="code-comment"># 등의 기울기 계산 (간단한 근사)</span>
+        back_tilt = <span class="code-function">abs</span>(shoulder_center_y - hip_center_y)
+        <span class="code-keyword">if</span> back_tilt < <span class="code-number">0.3</span>:  <span class="code-comment"># 너무 앞으로 숙인 경우</span>
+            <span class="code-function">self</span>.warnings.append(<span class="code-string">"📐 등을 더 펴주세요"</span>)
+        
+        <span class="code-comment"># 4. 양쪽 어깨 높이 차이로 좌우 균형 체크</span>
+        shoulder_tilt_angle = <span class="code-function">self</span>.<span class="code-function">calculate_angle_2d</span>(
+            (left_shoulder.x, left_shoulder.y), 
+            (right_shoulder.x, right_shoulder.y)
+        )
+        <span class="code-keyword">if</span> <span class="code-function">abs</span>(shoulder_tilt_angle) > <span class="code-number">5</span>:  <span class="code-comment"># 5도 이상 기울어진 경우</span>
+            <span class="code-function">self</span>.warnings.append(f<span class="code-string">"⚖️ 어깨 기울기: {shoulder_tilt_angle:.1f}° (±5° 이내 권장)"</span>)
+        
+        <span class="code-comment"># 좋은 자세 카운트</span>
+        <span class="code-keyword">if</span> <span class="code-function">len</span>(<span class="code-function">self</span>.warnings) == <span class="code-number">0</span>:
+            <span class="code-function">self</span>.good_posture_count += <span class="code-number">1</span>
+            <span class="code-keyword">return</span> <span class="code-string">"✅ 좋은 자세입니다!"</span>
+        
+        <span class="code-keyword">return</span> <span class="code-function">self</span>.warnings
+    
+    <span class="code-keyword">def</span> <span class="code-function">get_posture_score</span>(<span class="code-function">self</span>):
+        <span class="code-string">"""자세 점수 계산 (백분율)"""</span>
+        <span class="code-keyword">if</span> <span class="code-function">self</span>.total_frames == <span class="code-number">0</span>:
+            <span class="code-keyword">return</span> <span class="code-number">0</span>
+        <span class="code-keyword">return</span> <span class="code-function">int</span>((<span class="code-function">self</span>.good_posture_count / <span class="code-function">self</span>.total_frames) * <span class="code-number">100</span>)
+
+<span class="code-comment"># 메인 실행 코드</span>
+mp_pose = mp.solutions.pose
+mp_draw = mp.solutions.drawing_utils
+
+posture_checker = <span class="code-function">PostureChecker</span>()
+
+<span class="code-keyword">with</span> mp_pose.Pose(min_detection_confidence=<span class="code-number">0.5</span>, min_tracking_confidence=<span class="code-number">0.5</span>) <span class="code-keyword">as</span> pose:
+    cap = cv2.VideoCapture(<span class="code-number">0</span>)
+    
+    <span class="code-keyword">while</span> cap.isOpened():
+        ret, frame = cap.read()
+        <span class="code-keyword">if not</span> ret: <span class="code-keyword">break</span>
+        
+        <span class="code-comment"># 자세 검출</span>
+        rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        results = pose.process(rgb_image)
+        
+        <span class="code-keyword">if</span> results.pose_landmarks:
+            <span class="code-comment"># 자세 분석</span>
+            feedback = posture_checker.analyze_posture(results.pose_landmarks.landmark)
+            score = posture_checker.get_posture_score()
+            
+            <span class="code-comment"># 피드백 화면 출력</span>
+            y_offset = <span class="code-number">30</span>
+            <span class="code-keyword">if</span> <span class="code-function">isinstance</span>(feedback, <span class="code-function">str</span>):
+                <span class="code-comment"># 좋은 자세</span>
+                cv2.putText(frame, feedback, (<span class="code-number">10</span>, y_offset), 
+                           cv2.FONT_HERSHEY_SIMPLEX, <span class="code-number">1</span>, (<span class="code-number">0</span>, <span class="code-number">255</span>, <span class="code-number">0</span>), <span class="code-number">2</span>)
+            <span class="code-keyword">else</span>:
+                <span class="code-comment"># 경고 메시지들</span>
+                <span class="code-keyword">for</span> warning <span class="code-keyword">in</span> feedback:
+                    cv2.putText(frame, warning, (<span class="code-number">10</span>, y_offset), 
+                               cv2.FONT_HERSHEY_SIMPLEX, <span class="code-number">0.6</span>, (<span class="code-number">0</span>, <span class="code-number">0</span>, <span class="code-number">255</span>), <span class="code-number">2</span>)
+                    y_offset += <span class="code-number">25</span>
+            
+            <span class="code-comment"># 자세 점수 표시</span>
+            score_color = (<span class="code-number">0</span>, <span class="code-number">255</span>, <span class="code-number">0</span>) <span class="code-keyword">if</span> score >= <span class="code-number">70</span> <span class="code-keyword">else</span> (<span class="code-number">0</span>, <span class="code-number">165</span>, <span class="code-number">255</span>) <span class="code-keyword">if</span> score >= <span class="code-number">50</span> <span class="code-keyword">else</span> (<span class="code-number">0</span>, <span class="code-number">0</span>, <span class="code-number">255</span>)
+            cv2.putText(frame, f<span class="code-string">"자세 점수: {score}%"</span>, (<span class="code-number">10</span>, frame.shape[<span class="code-number">0</span>] - <span class="code-number">20</span>), 
+                       cv2.FONT_HERSHEY_SIMPLEX, <span class="code-number">0.7</span>, score_color, <span class="code-number">2</span>)
+            
+            <span class="code-comment"># 자세 스켈레톤 그리기</span>
+            mp_draw.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+        
+        cv2.imshow(<span class="code-string">'실시간 자세 교정'</span>, frame)
+        <span class="code-keyword">if</span> cv2.waitKey(<span class="code-number">1</span>) & <span class="code-number">0xFF</span> == <span class="code-number">27</span>: <span class="code-keyword">break</span>
+
+cap.release()
+cv2.destroyAllWindows()
+</pre>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">🧘‍♂️ <span style="margin-left: 8px;">MediaPipe | 11 / 18</span></div>
+  </section>
+
+  <!-- Slide 12: korean_text_utils.py (한글 텍스트 렌더링) -->
+  <section id="slide12" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">MediaPipe</span> - <span class="python-yellow">한글 텍스트 오버레이</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;"><span class="python-yellow">12.</span> 핵심 요약</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">Pillow로 텍스트를 그린 뒤 OpenCV 이미지로 되돌려 사용합니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;">시스템에 존재하는 한글 폰트를 우선적으로 로드합니다.</p>
+      </div>
+      <div class="code-content">
+<pre>
+<span class="code-keyword">from</span> PIL <span class="code-keyword">import</span> Image, ImageDraw, ImageFont
+img_pil = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+draw = ImageDraw.Draw(img_pil)
+font = ImageFont.truetype(<span class="code-string">"/System/Library/Fonts/AppleSDGothicNeo.ttc"</span>, <span class="code-number">24</span>)
+draw.text((<span class="code-number">10</span>,<span class="code-number">30</span>), <span class="code-string">"자세 교정"</span>, font=font, fill=(<span class="code-number">255</span>,<span class="code-number">255</span>,<span class="code-number">255</span>))
+img = cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGB2BGR)
+</pre>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">🇰🇷 <span style="margin-left: 8px;">MediaPipe | 12 / 18</span></div>
+  </section>
+
+  <!-- Slide 13: mediapipe_5.py (이미지 분류 데모) -->
+  <section id="slide13" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">MediaPipe</span> - <span class="python-yellow">이미지 분류 데모</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;"><span class="python-yellow">13.</span> 핵심 요약</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">단일 이미지의 레이블과 점수를 출력합니다. BGR→RGB 변환을 잊지 마세요.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;">실행 전 image_path를 존재하는 파일로 바꾸세요.</p>
+      </div>
+      <div class="code-content">
+<pre>
+<span class="code-keyword">import</span> mediapipe <span class="code-keyword">as</span> mp
+<span class="code-keyword">from</span> mediapipe.tasks <span class="code-keyword">import</span> python
+<span class="code-keyword">from</span> mediapipe.tasks.python <span class="code-keyword">import</span> vision
+base = python.BaseOptions(model_asset_path=<span class="code-string">'your_model.tflite'</span>)
+opt = vision.ImageClassifierOptions(base_options=base)
+clf = vision.ImageClassifier.create_from_options(opt)
+mp_img = mp.Image.create_from_file(<span class="code-string">'pointing_up.jpg'</span>)
+res = clf.classify(mp_img)
+<span class="code-keyword">for</span> c <span class="code-keyword">in</span> res.classifications:
+  <span class="code-keyword">for</span> cat <span class="code-keyword">in</span> c.categories:
+    <span class="code-function">print</span>(cat.category_name, cat.score)
+</pre>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">🔍 <span style="margin-left: 8px;">MediaPipe | 13 / 18</span></div>
+  </section>
+
+  <!-- Slide 14: mediapipe_1.py (Hands 기본 변형) -->
+  <section id="slide14" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">MediaPipe</span> - <span class="python-yellow">Hands (다중 손, 옵션)</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;"><span class="python-yellow">14.</span> 핵심 요약</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">max_num_hands를 늘리고, draw_landmarks로 연결선을 표시합니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;">ESC로 종료(27), 성능이 낮으면 프레임 크기를 줄이세요.</p>
+      </div>
+      <div class="code-content">
+<pre>
+<span class="code-keyword">with</span> mp_hands.Hands(max_num_hands=<span class="code-number">4</span>, min_detection_confidence=<span class="code-number">0.5</span>,
+  min_tracking_confidence=<span class="code-number">0.5</span>) <span class="code-keyword">as</span> hands:
+  ...
+</pre>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">✋ <span style="margin-left: 8px;">MediaPipe | 14 / 18</span></div>
+  </section>
+
+  <!-- Slide 15: mediapipe_5 (Gesture Tasks) -->
+  <section id="slide15" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">MediaPipe</span> - <span class="python-yellow">Gesture Tasks: 이미지 제스처 인식</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;"><span class="python-yellow">15.</span> 핵심 요약</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">미리 학습된 gesture_recognizer.task를 로드해 이미지 제스처를 인식합니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;">랜드마크를 그려 결과를 시각화합니다.</p>
+      </div>
+      <div class="code-content">
+<pre>
+<span class="code-keyword">from</span> mediapipe.tasks <span class="code-keyword">import</span> python; <span class="code-keyword">from</span> mediapipe.tasks.python <span class="code-keyword">import</span> vision
+opt = vision.GestureRecognizerOptions(base_options=python.BaseOptions(
+  model_asset_path=<span class="code-string">'gesture_recognizer.task'</span>))
+rec = vision.GestureRecognizer.create_from_options(opt)
+result = rec.recognize(mp.Image.create_from_file(<span class="code-string">'thumbs_up.jpg'</span>))
+</pre>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">👍 <span style="margin-left: 8px;">MediaPipe | 15 / 18</span></div>
+  </section>
+
+  <!-- Slide 16: object_detection.py (빈 파일 안내) -->
+  <section id="slide16" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">MediaPipe</span> - <span class="python-yellow">Object Detection (준비 중)</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">현재 파일은 비어 있습니다. MediaPipe Tasks의 ObjectDetector로 쉽게 확장할 수 있습니다.</p>
+        <div class="tip-box">
+          <h4 style="font-size: 1rem; font-weight: bold; color: #fbbf24; margin-bottom: 8px;">💡 힌트</h4>
+          <p style="font-size: 0.875rem; color: #9ca3af;">from mediapipe.tasks.python.vision import ObjectDetector<br>BaseOptions(model_asset_path=...)로 모델 지정</p>
+        </div>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">🎯 <span style="margin-left: 8px;">MediaPipe | 16 / 18</span></div>
+  </section>
+
+  <!-- Slide 17: advanced_gesture_recognition.py (빈 파일 안내) -->
+  <section id="slide17" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">MediaPipe</span> - <span class="python-yellow">고급 제스처 인식 (준비 중)</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">데이터 수집 → 라벨링 → 학습 모델 변환(TFLite) → MediaPipe Tasks로 서빙까지 확장하세요.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;">초기엔 규칙 기반/임계값 방식으로 프로토타입을 빠르게 만드세요.</p>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">🚀 <span style="margin-left: 8px;">MediaPipe | 17 / 18</span></div>
+  </section>
+
+  <!-- Slide 18: selfie_segmentation.py (빈 파일 안내) -->
+  <section id="slide18" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">MediaPipe</span> - <span class="python-yellow">Selfie Segmentation (준비 중)</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">Background blur/replace에 유용합니다. Tasks의 ImageSegmenter/GeneralSegmenter를 참고하세요.</p>
+        <div class="tip-box">
+          <h4 style="font-size: 1rem; font-weight: bold; color: #fbbf24; margin-bottom: 8px;">💡 힌트</h4>
+          <p style="font-size: 0.875rem; color: #9ca3af;">mask = segmenter.segment(mp.Image(...)).confidence_masks[0]</p>
+        </div>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">🎭 <span style="margin-left: 8px;">MediaPipe | 18 / 18</span></div>
+  </section>
+
+  <!-- Slide 19: 마무리 & 팁 -->
+  <section id="slide19" class="slide-container">
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center;">
+        <div style="margin-bottom: 3rem;">
+            <h1 style="font-size: 3rem; font-weight: bold; margin-bottom: 1rem; background: linear-gradient(45deg, #306998, #FFD43B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">다음 단계</h1>
+            <div style="width: 150px; height: 4px; background: linear-gradient(45deg, #306998, #FFD43B); margin: 0 auto; border-radius: 2px;"></div>
+        </div>
+        <div style="margin-top: 2rem; max-width: 800px;">
+            <p style="font-size: 1.25rem; color: #9ca3af; margin-bottom: 1rem; line-height: 1.6;">성능이 낮다면 프레임 축소, 처리 스킵(예: 2프레임당 1회), CPU/GPU 빌드 확인을 시도하세요.</p>
+            <p style="font-size: 1rem; color: #6b7280; line-height: 1.6;">UI 오버레이(한글 표시)와 세션 로그를 더해 데이터 기반 개선을 반복하세요.</p>
+        </div>
+        <div style="position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%); color: #6b7280; font-size: 0.875rem;">
+            <p>🚀 실전 프로젝트로 확장해 보세요!</p>
+        </div>
+    </div>
+  </section>
+
+  <script src="slide-controller.js"></script>
+</body>
+</html>

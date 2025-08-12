@@ -10,7 +10,7 @@ mp_drawing = mp.solutions.drawing_utils # MediaPipe의 그리기 관련 유틸�
 
 def calculate_angle(a, b, c): # 세 점(관절)을 이용해 각도를 계산하는 함수를 정의합니다.
     """세 점을 이용해 각도 계산""" # 함수의 설명 문자열(docstring)입니다.
-    a = np.array(a)  # 첫 번째 점의 좌표를 NumPy 배열로 변환합니다.
+    a = np.array(a)  # 첫 번째 점의 좌표를 NumPy 배열로 변환합니다.₩
     b = np.array(b)  # 중간점(각도의 꼭짓점)의 좌표를 NumPy 배열로 변환합니다.
     c = np.array(c)  # 세 번째 점의 좌표를 NumPy 배열로 변환합니다.
     
