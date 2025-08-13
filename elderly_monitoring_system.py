@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 노인 활동 모니터링 시스템
 - 낙상 감지 (Fall Detection)

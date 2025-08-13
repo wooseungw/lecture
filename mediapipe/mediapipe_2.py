@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import mediapipe as mp # MediaPipe 라이브러리를 가져옵니다.
 import cv2 # OpenCV 라이브러리를 가져옵니다. 이미지 파일을 읽는 데 사용됩니다.
 

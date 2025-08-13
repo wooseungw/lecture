@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # 한글 텍스트 렌더링 유틸리티
 import cv2 # OpenCV 라이브러리, 이미지 처리에 사용됩니다.
 import numpy as np # NumPy 라이브러리, 배열 처리에 사용됩니다.
@@ -16,9 +18,12 @@ class KoreanTextRenderer: # 한글 텍스트를 OpenCV 이미지에 렌더링하
         # 다양한 운영 체제에 대한 일반적인 한글 폰트 경로 목록입니다.
         font_paths = [
             "/System/Library/Fonts/AppleSDGothicNeo.ttc",  # macOS 기본 한글 폰트
+            "/System/Library/Fonts/Arial Unicode MS.ttf",  # macOS 유니코드 폰트
             "/System/Library/Fonts/Helvetica.ttc",         # macOS 대체 폰트
             "C:/Windows/Fonts/malgun.ttf",                 # Windows 맑은 고딕
+            "C:/Windows/Fonts/gulim.ttc",                  # Windows 굴림
             "/usr/share/fonts/truetype/nanum/NanumGothic.ttf",  # Ubuntu 나눔고딕
+            "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",  # Linux 대체
         ]
         
         # 폰트 경로 목록을 순회하며 사용 가능한 폰트를 찾습니다.

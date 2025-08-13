@@ -1,8 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # 자세 교정 시스템 - 올바른 앉은 자세 분석
 import cv2 # OpenCV 라이브러리, 이미지 및 비디오 처리에 사용
 import mediapipe as mp # MediaPipe 라이브러리, 자세 추정에 사용
 import numpy as np # NumPy 라이브러리, 수치 계산에 사용
 import math # 수학 계산을 위한 라이브러리
+import os # 운영체제 인터페이스 (파일 경로 확인)
 from PIL import Image, ImageDraw, ImageFont # PIL 라이브러리, 이미지에 텍스트를 그리기 위해 사용
 
 # MediaPipe 초기화
@@ -29,16 +32,34 @@ def draw_korean_text(img, text, position, font_size=20, color=(255, 255, 255)): 
     img_pil = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB)) # OpenCV 이미지를 PIL 이미지로 변환 (BGR -> RGB)
     draw = ImageDraw.Draw(img_pil) # PIL 이미지에 그리기 위한 객체 생성
     
-    try: # 예외 처리 시작
-        # macOS 시스템 한글 폰트 사용
-        font = ImageFont.truetype("/System/Library/Fonts/AppleSDGothicNeo.ttc", font_size) # macOS의 기본 한글 폰트 로드
-    except: # 폰트 로드 실패 시
-        try: # 다른 폰트 시도
-            # 대체 폰트 시도
-            font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", font_size) # 대체 폰트 (Helvetica) 로드
-        except: # 대체 폰트도 실패 시
-            # 기본 폰트 사용
-            font = ImageFont.load_default() # PIL의 기본 폰트 로드
+    # 운영체제별 한글 폰트 경로
+    korean_fonts = [
+        "/System/Library/Fonts/AppleSDGothicNeo.ttc",  # macOS
+        "/System/Library/Fonts/Arial Unicode MS.ttf",  # macOS 대체
+        "C:/Windows/Fonts/malgun.ttf",  # Windows - 맑은 고딕
+        "C:/Windows/Fonts/gulim.ttc",   # Windows - 굴림
+        "/usr/share/fonts/truetype/nanum/NanumGothic.ttf",  # Ubuntu/Linux
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",  # Linux 대체
+    ]
+    
+    font = None
+    for font_path in korean_fonts:
+        try:
+            if os.path.exists(font_path):
+                font = ImageFont.truetype(font_path, font_size)
+                break
+        except Exception:
+            continue
+    
+    # 모든 폰트가 실패한 경우 기본 폰트 사용
+    if font is None:
+        try:
+            font = ImageFont.load_default()
+        except Exception:
+            # 최후의 방법: cv2.putText 사용
+            cv2.putText(img, text.encode('utf-8').decode('utf-8'), position, 
+                       cv2.FONT_HERSHEY_SIMPLEX, font_size/20, color, 2)
+            return img
     
     # 텍스트 그리기
     draw.text(position, text, font=font, fill=color) # 지정된 위치에 텍스트를 그림

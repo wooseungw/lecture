@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # 종합 인간 행동 분석 시스템 - 얼굴, 손, 자세를 동시에 분석
 import cv2 # OpenCV 라이브러리, 비디오 및 이미지 처리에 사용됩니다.
 import mediapipe as mp # MediaPipe 라이브러리, 전체적인(holistic) 추적에 사용됩니다.
@@ -34,13 +36,13 @@ class HolisticAnalyzer: # 전체적인 분석을 위한 클래스를 정의합�
         
         # 표정 판별
         if mouth_curve < -0.008: # 입꼬리가 많이 올라갔으면 (미소)
-            return "미소 😊", abs(mouth_curve) * 100
+            return "Smile", abs(mouth_curve) * 100
         elif mouth_curve > 0.008: # 입꼬리가 많이 내려갔으면 (찡그림)
-            return "찡그림 😞", mouth_curve * 100
+            return "Twist", mouth_curve * 100
         elif eye_openness > 0.02: # 눈이 크게 떠졌으면 (놀람)
-            return "놀람 😮", eye_openness * 50
+            return "Surprise", eye_openness * 50
         else: # 그 외의 경우
-            return "중립 😐", 0.5
+            return "Normal", 0.5
 
     def analyze_hand_state(self, left_hand, right_hand):
         """양손 상태 분석"""

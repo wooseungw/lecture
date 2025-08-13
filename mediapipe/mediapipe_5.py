@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import math # 수학 연산을 위한 라이브러리입니다.
 import urllib.request # URL에서 데이터를 다운로드하기 위한 라이브러리입니다.
 import cv2 # OpenCV 라이브러리, 이미지 처리 및 조작에 사용됩니다.

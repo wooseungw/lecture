@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # YOLO 종합 예제 5: 스마트 보안 시스템
 # 초보자를 위한 실전 활용 예제
 

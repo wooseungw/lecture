@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MediaPipe 강의 자료 - Level 1-4 기초부터 고급까지</title>
+<link href="css/tailwind.min.css" rel="stylesheet"/>
+<link href="css/fontawesome.min.css" rel="stylesheet"/>
+<link href="slide-controller.css" rel="stylesheet"/>
+<style>
+        .python-blue { color: #306998; }
+        .python-yellow { color: #FFD43B; }
+        .slide-container { 
+            background-color: #1e1e1e; 
+            color: #ffffff; 
+            font-family: 'Segoe UI', 'Noto Sans KR', sans-serif;
+        }
+        .content-wrapper { display: flex; align-items: center; gap: 2rem; }
+        .text-content { flex: 1; }
+        .code-content { flex: 1.1; background-color: #252525; padding: 1.5rem; border-radius: 8px; font-family: 'Consolas', 'D2Coding', monospace; overflow-x: auto; max-height: 500px; overflow-y: auto; }
+        .tip-box { background-color: #2d2d2d; border-left: 4px solid #FFD43B; padding: 1rem; margin-top: 1.25rem; border-radius: 0 8px 8px 0; }
+        .code-comment { color: #6A9955; }
+        .code-keyword { color: #569cd6; }
+        .code-string { color: #ce9178; }
+        .code-number { color: #b5cea8; }
+        .code-function { color: #DCDCAA; }
+</style>
+</head>
+<body>
+
+<!-- Title Slide: MediaPipe 강의 제목 -->
+<section id="slide0" class="slide-container">
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center;">
+        <div style="margin-bottom: 3rem;">
+            <h1 style="font-size: 4rem; font-weight: bold; margin-bottom: 1rem; background: linear-gradient(45deg, #306998, #FFD43B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">MediaPipe</h1>
+            <h2 style="font-size: 2.5rem; font-weight: 300; color: #d1d5db; margin-bottom: 2rem;">기초부터 고급까지 (Level 1-4)</h2>
+            <div style="width: 200px; height: 4px; background: linear-gradient(45deg, #306998, #FFD43B); margin: 0 auto; border-radius: 2px;"></div>
+        </div>
+        <div style="margin-top: 2rem;">
+            <p style="font-size: 1.25rem; color: #9ca3af; margin-bottom: 1rem;">손 추적부터 제스처 인식까지 체계적 학습</p>
+            <p style="font-size: 1rem; color: #6b7280;">Python MediaPipe 라이브러리 실전 가이드</p>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 1: 환경 준비 -->
+<section id="slide1" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">MediaPipe</span> - <span class="python-yellow">시작하기: 설치와 예제 실행</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;"><span class="python-yellow">1.</span> MediaPipe 환경 구성하기</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">MediaPipe는 Google에서 개발한 실시간 비전 처리 파이프라인으로, 손/얼굴/자세 추적을 단 몇 줄로 구현할 수 있습니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;">가상환경 사용을 권장하며, 웹캠 접근 권한과 충분한 조명이 필요합니다. 실행 시 창이 열리면 ESC로 종료합니다.</p>
+        <div class="tip-box">
+          <h4 style="font-size: 1rem; font-weight: bold; color: #fbbf24; margin-bottom: 8px;">📦 패키지 설치</h4>
+          <p style="font-size: 0.875rem; color: #9ca3af;">pip install opencv-python mediapipe pillow matplotlib</p>
+          <p style="font-size: 0.875rem; color: #9ca3af; margin-top: 4px;">macOS: 시스템 환경설정 → 보안 및 개인 정보 보호 → 카메라 권한 허용</p>
+        </div>
+      </div>
+      <div class="code-content">
+<pre>
+<span class="code-comment"># 환경 테스트 - 웹캠과 MediaPipe 동작 확인</span>
+<span class="code-keyword">import</span> cv2
+<span class="code-keyword">import</span> mediapipe <span class="code-keyword">as</span> mp
+
+<span class="code-comment"># OpenCV 설치 확인</span>
+<span class="code-function">print</span>(<span class="code-function">f</span><span class="code-string">"OpenCV 버전: {cv2.__version__}"</span>)
+
+<span class="code-comment"># MediaPipe 설치 확인</span>
+<span class="code-function">print</span>(<span class="code-function">f</span><span class="code-string">"MediaPipe 버전: {mp.__version__}"</span>)
+
+<span class="code-comment"># 웹캠 접근 테스트</span>
+cap = cv2.VideoCapture(<span class="code-number">0</span>)
+<span class="code-keyword">if</span> cap.isOpened():
+    <span class="code-function">print</span>(<span class="code-string">"✅ 웹캠 접근 성공"</span>)
+    ret, frame = cap.read()
+    <span class="code-keyword">if</span> ret:
+        <span class="code-function">print</span>(<span class="code-function">f</span><span class="code-string">"웹캠 해상도: {frame.shape[1]}x{frame.shape[0]}"</span>)
+        cv2.imshow(<span class="code-string">'Test Frame'</span>, frame)
+        cv2.waitKey(<span class="code-number">3000</span>)  <span class="code-comment"># 3초 대기</span>
+        cv2.destroyAllWindows()
+<span class="code-keyword">else</span>:
+    <span class="code-function">print</span>(<span class="code-string">"❌ 웹캠 접근 실패"</span>)
+cap.release()
+
+<span class="code-function">print</span>(<span class="code-string">"환경 테스트 완료!"</span>)
+</pre>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">🐍 <span style="margin-left: 8px;">환경 준비 | 1 / 5</span></div>
+</section>
+
+<!-- Slide 2: Level 1 - 기본 손 추적 -->
+<section id="slide2" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">Level 1</span> - <span class="python-yellow">기본 손 추적</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;"><span class="python-yellow">2.</span> 손 추적의 기본</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">MediaPipe는 손의 21개 관절점을 실시간으로 추적합니다. 각 관절에는 번호가 매겨져 있어 손목(0), 엄지(1-4), 검지(5-8) 등으로 구분됩니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;">웹캠을 통해 실시간으로 손을 탐지하고 관절점에 점과 연결선을 그려서 시각화합니다.</p>
+        <div class="tip-box">
+          <h4 style="font-size: 1rem; font-weight: bold; color: #fbbf24; margin-bottom: 8px;">✋ 손 랜드마크 21개</h4>
+          <p style="font-size: 0.875rem; color: #9ca3af;">손목(0), 엄지(1-4), 검지(5-8), 중지(9-12), 약지(13-16), 새끼(17-20)</p>
+        </div>
+      </div>
+      <div class="code-content">
+<pre>
+<span class="code-comment">#!/usr/bin/env python3</span>
+<span class="code-comment"># -*- coding: utf-8 -*-</span>
+<span class="code-comment"># Level 1: 기본 손 추적 - 웹캠에서 실시간 손 랜드마크 표시</span>
+<span class="code-keyword">import</span> cv2 <span class="code-comment"># OpenCV 라이브러리, 이미지 처리 및 조작에 사용됩니다.</span>
+<span class="code-keyword">import</span> mediapipe <span class="code-keyword">as</span> mp <span class="code-comment"># MediaPipe 라이브러리, 손 추적에 사용됩니다.</span>
+
+<span class="code-comment"># MediaPipe 손 추적 모델 초기화</span>
+mp_hands = mp.solutions.hands <span class="code-comment"># MediaPipe Hands 솔루션</span>
+mp_drawing = mp.solutions.drawing_utils <span class="code-comment"># 랜드마크 그리기 유틸리티</span>
+mp_drawing_styles = mp.solutions.drawing_styles <span class="code-comment"># 그리기 스타일 유틸리티</span>
+
+<span class="code-comment"># 손 추적 객체 생성</span>
+hands = mp_hands.Hands(
+    static_image_mode=<span class="code-keyword">False</span>,    <span class="code-comment"># 동영상 처리 모드 (실시간)</span>
+    max_num_hands=<span class="code-number">2</span>,             <span class="code-comment"># 최대 손 개수 (양손 인식)</span>
+    min_detection_confidence=<span class="code-number">0.5</span>, <span class="code-comment"># 손 감지 최소 신뢰도</span>
+    min_tracking_confidence=<span class="code-number">0.5</span>   <span class="code-comment"># 손 추적 최소 신뢰도</span>
+)
+
+<span class="code-comment"># 웹캠 연결</span>
+cap = cv2.VideoCapture(<span class="code-number">0</span>) <span class="code-comment"># 웹캠 장치 연결 (0번 장치)</span>
+
+<span class="code-keyword">while</span> cap.isOpened(): <span class="code-comment"># 웹캠이 연결되어 있는 동안 반복</span>
+    success, image = cap.read() <span class="code-comment"># 웹캠에서 프레임 읽기</span>
+    <span class="code-keyword">if</span> <span class="code-keyword">not</span> success:
+        <span class="code-function">print</span>(<span class="code-string">"카메라에서 프레임을 가져올 수 없습니다."</span>)
+        <span class="code-keyword">continue</span>
+
+    <span class="code-comment"># 이미지 전처리: BGR을 RGB로 변환 (MediaPipe는 RGB 사용)</span>
+    image.flags.writeable = <span class="code-keyword">False</span> <span class="code-comment"># 성능 향상을 위해 쓰기 불가 설정</span>
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) <span class="code-comment"># BGR → RGB 변환</span>
+    
+    <span class="code-comment"># 손 추적 수행</span>
+    results = hands.process(image) <span class="code-comment"># MediaPipe로 손 랜드마크 추출</span>
+
+    <span class="code-comment"># 이미지를 다시 BGR로 변환 (OpenCV 표시용)</span>
+    image.flags.writeable = <span class="code-keyword">True</span>
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+    <span class="code-comment"># 손 랜드마크 그리기</span>
+    <span class="code-keyword">if</span> results.multi_hand_landmarks: <span class="code-comment"># 손이 감지되었다면</span>
+        <span class="code-keyword">for</span> hand_landmarks <span class="code-keyword">in</span> results.multi_hand_landmarks: <span class="code-comment"># 각 손에 대해</span>
+            <span class="code-comment"># 관절점과 연결선 그리기</span>
+            mp_drawing.draw_landmarks(
+                image,
+                hand_landmarks,
+                mp_hands.HAND_CONNECTIONS, <span class="code-comment"># 손 관절 연결선 정보</span>
+                mp_drawing_styles.get_default_hand_landmarks_style(),
+                mp_drawing_styles.get_default_hand_connections_style())
+
+    <span class="code-comment"># 화면에 출력</span>
+    cv2.imshow(<span class="code-string">'MediaPipe Hands'</span>, image) <span class="code-comment"># 창에 이미지 표시</span>
+    <span class="code-keyword">if</span> cv2.waitKey(<span class="code-number">5</span>) & <span class="code-number">0xFF</span> == <span class="code-number">27</span>: <span class="code-comment"># ESC 키로 종료</span>
+        <span class="code-keyword">break</span>
+
+<span class="code-comment"># 자원 해제</span>
+cap.release() <span class="code-comment"># 웹캠 연결 해제</span>
+cv2.destroyAllWindows() <span class="code-comment"># 모든 OpenCV 창 닫기</span>
+hands.close() <span class="code-comment"># MediaPipe Hands 객체 해제</span>
+</pre>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">✋ <span style="margin-left: 8px;">Level 1 | 2 / 5</span></div>
+</section>
+
+<!-- Slide 3: Level 2 - 얼굴 메시 추적 -->
+<section id="slide3" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">Level 2</span> - <span class="python-yellow">얼굴 메시 추적</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;"><span class="python-yellow">3.</span> 정밀한 얼굴 분석</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">Face Mesh는 얼굴의 468개 랜드마크를 추적하여 눈, 코, 입, 얼굴 윤곽 등을 매우 정밀하게 분석합니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;">3D 좌표계를 지원하여 얼굴의 깊이 정보까지 제공하므로 AR 필터, 표정 인식 등에 활용 가능합니다.</p>
+        <div class="tip-box">
+          <h4 style="font-size: 1rem; font-weight: bold; color: #fbbf24; margin-bottom: 8px;">😊 얼굴 랜드마크 468개</h4>
+          <p style="font-size: 0.875rem; color: #9ca3af;">얼굴 윤곽, 눈썹, 눈, 코, 입, 턱 등 얼굴 전체를 정밀하게 매핑</p>
+        </div>
+      </div>
+      <div class="code-content">
+<pre>
+<span class="code-comment">#!/usr/bin/env python3</span>
+<span class="code-comment"># -*- coding: utf-8 -*-</span>
+<span class="code-comment"># Level 2: 얼굴 메시 추적 - 웹캠에서 실시간 얼굴 468개 랜드마크 표시</span>
+<span class="code-keyword">import</span> cv2 <span class="code-comment"># OpenCV 라이브러리, 이미지 처리 및 조작에 사용됩니다.</span>
+<span class="code-keyword">import</span> mediapipe <span class="code-keyword">as</span> mp <span class="code-comment"># MediaPipe 라이브러리, 얼굴 메시 추적에 사용됩니다.</span>
+
+<span class="code-comment"># MediaPipe 얼굴 메시 모델 초기화</span>
+mp_face_mesh = mp.solutions.face_mesh <span class="code-comment"># MediaPipe Face Mesh 솔루션</span>
+mp_drawing = mp.solutions.drawing_utils <span class="code-comment"># 랜드마크 그리기 유틸리티</span>
+mp_drawing_styles = mp.solutions.drawing_styles <span class="code-comment"># 그리기 스타일 유틸리티</span>
+
+<span class="code-comment"># 그리기 스펙 정의</span>
+drawing_spec = mp_drawing.DrawingSpec(thickness=<span class="code-number">1</span>, circle_radius=<span class="code-number">1</span>) <span class="code-comment"># 랜드마크 점 크기와 연결선 굵기</span>
+
+<span class="code-comment"># 얼굴 메시 객체 생성</span>
+face_mesh = mp_face_mesh.FaceMesh(
+    max_num_faces=<span class="code-number">1</span>,               <span class="code-comment"># 최대 얼굴 개수</span>
+    refine_landmarks=<span class="code-keyword">True</span>,        <span class="code-comment"># 정밀한 랜드마크 감지 (눈, 입 주변 추가 점)</span>
+    min_detection_confidence=<span class="code-number">0.5</span>, <span class="code-comment"># 얼굴 감지 최소 신뢰도</span>
+    min_tracking_confidence=<span class="code-number">0.5</span>   <span class="code-comment"># 얼굴 추적 최소 신뢰도</span>
+)
+
+<span class="code-comment"># 웹캠 연결</span>
+cap = cv2.VideoCapture(<span class="code-number">0</span>) <span class="code-comment"># 웹캠 장치 연결 (0번 장치)</span>
+
+<span class="code-keyword">while</span> cap.isOpened(): <span class="code-comment"># 웹캠이 연결되어 있는 동안 반복</span>
+    success, image = cap.read() <span class="code-comment"># 웹캠에서 프레임 읽기</span>
+    <span class="code-keyword">if</span> <span class="code-keyword">not</span> success:
+        <span class="code-function">print</span>(<span class="code-string">"카메라에서 프레임을 가져올 수 없습니다."</span>)
+        <span class="code-keyword">continue</span>
+
+    <span class="code-comment"># 이미지 전처리: BGR을 RGB로 변환 (MediaPipe는 RGB 사용)</span>
+    image.flags.writeable = <span class="code-keyword">False</span> <span class="code-comment"># 성능 향상을 위해 쓰기 불가 설정</span>
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) <span class="code-comment"># BGR → RGB 변환</span>
+    
+    <span class="code-comment"># 얼굴 메시 추적 수행</span>
+    results = face_mesh.process(image) <span class="code-comment"># MediaPipe로 얼굴 랜드마크 추출</span>
+
+    <span class="code-comment"># 이미지를 다시 BGR로 변환 (OpenCV 표시용)</span>
+    image.flags.writeable = <span class="code-keyword">True</span>
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+    <span class="code-comment"># 얼굴 메시 랜드마크 그리기</span>
+    <span class="code-keyword">if</span> results.multi_face_landmarks: <span class="code-comment"># 얼굴이 감지되었다면</span>
+        <span class="code-keyword">for</span> face_landmarks <span class="code-keyword">in</span> results.multi_face_landmarks: <span class="code-comment"># 각 얼굴에 대해</span>
+            <span class="code-comment"># 얼굴 윤곽 그리기</span>
+            mp_drawing.draw_landmarks(
+                image=image,
+                landmark_list=face_landmarks,
+                connections=mp_face_mesh.FACEMESH_CONTOURS, <span class="code-comment"># 얼굴 윤곽선</span>
+                landmark_drawing_spec=<span class="code-keyword">None</span>,
+                connection_drawing_spec=mp_drawing_styles.get_default_face_mesh_contours_style())
+            
+            <span class="code-comment"># 홍채 (눈동자) 그리기</span>
+            mp_drawing.draw_landmarks(
+                image=image,
+                landmark_list=face_landmarks,
+                connections=mp_face_mesh.FACEMESH_IRISES, <span class="code-comment"># 홍채 연결선</span>
+                landmark_drawing_spec=<span class="code-keyword">None</span>,
+                connection_drawing_spec=mp_drawing_styles.get_default_face_mesh_iris_connections_style())
+
+    <span class="code-comment"># 화면에 출력</span>
+    cv2.imshow(<span class="code-string">'MediaPipe Face Mesh'</span>, image) <span class="code-comment"># 창에 이미지 표시</span>
+    <span class="code-keyword">if</span> cv2.waitKey(<span class="code-number">5</span>) & <span class="code-number">0xFF</span> == <span class="code-number">27</span>: <span class="code-comment"># ESC 키로 종료</span>
+        <span class="code-keyword">break</span>
+
+<span class="code-comment"># 자원 해제</span>
+cap.release() <span class="code-comment"># 웹캠 연결 해제</span>
+cv2.destroyAllWindows() <span class="code-comment"># 모든 OpenCV 창 닫기</span>
+face_mesh.close() <span class="code-comment"># MediaPipe Face Mesh 객체 해제</span>
+</pre>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">😊 <span style="margin-left: 8px;">Level 2 | 3 / 5</span></div>
+</section>
+
+<!-- Slide 4: Level 3 - 자세 추정 -->
+<section id="slide4" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">Level 3</span> - <span class="python-yellow">자세 추정</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;"><span class="python-yellow">4.</span> 전신 자세 분석</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">Pose Estimation은 사람의 33개 관절점을 추적하여 머리부터 발끝까지 전신 자세를 분석합니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;">운동 분석, 피트니스 앱, 동작 인식 등에 활용되며, 3D 좌표 정보도 제공합니다.</p>
+        <div class="tip-box">
+          <h4 style="font-size: 1rem; font-weight: bold; color: #fbbf24; margin-bottom: 8px;">🏃 자세 랜드마크 33개</h4>
+          <p style="font-size: 0.875rem; color: #9ca3af;">코, 눈, 귀, 어깨, 팔꿈치, 손목, 엉덩이, 무릎, 발목 등 주요 관절점</p>
+        </div>
+      </div>
+      <div class="code-content">
+<pre>
+<span class="code-comment">#!/usr/bin/env python3</span>
+<span class="code-comment"># -*- coding: utf-8 -*-</span>
+<span class="code-comment"># Level 3: 자세 추정 - 웹캠에서 실시간 전신 33개 랜드마크 표시</span>
+<span class="code-keyword">import</span> cv2 <span class="code-comment"># OpenCV 라이브러리, 이미지 처리 및 조작에 사용됩니다.</span>
+<span class="code-keyword">import</span> mediapipe <span class="code-keyword">as</span> mp <span class="code-comment"># MediaPipe 라이브러리, 자세 추정에 사용됩니다.</span>
+
+<span class="code-comment"># MediaPipe 자세 추정 모델 초기화</span>
+mp_pose = mp.solutions.pose <span class="code-comment"># MediaPipe Pose 솔루션</span>
+mp_drawing = mp.solutions.drawing_utils <span class="code-comment"># 랜드마크 그리기 유틸리티</span>
+mp_drawing_styles = mp.solutions.drawing_styles <span class="code-comment"># 그리기 스타일 유틸리티</span>
+
+<span class="code-comment"># 자세 추정 객체 생성</span>
+pose = mp_pose.Pose(
+    static_image_mode=<span class="code-keyword">False</span>,    <span class="code-comment"># 동영상 처리 모드 (실시간)</span>
+    model_complexity=<span class="code-number">1</span>,         <span class="code-comment"># 모델 복잡도 (0: 가벼움, 2: 정확함)</span>
+    smooth_landmarks=<span class="code-keyword">True</span>,     <span class="code-comment"># 랜드마크 스무딩 (떨림 방지)</span>
+    enable_segmentation=<span class="code-keyword">False</span>, <span class="code-comment"># 사람 영역 분할 비활성화</span>
+    min_detection_confidence=<span class="code-number">0.5</span>, <span class="code-comment"># 자세 감지 최소 신뢰도</span>
+    min_tracking_confidence=<span class="code-number">0.5</span>   <span class="code-comment"># 자세 추적 최소 신뢰도</span>
+)
+
+<span class="code-comment"># 웹캠 연결</span>
+cap = cv2.VideoCapture(<span class="code-number">0</span>) <span class="code-comment"># 웹캠 장치 연결 (0번 장치)</span>
+
+<span class="code-keyword">while</span> cap.isOpened(): <span class="code-comment"># 웹캠이 연결되어 있는 동안 반복</span>
+    success, image = cap.read() <span class="code-comment"># 웹캠에서 프레임 읽기</span>
+    <span class="code-keyword">if</span> <span class="code-keyword">not</span> success:
+        <span class="code-function">print</span>(<span class="code-string">"카메라에서 프레임을 가져올 수 없습니다."</span>)
+        <span class="code-keyword">continue</span>
+
+    <span class="code-comment"># 이미지 전처리: BGR을 RGB로 변환 (MediaPipe는 RGB 사용)</span>
+    image.flags.writeable = <span class="code-keyword">False</span> <span class="code-comment"># 성능 향상을 위해 쓰기 불가 설정</span>
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) <span class="code-comment"># BGR → RGB 변환</span>
+    
+    <span class="code-comment"># 자세 추정 수행</span>
+    results = pose.process(image) <span class="code-comment"># MediaPipe로 자세 랜드마크 추출</span>
+
+    <span class="code-comment"># 이미지를 다시 BGR로 변환 (OpenCV 표시용)</span>
+    image.flags.writeable = <span class="code-keyword">True</span>
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+    <span class="code-comment"># 자세 랜드마크 그리기</span>
+    <span class="code-keyword">if</span> results.pose_landmarks: <span class="code-comment"># 자세가 감지되었다면</span>
+        <span class="code-comment"># 관절점과 연결선 그리기</span>
+        mp_drawing.draw_landmarks(
+            image,
+            results.pose_landmarks,
+            mp_pose.POSE_CONNECTIONS, <span class="code-comment"># 자세 관절 연결선 정보</span>
+            landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style())
+
+        <span class="code-comment"># 각 랜드마크의 좌표와 신뢰도 출력 (선택사항)</span>
+        <span class="code-keyword">for</span> idx, landmark <span class="code-keyword">in</span> <span class="code-function">enumerate</span>(results.pose_landmarks.landmark):
+            <span class="code-comment"># 화면 좌표로 변환</span>
+            h, w, c = image.shape
+            cx, cy = <span class="code-function">int</span>(landmark.x * w), <span class="code-function">int</span>(landmark.y * h)
+            
+            <span class="code-comment"># 주요 관절점에 번호 표시 (어깨, 팔꿈치, 손목만)</span>
+            <span class="code-keyword">if</span> idx <span class="code-keyword">in</span> [<span class="code-number">11</span>, <span class="code-number">12</span>, <span class="code-number">13</span>, <span class="code-number">14</span>, <span class="code-number">15</span>, <span class="code-number">16</span>]:  <span class="code-comment"># 상체 주요 관절</span>
+                cv2.putText(image, <span class="code-function">str</span>(idx), (cx-<span class="code-number">10</span>, cy-<span class="code-number">10</span>), 
+                           cv2.FONT_HERSHEY_SIMPLEX, <span class="code-number">0.5</span>, (<span class="code-number">255</span>, <span class="code-number">255</span>, <span class="code-number">0</span>), <span class="code-number">1</span>, cv2.LINE_AA)
+
+    <span class="code-comment"># 화면에 출력</span>
+    cv2.imshow(<span class="code-string">'MediaPipe Pose'</span>, image) <span class="code-comment"># 창에 이미지 표시</span>
+    <span class="code-keyword">if</span> cv2.waitKey(<span class="code-number">5</span>) & <span class="code-number">0xFF</span> == <span class="code-number">27</span>: <span class="code-comment"># ESC 키로 종료</span>
+        <span class="code-keyword">break</span>
+
+<span class="code-comment"># 자원 해제</span>
+cap.release() <span class="code-comment"># 웹캠 연결 해제</span>
+cv2.destroyAllWindows() <span class="code-comment"># 모든 OpenCV 창 닫기</span>
+pose.close() <span class="code-comment"># MediaPipe Pose 객체 해제</span>
+</pre>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">🏃 <span style="margin-left: 8px;">Level 3 | 4 / 5</span></div>
+</section>
+
+<!-- Slide 5: Level 4 - 제스처 인식 -->
+<section id="slide5" class="slide-container">
+    <div style="position: absolute; top: 40px; left: 40px;">
+        <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 8px;"><span class="python-blue">Level 4</span> - <span class="python-yellow">고급 제스처 인식</span></h1>
+        <div style="width: 80px; height: 4px; background-color: #306998; border-radius: 2px;"></div>
+    </div>
+    <div class="content-wrapper">
+      <div class="text-content">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;"><span class="python-yellow">5.</span> 이미지 기반 제스처 분류</h2>
+        <p style="font-size: 1rem; color: #d1d5db; line-height: 1.6;">MediaPipe Gesture Recognition은 미리 훈련된 모델을 사용하여 thumbs_up, victory, pointing_up 등의 제스처를 자동으로 분류합니다.</p>
+        <p style="margin-top: 10px; font-size: 0.95rem; color: #e5e7eb;"><strong>모델 다운로드:</strong> 구글 스토리지에서 gesture_recognizer.task 모델을 자동으로 다운로드합니다.</p>
+        <div class="tip-box">
+          <h4 style="font-size: 1rem; font-weight: bold; color: #fbbf24; margin-bottom: 8px;">🎯 인식 가능한 제스처</h4>
+          <p style="font-size: 0.875rem; color: #9ca3af;">Thumbs Up, Thumbs Down, Victory, Pointing Up, Open Palm, Closed Fist</p>
+        </div>
+      </div>
+      <div class="code-content">
+<pre>
+<span class="code-comment">#!/usr/bin/env python3</span>
+<span class="code-comment"># -*- coding: utf-8 -*-</span>
+<span class="code-comment"># Level 4: 고급 제스처 인식 - 이미지에서 제스처 분류</span>
+<span class="code-keyword">import</span> math <span class="code-comment"># 수학 연산을 위한 라이브러리입니다.</span>
+<span class="code-keyword">import</span> urllib.request <span class="code-comment"># URL에서 데이터를 다운로드하기 위한 라이브러리입니다.</span>
+<span class="code-keyword">import</span> cv2 <span class="code-comment"># OpenCV 라이브러리, 이미지 처리 및 조작에 사용됩니다.</span>
+<span class="code-keyword">from</span> matplotlib <span class="code-keyword">import</span> pyplot <span class="code-keyword">as</span> plt <span class="code-comment"># Matplotlib 라이브러리, 그래프 및 이미지 시각화에 사용됩니다.</span>
+<span class="code-keyword">import</span> mediapipe <span class="code-keyword">as</span> mp <span class="code-comment"># MediaPipe 라이브러리, 제스처 인식에 사용됩니다.</span>
+<span class="code-keyword">from</span> mediapipe.framework.formats <span class="code-keyword">import</span> landmark_pb2 <span class="code-comment"># MediaPipe 랜드마크 프로토콜 버퍼를 가져옵니다.</span>
+<span class="code-keyword">from</span> mediapipe.tasks <span class="code-keyword">import</span> python <span class="code-comment"># MediaPipe Tasks Python API를 가져옵니다.</span>
+<span class="code-keyword">from</span> mediapipe.tasks.python <span class="code-keyword">import</span> vision <span class="code-comment"># MediaPipe Vision Tasks를 가져옵니다.</span>
+
+<span class="code-comment"># 예제 이미지 파일들을 다운로드합니다.</span>
+IMAGE_FILENAMES = [<span class="code-string">'thumbs_down.jpg'</span>, <span class="code-string">'victory.jpg'</span>, <span class="code-string">'thumbs_up.jpg'</span>, <span class="code-string">'pointing_up.jpg'</span>] <span class="code-comment"># 다운로드할 이미지 파일 이름 목록</span>
+<span class="code-keyword">for</span> name <span class="code-keyword">in</span> IMAGE_FILENAMES: <span class="code-comment"># 각 이미지 파일 이름에 대해 반복</span>
+    url = <span class="code-function">f</span><span class="code-string">'https://storage.googleapis.com/mediapipe-tasks/gesture_recognizer/{name}'</span> <span class="code-comment"># 이미지 다운로드 URL 구성</span>
+    urllib.request.urlretrieve(url, name) <span class="code-comment"># URL에서 파일을 다운로드하여 로컬에 저장</span>
+
+<span class="code-comment"># Matplotlib 그래프 설정을 변경합니다.</span>
+plt.rcParams.update({
+    <span class="code-string">'axes.spines.top'</span>: <span class="code-keyword">False</span>,       <span class="code-comment"># 위쪽 축 선 숨기기</span>
+    <span class="code-string">'axes.spines.right'</span>: <span class="code-keyword">False</span>,     <span class="code-comment"># 오른쪽 축 선 숨기기</span>
+    <span class="code-string">'axes.spines.left'</span>: <span class="code-keyword">False</span>,      <span class="code-comment"># 왼쪽 축 선 숨기기</span>
+    <span class="code-string">'axes.spines.bottom'</span>: <span class="code-keyword">False</span>,    <span class="code-comment"># 아래쪽 축 선 숨기기</span>
+    <span class="code-string">'xtick.labelbottom'</span>: <span class="code-keyword">False</span>,     <span class="code-comment"># 아래쪽 x축 레이블 숨기기</span>
+    <span class="code-string">'xtick.bottom'</span>: <span class="code-keyword">False</span>,          <span class="code-comment"># 아래쪽 x축 틱 숨기기</span>
+    <span class="code-string">'ytick.labelleft'</span>: <span class="code-keyword">False</span>,       <span class="code-comment"># 왼쪽 y축 레이블 숨기기</span>
+    <span class="code-string">'ytick.left'</span>: <span class="code-keyword">False</span>,            <span class="code-comment"># 왼쪽 y축 틱 숨기기</span>
+    <span class="code-string">'xtick.labeltop'</span>: <span class="code-keyword">False</span>,        <span class="code-comment"># 위쪽 x축 레이블 숨기기</span>
+    <span class="code-string">'xtick.top'</span>: <span class="code-keyword">False</span>,             <span class="code-comment"># 위쪽 x축 틱 숨기기</span>
+    <span class="code-string">'ytick.labelright'</span>: <span class="code-keyword">False</span>,      <span class="code-comment"># 오른쪽 y축 레이블 숨기기</span>
+    <span class="code-string">'ytick.right'</span>: <span class="code-keyword">False</span>            <span class="code-comment"># 오른쪽 y축 틱 숨기기</span>
+})
+
+<span class="code-comment"># Mediapipe 그리기 유틸리티 및 스타일을 설정합니다.</span>
+mp_hands = mp.solutions.hands <span class="code-comment"># MediaPipe Hands 솔루션</span>
+mp_drawing = mp.solutions.drawing_utils <span class="code-comment"># 랜드마크 그리기 유틸리티</span>
+mp_drawing_styles = mp.solutions.drawing_styles <span class="code-comment"># 그리기 스타일 유틸리티</span>
+
+<span class="code-comment"># 제스처 인식기 생성 섹션</span>
+<span class="code-comment"># 기본 옵션을 설정합니다. 모델 파일의 경로를 지정합니다.</span>
+base_options = python.BaseOptions(model_asset_path=<span class="code-string">'gesture_recognizer.task'</span>)
+<span class="code-comment"># 제스처 인식기 옵션을 설정합니다.</span>
+options = vision.GestureRecognizerOptions(base_options=base_options)
+<span class="code-comment"># 설정된 옵션으로 제스처 인식기를 생성합니다.</span>
+recognizer = vision.GestureRecognizer.create_from_options(options)
+
+<span class="code-comment"># 이미지에서 제스처 인식 및 결과 저장 섹션</span>
+mp_images = [] <span class="code-comment"># MediaPipe Image 객체를 저장할 리스트</span>
+results = [] <span class="code-comment"># 제스처 인식 결과를 저장할 리스트</span>
+<span class="code-keyword">for</span> image_file_name <span class="code-keyword">in</span> IMAGE_FILENAMES: <span class="code-comment"># 각 이미지 파일 이름에 대해 반복</span>
+    image = mp.Image.create_from_file(image_file_name) <span class="code-comment"># 파일에서 MediaPipe Image 객체 생성</span>
+    recognition_result = recognizer.recognize(image) <span class="code-comment"># 이미지에서 제스처 인식 수행</span>
+    mp_images.append(image) <span class="code-comment"># MediaPipe Image 객체를 리스트에 추가</span>
+    top_gesture = recognition_result.gestures[<span class="code-number">0</span>][<span class="code-number">0</span>] <span class="code-comment"># 가장 높은 점수의 제스처 추출</span>
+    hand_landmarks = recognition_result.hand_landmarks <span class="code-comment"># 손 랜드마크 추출</span>
+    results.append((top_gesture, hand_landmarks)) <span class="code-comment"># 제스처와 랜드마크를 결과 리스트에 추가</span>
+
+<span class="code-comment"># 결과 출력</span>
+<span class="code-keyword">for</span> i, (gesture, landmarks) <span class="code-keyword">in</span> <span class="code-function">enumerate</span>(results):
+    <span class="code-function">print</span>(<span class="code-function">f</span><span class="code-string">"Image {IMAGE_FILENAMES[i]}: {gesture.category_name} (신뢰도: {gesture.score:.2f})"</span>)
+
+<span class="code-function">print</span>(<span class="code-string">"제스처 인식 완료!"</span>)
+</pre>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 24px; right: 40px; display: flex; align-items: center; color: #6b7280; font-size: 0.875rem;">🎯 <span style="margin-left: 8px;">Level 4 | 5 / 5</span></div>
+</section>
+
+  <script src="slide-controller.js"></script>
+</body>
+</html>

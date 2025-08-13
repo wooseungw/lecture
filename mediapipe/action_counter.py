@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # 운동 동작 카운터 - 스쿼트 횟수 자동 계산
 import cv2 # OpenCV 라이브러리, 비디오 및 이미지 처리에 사용됩니다.
 import mediapipe as mp # MediaPipe 라이브러리, 자세 추정(pose estimation)에 사용됩니다.

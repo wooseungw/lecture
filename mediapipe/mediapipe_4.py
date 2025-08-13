@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import cv2 # OpenCV 라이브러리를 가져옵니다. 웹캠, 이미지/비디오 처리에 사용됩니다.
 import mediapipe as mp # MediaPipe 라이브러리를 가져옵니다. 자세 추적(pose estimation) 솔루션을 제공합니다.
 

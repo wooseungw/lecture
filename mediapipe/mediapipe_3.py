@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import mediapipe as mp # MediaPipe 라이브러리를 가져옵니다. 얼굴 랜드마크 감지에 사용됩니다.
 import cv2 # OpenCV 라이브러리를 가져옵니다. 웹캠 및 이미지 처리에 사용됩니다.
 

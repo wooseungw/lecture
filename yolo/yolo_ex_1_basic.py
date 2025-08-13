@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # YOLO 객체 탐지 예제 1: 기본 이미지 탐지
 # 초보자를 위한 단계별 학습 자료
 

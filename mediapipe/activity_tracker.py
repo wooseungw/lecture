@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # 행동 패턴 분석기 - 일정 시간동안의 활동을 분석하고 기록
 import cv2 # OpenCV 라이브러리, 비디오 및 이미지 처리에 사용됩니다.
 import mediapipe as mp # MediaPipe 라이브러리, 자세 추정(pose estimation)에 사용됩니다.

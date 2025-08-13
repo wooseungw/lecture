@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # 얼굴 탐지 - 다중 얼굴 인식 및 분석 시스템
 import cv2 # OpenCV 라이브러리, 비디오 및 이미지 처리에 사용됩니다.
 import mediapipe as mp # MediaPipe 라이브러리, 얼굴 감지에 사용됩니다.
@@ -34,11 +36,11 @@ class FaceAnalyzer: # 얼굴 분석을 위한 클래스를 정의합니다.
         
         # 중심 x 좌표가 이미지의 어느 쪽에 위치하는지에 따라 방향을 추정합니다.
         if center_x < 0.4:
-            return "오른쪽 보는 중"
+            return "Right looking"
         elif center_x > 0.6:
-            return "왼쪽 보는 중"
+            return "Left looking"
         else:
-            return "정면"
+            return "Front looking"  # 정면을 보고 있는 경우
     
     def get_face_size_category(self, detection, image_width, image_height):
         """얼굴 크기 분류"""
@@ -52,13 +54,13 @@ class FaceAnalyzer: # 얼굴 분석을 위한 클래스를 정의합니다.
         
         # 비율에 따라 얼굴 크기 카테고리와 색상을 반환합니다.
         if face_ratio > 0.1:
-            return "아주 가까움", (0, 255, 0)  # 초록
+            return "Very Close", (0, 255, 0)  # 초록
         elif face_ratio > 0.05:
-            return "가까움", (0, 255, 255)      # 노랑
+            return "Close", (0, 255, 255)      # 노랑
         elif face_ratio > 0.02:
-            return "보통", (255, 255, 0)        # 청록
+            return "Normal", (255, 255, 0)        # 청록
         else:
-            return "멀음", (255, 0, 0)          # 빨강
+            return "Far", (255, 0, 0)          # 빨강
     
     def track_face_id(self, detection):
         """간단한 얼굴 ID 추적"""

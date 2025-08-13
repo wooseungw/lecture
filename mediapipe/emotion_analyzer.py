@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # 감정 분석기 - 얼굴 표정과 제스처를 조합한 감정 인식
 import cv2 # OpenCV 라이브러리, 비디오 및 이미지 처리에 사용됩니다.
 import mediapipe as mp # MediaPipe 라이브러리, 얼굴 메시 및 손 추적에 사용됩니다.

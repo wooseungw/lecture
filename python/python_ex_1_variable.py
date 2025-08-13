@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 # 파이썬 변수 사용법 예제
 
 # 1. 기본 변수 선언 및 값 할당
